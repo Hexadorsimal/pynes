@@ -7,10 +7,10 @@ class StatusFlag:
         self.name = name
         self.mask = mask
         self.description = description
-        self.value = True
+        self.set = True
 
     def __repr__(self):
-        if self.value:
+        if self.set:
             return self.letter
         else:
             return "-"
@@ -31,3 +31,10 @@ class FlagRegister(Register):
 
         return "<FlagRegister {name}:{flags}>".format(name=self.name, flags=flag_string)
 
+    @property
+    def value(self):
+        val = 0
+        for (letter, flag) in self.flags.items():
+            if flag.set:
+                val |= flag.mask
+        return val

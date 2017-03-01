@@ -6,3 +6,7 @@ class Register:
 
     def __repr__(self):
         return "<Register {name}>".format(name=self.name)
+
+    @property
+    def value(self):
+        raise NotImplementedError
