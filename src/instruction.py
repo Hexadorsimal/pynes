@@ -8,4 +8,4 @@ class Instruction:
         self.legal = legal
 
     def __repr__(self):
-        return "<Instruction {op} {name} {am}>".format(op=self.opcode, name=self.name, am=self.address_mode)
+        return "<Instruction {op:02X} {name} {am}>".format(op=self.opcode, name=self.name, am=self.address_mode)
