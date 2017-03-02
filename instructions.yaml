@@ -60,7 +60,7 @@ instructions:
         cycle_count: 8
         legal: no
       - address_mode: zero page
-        opcode: 0c07
+        opcode: 0x07
         cycle_count: 5
         legal: no
       - address_mode: absolute
@@ -70,7 +70,7 @@ instructions:
   - name: TOP
     variations:
       - address_mode: absolute
-        opcode: 0c0C
+        opcode: 0x0C
         cycle_count: 4
         legal: no
 
