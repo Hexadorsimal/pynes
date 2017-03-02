@@ -1,7 +1,6 @@
 import yaml
 from src.counter import Counter
 from src.processor import Processor
-from src.register import Register
 from src.flagregister import FlagRegister, StatusFlag
 from src.instruction import Instruction
 from src.addressmode import AddressMode
@@ -21,9 +20,13 @@ with open('6502.yaml', 'r') as stream:
         else:
             registers.append(Counter(**register_dict))
 
-instructions = [
-    Instruction(0, AddressMode.accumulator, "ADC", "Add memory to accumulator with carry", True)
-]
+instructions = []
+
+with open('instructions.yaml') as stream:
+    yaml_data = yaml.load(stream)
+    for instruction_dict in yaml_data["instructions"]:
+        for variation_dict in instruction_dict["variations"]:
+            instructions.append(Instruction(name=instruction_dict["name"], **variation_dict))
 
 processor = Processor(registers, instructions)
 

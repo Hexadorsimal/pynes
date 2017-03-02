@@ -1,10 +1,11 @@
 class Instruction:
-    def __init__(self, opcode, address_mode, name, description, is_legal):
+    def __init__(self, opcode, address_mode, name, cycle_count, description=None, legal=True):
         self.opcode = opcode
         self.address_mode = address_mode
         self.name = name
         self.description = description
-        self.is_legal = is_legal
+        self.cycle_count = cycle_count
+        self.legal = legal
 
     def __repr__(self):
-        return "<Instruction {op} {name} {am}>".format(op=self.opcode, name=self.name, am=self.address_mode.value)
+        return "<Instruction {op} {name} {am}>".format(op=self.opcode, name=self.name, am=self.address_mode)

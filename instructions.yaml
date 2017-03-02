@@ -1,0 +1,76 @@
+---
+instructions:
+  - name: AAC
+    variations:
+      - address_mode: immediate
+        opcode: 0x0B
+        cycle_count: 2
+        legal: no
+  - name: ASL
+    variations:
+      - address_mode: zero page
+        opcode: 0x06
+        cycle_count: 3
+      - address_mode: accumulator
+        opcode: 0x0A
+        cycle_count: 2
+      - address_mode: absolute
+        opcode: 0x0E
+        cycle_count: 4
+  - name: BRK
+    variations:
+      - address_mode: implied
+        opcode: 0x00
+        cycle_count: 7
+  - name: DOP
+    variations:
+      - address_mode: zero page
+        opcode: 0x04
+        cycle_count: 3
+        legal: no
+  - name: KIL
+    variations:
+      - address_mode: implied
+        opcode: 0x02
+        cycle_count: 0
+        legal: no
+  - name: ORA
+    variations:
+      - address_mode: indexed indirect x
+        opcode: 0x01
+        cycle_count: 6
+      - address_mode: zero page
+        opcode: 0x05
+        cycle_count: 3
+      - address_mode: immediate
+        opcode: 0x09
+        cycle_count: 2
+      - address_mode: absolute
+        opcode: 0x0D
+        cycle_count: 4
+  - name: PHP
+    variations:
+      - address_mode: implied
+        opcode: 0x08
+        cycle_count: 3
+  - name: SLO
+    variations:
+      - address_mode: indexed indirect x
+        opcode: 0x03
+        cycle_count: 8
+        legal: no
+      - address_mode: zero page
+        opcode: 0c07
+        cycle_count: 5
+        legal: no
+      - address_mode: absolute
+        opcode: 0x0F
+        cycle_count: 6
+        legal: no
+  - name: TOP
+    variations:
+      - address_mode: absolute
+        opcode: 0c0C
+        cycle_count: 4
+        legal: no
+
