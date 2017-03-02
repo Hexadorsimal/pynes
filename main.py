@@ -7,21 +7,19 @@ from src.instruction import Instruction
 from src.addressmode import AddressMode
 
 
-flags = []
+registers = []
 
-with open('flags.yaml', 'r') as stream:
+with open('6502.yaml', 'r') as stream:
     yaml_data = yaml.load(stream)
-    for flag_dict in yaml_data["flags"]:
-        flags.append(StatusFlag(**flag_dict))
-
-registers = [
-    Counter("PC", "Program Counter", 16),
-    Register("A", "Accumulator", 8),
-    Register("X", "X Index", 8),
-    Register("Y", "Y Index", 8),
-    Counter("SP", "Stack Pointer", 8),
-    FlagRegister(flags, "P", "Processor Status", 8),
-]
+    for register_dict in yaml_data["registers"]:
+        if "flags" in register_dict:
+            flags = []
+            for flag_dict in register_dict["flags"]:
+                flags.append(StatusFlag(**flag_dict))
+            register_dict["flags"] = flags
+            registers.append(FlagRegister(**register_dict))
+        else:
+            registers.append(Counter(**register_dict))
 
 instructions = [
     Instruction(0, AddressMode.accumulator, "ADC", "Add memory to accumulator with carry", True)
