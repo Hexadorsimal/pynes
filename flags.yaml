@@ -1,0 +1,34 @@
+---
+flags:
+  - letter: C
+    name: Carry
+    mask: 0x01
+    description: Set if the add produced a carry, or if the subtraction produced a borrow.  Also holds bits after a logical shift.
+  - letter: Z
+    name: Zero
+    mask: 0x02
+    description: Set if the result of the last operation (load/inc/dec/add/sub) was zero.
+  - letter: I
+    name: Interrupt
+    mask: 0x04
+    description: Set if maskable interrupts are disabled.
+  - letter: D
+    name: Decimal
+    mask: 0x08
+    description: Set if decimal mode active.(NES unused)
+  - letter: B
+    name: Breakpoint
+    mask: 0x10
+    description: Set if an interrupt caused by a BRK, reset if caused by an external interrupt.
+  - letter: R
+    name: Reserved
+    mask: 0x20
+    description: Should always be 1
+  - letter: O
+    name: Overflow
+    mask: 0x40
+    description: Set if the addition of two like-signed numbers or the subtraction of two unlike-signed numbers produces a result greater than +127 or less than -128.
+  - letter: S
+    name: Sign
+    mask: 0x80
+    description: Set if bit 7 of the Accumulator is set
