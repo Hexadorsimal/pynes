@@ -1,28 +1,25 @@
 ---
 registers:
-  - name: PC
-    description: Program Counter
-    bit_count: 16
+  - name: PCL
+    description: Program Counter Low
+
+  - name: PCH
+    description: Program Counter High
 
   - name: A
     description: Accumulator
-    bit_count: 8
 
   - name: X
-    description: X Index
-    bit_count: 8
+    description: Index Register X
 
   - name: Y
-    description: Y Index
-    bit_count: 8
+    description: Index Register Y
 
   - name: SP
     description: Stack Pointer
-    bit_count: 8
 
   - name: P
-    description: Processor Status
-    bit_count: 8
+    description: Processor Status Register
     flags:
       - letter: C
         name: Carry
@@ -63,3 +60,50 @@ registers:
         name: Sign
         mask: 0x80
         description: Set if bit 7 of the Accumulator is set
+
+  - name: ABL
+    description: Address Bus Buffer Low
+
+  - name: ABH
+    description: Address Bus Buffer High
+
+  - name: DB
+    description: Data Bus Buffer
+
+  - name: DL
+    description: Input Data Latch
+
+  - name: ALU
+    description: Arithmetic Logic Unit
+
+  - name: IR
+    description: Instruction Register
+
+lines:
+  - name: R/W
+    description: Read/Write
+
+  - name: DBE
+    description: Data Bus Enable
+
+  - name: BA
+    description: Bus Available
+
+  - name: RDY
+    description: Ready
+
+  - name: NMI
+    description: Non-Maskable Interrupt
+
+  - name: IRQ
+    description: Interrupt Request
+
+  - name: RES
+    description: Reset
+
+  - name: SYNC
+    description: Signal
+
+  - name: S.O.
+    description: Set Overflow
+

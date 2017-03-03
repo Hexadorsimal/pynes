@@ -3,10 +3,11 @@ from src.counter import Counter
 from src.processor import Processor
 from src.flagregister import FlagRegister, StatusFlag
 from src.instruction import Instruction
-from src.addressmode import AddressMode
+from src.line import Line
 
 
 registers = []
+lines = []
 
 with open('6502.yaml', 'r') as stream:
     yaml_data = yaml.load(stream)
@@ -20,6 +21,9 @@ with open('6502.yaml', 'r') as stream:
         else:
             registers.append(Counter(**register_dict))
 
+    for line_dict in yaml_data["lines"]:
+        lines.append(Line(**line_dict))
+
 instructions = []
 
 with open('instructions.yaml') as stream:
@@ -28,10 +32,14 @@ with open('instructions.yaml') as stream:
         for variation_dict in instruction_dict["variations"]:
             instructions.append(Instruction(name=instruction_dict["name"], **variation_dict))
 
-processor = Processor(registers, instructions)
 
-for (name, register) in processor.registers.items():
+processor = Processor(registers, lines, instructions)
+
+for register in processor.registers.values():
     print(register)
+
+for line in processor.lines.values():
+    print(line)
 
 for (opcode, instruction) in processor.instructions.items():
     print(instruction)
