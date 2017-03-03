@@ -1,0 +1,46 @@
+---
+microinstructions:
+  - name: Fetch Instruction
+    operation: DB -> IR
+
+  - name: Clear Interrupt Flag
+    operation: 0 -> I
+
+  - name: Clear Carry Flag
+    operation: 0 -> C
+
+  - name: Clear Overflow Flag
+    operation: 0 -> V
+
+  - name: Clear Zero Flag
+    operation: 0 -> Z
+
+  - name: Clear Negative Flag
+    operation: 0 -> N
+
+  - name: Clear Decimal Flag
+    operation: 0 -> D
+
+  - name: Clear Break Flag
+    operation: 0 -> B
+
+  - name: Set Interrupt Flag
+    operation: 1 -> I
+
+  - name: Set Carry Flag
+    operation: 1 -> C
+
+  - name: Set Overflow Flag
+    operation: 1 -> V
+
+  - name: Set Zero Flag
+    operation: 1 -> Z
+
+  - name: Set Negative Flag
+    operation: 1 -> N
+
+  - name: Set Decimal Flag
+    operation: 1 -> D
+
+  - name: Set Break Flag
+    operation: 1 -> B
