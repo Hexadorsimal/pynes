@@ -15,7 +15,7 @@ registers:
   - name: Y
     description: Index Register Y
 
-  - name: SP
+  - name: S
     description: Stack Pointer
 
   - name: P
@@ -61,31 +61,59 @@ registers:
         mask: 0x80
         description: Set if bit 7 of the Accumulator is set
 
-  - name: ADL
-    description: Address Low
-
-  - name: ADH
-    description: Address High
-
-  - name: ABL
-    description: Address Bus Buffer Low
-
-  - name: ABH
-    description: Address Bus Buffer High
-
-  - name: DB
-    description: Data Bus Buffer
+  - name: ALU
+    description: Arithmetic Logic Unit
 
   - name: DL
     description: Input Data Latch
 
-  - name: ALU
-    description: Arithmetic Logic Unit
-
   - name: IR
     description: Instruction Register
 
-lines:
+  - name: ADL
+    description: Internal Address Low
+  - name: ADH
+    description: Internal Address High
+
+  - name: BAL
+    description: Base Address Low
+  - name: BAH
+    description: Base Address High
+
+  - name: IAL
+    description: Indirect Address Low
+  - name: IAH
+    description: Indirect Address High
+
+buses:
+  - name: AB
+    description: Address Bus
+    width: 16
+
+  - name: DB
+    description: Data Bus
+    width: 8
+
+connections:
+  - name: DB-X
+  - name: DB-Y
+  - name: DB-ALU
+  - name: DB-A
+  - name: DB-PCL
+  - name: DB-PCH
+  - name: DB-P
+  - name: ALU-A
+  - name: ALU-ADL
+  - name: PCL-ADL
+  - name: ALU-PCH
+  - name: PCH-ADH
+  - name: ADL-ABL
+  - name: ADH-ABH
+  - name: DB-M
+  - name: ABL-M
+  - name: ABH-M
+
+signals:
   - name: R/W
     description: Read/Write
 

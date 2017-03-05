@@ -1,76 +1,340 @@
 ---
-instructions:
-  - name: AAC
-    variations:
-      - address_mode: immediate
-        opcode: 0x0B
-        cycle_count: 2
-        legal: no
-  - name: ASL
-    variations:
-      - address_mode: zero page
-        opcode: 0x06
-        cycle_count: 3
-      - address_mode: accumulator
-        opcode: 0x0A
-        cycle_count: 2
-      - address_mode: absolute
-        opcode: 0x0E
-        cycle_count: 4
-  - name: BRK
-    variations:
-      - address_mode: implied
-        opcode: 0x00
-        cycle_count: 7
-  - name: DOP
-    variations:
-      - address_mode: zero page
-        opcode: 0x04
-        cycle_count: 3
-        legal: no
-  - name: KIL
-    variations:
-      - address_mode: implied
-        opcode: 0x02
-        cycle_count: 0
-        legal: no
-  - name: ORA
-    variations:
-      - address_mode: indexed indirect x
-        opcode: 0x01
-        cycle_count: 6
-      - address_mode: zero page
-        opcode: 0x05
-        cycle_count: 3
-      - address_mode: immediate
-        opcode: 0x09
-        cycle_count: 2
-      - address_mode: absolute
-        opcode: 0x0D
-        cycle_count: 4
-  - name: PHP
-    variations:
-      - address_mode: implied
-        opcode: 0x08
-        cycle_count: 3
-  - name: SLO
-    variations:
-      - address_mode: indexed indirect x
-        opcode: 0x03
-        cycle_count: 8
-        legal: no
-      - address_mode: zero page
-        opcode: 0x07
-        cycle_count: 5
-        legal: no
-      - address_mode: absolute
-        opcode: 0x0F
-        cycle_count: 6
-        legal: no
-  - name: TOP
-    variations:
-      - address_mode: absolute
-        opcode: 0x0C
-        cycle_count: 4
-        legal: no
+categories:
+  - single byte instructions:
+    - ASL
+    - CLC
+    - CLD
+    - CLI
+    - CLV
+    - DEX
+    - DEY
+    - INX
+    - INY
+    - LSR
+    - NOP
+    - ROL
+    - SEC
+    - SED
+    - SEI
+    - TAX
+    - TAY
+    - TSX
+    - TXA
+    - TXS
+    - TYA
+  - internal execution on memory data:
+    - ADC
+    - AND
+    - BIT
+    - CMP
+    - CPX
+    - CPY
+    - EOR
+    - LDA
+    - LDX
+    - LDY
+    - ORA
+    - SBC
+  - store operations:
+    - STA
+    - STX
+    - STY
+  - read-modify-write operations:
+    - ASL
+    - DEC
+    - INC
+    - LSR
+    - ROL
+    - ROR
+  - miscellaneous operations:
+    - BCC
+    - BCS
+    - BEQ
+    - BMI
+    - BNE
+    - BPL
+    - BRK
+    - BVC
+    - BVS
+    - JMP
+    - JSR
+    - PHA
+    - PHP
+    - PLA
+    - PLP
+    - RTI
+    - RTS
 
+addressing_modes:
+  - name: all
+    operations:
+      - t0:
+        - AB: PC
+        - DB: IR
+        - PC <- PC + 1
+
+  - name: implied
+    operations:
+      - t1: nop
+
+  - name: accumulator
+    operations:
+      - t1: nop
+
+  - name: immediate
+    operations:
+      - t1:
+        - AB: PC
+        - DB: DL
+        - PC <- PC + 1
+
+  - name: absolute
+    operations:
+      - t1:
+        - AB: PC
+        - DB: ADL
+        - PC <- PC + 1
+      - t2:
+        - AB: PC
+        - DB: ADH
+        - PC <- PC + 1
+      - t3:
+        - AB: ADH, ADL
+        - DB: DL
+
+  - name: zero page
+    operations:
+      - t1:
+        - AB: PC
+        - DB: ADL
+        - PC <- PC + 1
+      - t2:
+        - AB: 00, ADL
+        - DB: DL
+
+  - name: relative
+    operations:
+
+  - name: zero page indexed x
+    operations:
+      - t1: PC + 1 -> AB, DB -> BAL
+      - t2: BAL -> ADL, 0 -> ADH, DB -> DL (discarded)
+      - t3: BAL + X -> ADL, DB -> ADL
+      - t5: DB -> DL
+
+  - name: zero page indexed y
+    operations:
+      - t1: PC + 1 -> AB, DB -> BAL
+      - t2: BAL -> ADL, 0 -> ADH, DB -> DL (discarded)
+      - t3: BAL + Y -> ADL, DB -> ADL
+      - t5: DB -> DL
+
+  - name: absolute indexed x
+    operations:
+      - t1: PC + 1 -> AB, DB -> BAL
+      - t2: PC + 2 -> AB, DB -> BAH
+      - t3: BAL + X -> ADL, BAH + C -> ADH, DB -> DL
+      - t4*: BAL + X -> ADL, BAH + 1 -> ADH, DB -> DL
+        condition: C = 1
+
+  - name: absolute indexed y
+    operations:
+      - t1: PC + 1 -> AB, DB -> BAL
+      - t2: PC + 2 -> AB, DB -> BAH
+      - t3: BAL + Y -> ADL, BAH + C -> ADH, DB -> DL
+      - t4*: BAL + Y -> ADL, BAH + 1 -> ADH, DB -> DL
+        condition: C = 1
+
+  - name: indexed x indirect
+    operations:
+      - t1: PC + 1 -> AB, DB -> BAL
+      - t2: BAL -> ADL, 0 -> ADH, DB -> DL (discarded)
+      - t3: BAL + X -> ADL, DB -> ADL
+      - t4: BAL + X + 1 -> ADL, DB -> ADH
+      - t5: ADH|ADL -> AB, DB -> DL
+
+  - name: indirect indexed y
+    operations:
+      - t1: PC + 1 -> AB, DB -> IAL
+      - t2: IAL -> ADL, 0 -> ADH, DB -> BAL
+      - t3: IAL + 1 -> ADL, DB -> BAH
+      - t4: BAL + Y -> ADL, BAH + C -> ADH, DB -> DL
+      - t5*: BAL + Y -> ADL, BAH + 1 -> ADH, DB -> DL
+        condition: C = 1
+
+  - name: absolute indirect
+
+instructions:
+  - name: ADC
+    description: Add Memory to Accumulator with Carry
+    operation: A + M + C -> A
+  - name: AND
+    description: AND Memory with Accumulator
+    operation: A and M -> A
+  - name: ASL
+    descriptin: Shift left One Bit (Memory or Accumulator)
+    variations:
+      - addressing_mode: accumulator
+        operations:
+        - t1: shl A
+
+  - name: BCC
+    description: Branch on Carry Clear
+    operation: Branch on C = 0
+  - name: BCS
+    description: Branch on Carry Set
+    operation: Branch on C = 1
+  - name: BEQ
+    description: Branch on Result Zero
+    operation: Branch on Z = 1
+  - name: BIT
+    description: Test Bits in Memory with Accumulator
+    operation: A and M
+  - name: BMI
+    description: Branch on Result Minus
+    operation: Branch on N = 1
+  - name: BNE
+    description: Branch on Result not Zero
+    operation: Branch on Z = 0
+  - name: BPL
+    description: Branch on Result Plus
+    operation: Branch on N = 0
+  - name: BRK
+    description: Force Break
+  - name: BVC
+    description: Branch on Overflow Clear
+    operation: Branch on V = 0
+  - name: BVS
+    description: Branch on Overflow Set
+    operation: Branch on V = 1
+
+  - name: CLC
+    description: Clear Carry Flag
+    operation: 0 -> C
+  - name: CLD
+    description: Clear Decimal Mode
+    operation: 0 -> D
+  - name: CLI
+    description: Clear Interrupt Disable Bit
+    operation: 0 -> I
+  - name: CLV
+    description: Clear Overflow Flag
+    operation: 0 -> V
+  - name: CMP
+    description: Compare Memory and Accumulator
+    operation: A - M
+  - name: CPX
+    description: Compare Memory and Index X
+    operation: X - M
+  - name: CPY
+    description: Compare Memory and Index Y
+    operation: Y - M
+
+  - name: DEC
+    description: Decrement Memory  by One
+    operation: M - 1 -> M
+  - name: DEX
+    description: Decrement Index X by One
+    operation: X - 1 -> X
+  - name: DEY
+    description: Decrement Index Y by One
+    operation: Y - 1 -> Y
+
+  - name: EOR
+    description: Exclusive OR Memory with Accumulator
+    operation: A xor M -> A
+
+  - name: INC
+    description: Increment Memory by One
+    operation: M + 1 -> M
+  - name: INX
+    description: Increment Index X by One
+    operation: X + 1 -> X
+  - name: INY
+    description: Increment Index Y by One
+    operation: Y + 1 -> Y
+
+  - name: JMP
+    description: Jump to New Location
+  - name: JSR
+    description: Jump to New Location Saving Return Address
+
+  - name: LDA
+    description: Load Accumulator with Memory
+    operation: M -> A
+  - name: LDX
+    description: Load Index X with Memory
+    operation: M -> X
+  - name: LDY
+    description: Load Index Y with Memory
+    operation: M -> Y
+  - name: LSR
+    description: Shift One Bit Right (Memory or Accumulator)
+
+  - name: NOP
+    description: No Operation
+
+  - name: ORA
+    description: OR Memory with Accumulator
+    operation: A or M -> A
+
+  - name: PHA
+    description: Push Accumulator on Stack
+    operation: A -> M[S], S - 1 -> S
+  - name: PHP
+    description: Push Processor Status on Stack
+    operation: P -> M[S], S - 1 -> S
+  - name: PLA
+    description: Pull Accumulator from Stack
+    operation: S + 1 -> S, M[S] -> A
+  - name: PLP
+    description: Pull Processor Status from Stack
+    operation: S + 1 -> S, M[S] -> P
+
+  - name: ROL
+    description: Rotate One Bit Left (Memory or Accumulator)
+  - name: RTI
+    description: Return from Interrupt
+  - name: RTS
+    description: Return from Subroutine
+
+  - name: SBC
+    description: Subtract Memory from Accumulator with Borrow
+    operation: A - M - !C -> A
+  - name: SEC
+    description: Set Carry Flag
+    operation: 1 -> C
+  - name: SED
+    description: Set Decimal Mode
+    operation: 1 -> D
+  - name: SEI
+    description: Set Interrupt Disable Status
+    operation: 1 -> I
+  - name: STA
+    description: Store Accumulator in Memory
+    operation: A -> M
+  - name: STX
+    description: Store Index X in Memory
+    operation: X -> M
+  - name: STY
+    description: Store Index Y in Memory
+    operation: Y -> M
+
+  - name: TAX
+    description: Transfer Accumulator to Index X
+    operation: A -> X
+  - name: TAY
+    description: Transfer Accumulator to Index Y
+    operation: A -> Y
+  - name: TSX
+    description: Transfer Stack Pointer to Index X
+    operation: S -> X
+  - name: TXA
+    description: Transfer Index X to Accumulator
+    operation: X -> A
+  - name: TXS
+    description: Transfer Index X to Stack Pointer
+    operation: X -> S
+  - name: TYA
+    description: Transfer Index Y to Accumulator
+    operation: Y -> A
