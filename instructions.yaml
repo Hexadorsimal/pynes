@@ -115,35 +115,68 @@ addressing_modes:
   - name: relative
     operations:
 
-  - name: zero page indexed x
-    operations:
-      - t1: PC + 1 -> AB, DB -> BAL
-      - t2: BAL -> ADL, 0 -> ADH, DB -> DL (discarded)
-      - t3: BAL + X -> ADL, DB -> ADL
-      - t5: DB -> DL
-
-  - name: zero page indexed y
-    operations:
-      - t1: PC + 1 -> AB, DB -> BAL
-      - t2: BAL -> ADL, 0 -> ADH, DB -> DL (discarded)
-      - t3: BAL + Y -> ADL, DB -> ADL
-      - t5: DB -> DL
-
   - name: absolute indexed x
     operations:
-      - t1: PC + 1 -> AB, DB -> BAL
-      - t2: PC + 2 -> AB, DB -> BAH
-      - t3: BAL + X -> ADL, BAH + C -> ADH, DB -> DL
-      - t4*: BAL + X -> ADL, BAH + 1 -> ADH, DB -> DL
-        condition: C = 1
+      - t1:
+        - AB: PC
+        - DB: BAL
+        - PC <- PC + 1
+      - t2:
+        - AB: PC
+        - DB: BAH
+        - PC <- PC + 1
+      - t3:
+        - AB: BAH, BAL + X
+        - DB: DL
+      - t4*:
+        - AB: BAH + 1, BAL + X
+        - DB: DL
+        - when: C = 1
 
   - name: absolute indexed y
     operations:
-      - t1: PC + 1 -> AB, DB -> BAL
-      - t2: PC + 2 -> AB, DB -> BAH
-      - t3: BAL + Y -> ADL, BAH + C -> ADH, DB -> DL
-      - t4*: BAL + Y -> ADL, BAH + 1 -> ADH, DB -> DL
-        condition: C = 1
+      - t1:
+        - AB: PC
+        - DB: BAL
+        - PC <- PC + 1
+      - t2:
+        - AB: PC
+        - DB: BAH
+        - PC <- PC + 1
+      - t3:
+        - AB: BAH, BAL + Y
+        - DB: DL
+      - t4*:
+        - AB: BAH + 1, BAL + Y
+        - DB: DL
+        - when: C = 1
+
+  - name: zero page indexed x
+    operations:
+      - t1:
+        - AB: PC
+        - DB: BAL
+        - PC <- PC + 1
+      - t2:
+        - AB: 00, BAL
+        - DB: DL (discarded)
+      - t3:
+        - AB: 00, BAL + X
+        - DB: DL
+
+  - name: zero page indexed y
+    operations:
+      operations:
+      - t1:
+        - AB: PC
+        - DB: BAL
+        - PC <- PC + 1
+      - t2:
+        - AB: 00, BAL
+        - DB: DL (discarded)
+      - t3:
+        - AB: 00, BAL + Y
+        - DB: DL
 
   - name: indexed x indirect
     operations:
