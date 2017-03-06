@@ -218,6 +218,23 @@ addressing_modes:
         - when: C = 1 or read-modify-write or STA
 
   - name: absolute indirect
+    operations:
+      - t1:
+        - AB: PC
+        - DB: IAL
+        - PC <- PC + 1
+      - t2:
+        - AB: PC
+        - DB: IAH
+      - t3:
+        - AB: IAH, IAL
+        - DB: ADL
+      - t4:
+        - AB: IAH, IAL + 1
+        - DB: ADH
+      - t5:
+        - AB: ADH, ADL
+        - DB: DL
 
 instructions:
   - name: ADC
