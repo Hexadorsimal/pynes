@@ -114,6 +114,12 @@ addressing_modes:
 
   - name: relative
     operations:
+      - t1:
+        - AB: PC
+        - DB: DL
+        - PC <- PC + 1
+      - t2:
+        - PC <- PC + DL
 
   - name: absolute indexed x
     operations:
