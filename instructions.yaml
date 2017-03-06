@@ -180,20 +180,42 @@ addressing_modes:
 
   - name: indexed x indirect
     operations:
-      - t1: PC + 1 -> AB, DB -> BAL
-      - t2: BAL -> ADL, 0 -> ADH, DB -> DL (discarded)
-      - t3: BAL + X -> ADL, DB -> ADL
-      - t4: BAL + X + 1 -> ADL, DB -> ADH
-      - t5: ADH|ADL -> AB, DB -> DL
+      - t1:
+        - AB: PC
+        - DB: BAL
+        - PC <- PC + 1
+      - t2:
+        - AB: 00, BAL
+        - DB: DL (discarded)
+      - t3:
+        - AB: 00, BAL + X
+        - DB: ADL
+      - t4:
+        - AB: 00, BAL + X + 1
+        - DB: ADH
+      - t5:
+        - AB: ADH, ADL
+        - DB: DL
 
   - name: indirect indexed y
     operations:
-      - t1: PC + 1 -> AB, DB -> IAL
-      - t2: IAL -> ADL, 0 -> ADH, DB -> BAL
-      - t3: IAL + 1 -> ADL, DB -> BAH
-      - t4: BAL + Y -> ADL, BAH + C -> ADH, DB -> DL
-      - t5*: BAL + Y -> ADL, BAH + 1 -> ADH, DB -> DL
-        condition: C = 1
+      - t1:
+        - AB: PC
+        - DB: IAL
+        - PC <- PC + 1
+      - t2:
+        - AB: 00, IAL
+        - DB: BAL
+      - t3:
+        - AB: 00, IAL + 1
+        - DB: BAH
+      - t4:
+        - AB: BAH, BAL + Y
+        - DB: DL
+      - t5*:
+        - AB: BAH + 1, BAL + Y
+        - DB: DL
+        - when: C = 1 or read-modify-write or STA
 
   - name: absolute indirect
 
