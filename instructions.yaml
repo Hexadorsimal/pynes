@@ -121,7 +121,7 @@ addressing_modes:
       - name: t2
         PC: PC + DL
 
-  - name: absolute indexed x
+  - name: absolute x
     cycles:
       - name: t1
         AB: PC
@@ -139,7 +139,7 @@ addressing_modes:
         DB: DL
         when: C = 1
 
-  - name: absolute indexed y
+  - name: absolute y
     cycles:
       - name: t1
         AB: PC
@@ -157,7 +157,7 @@ addressing_modes:
         DB: DL
         when: C = 1
 
-  - name: zero page indexed x
+  - name: zero page x
     cycles:
       - name: t1
         AB: PC
@@ -170,7 +170,7 @@ addressing_modes:
         AB: 00, BAL + X
         DB: DL
 
-  - name: zero page indexed y
+  - name: zero page y
     cycles:
       - name: t1
         AB: PC
@@ -183,7 +183,7 @@ addressing_modes:
         AB: 00, BAL + Y
         DB: DL
 
-  - name: indexed x indirect
+  - name: indexed indirect
     cycles:
       - name: t1
         AB: PC
@@ -202,7 +202,7 @@ addressing_modes:
         AB: ADH, ADL
         DB: DL
 
-  - name: indirect indexed y
+  - name: indirect indexed
     cycles:
       - name: t1
         AB: PC
@@ -241,13 +241,114 @@ addressing_modes:
         AB: ADH, ADL
         DB: DL
 
+groups:
+  - name: 1
+    addressing_modes:
+      - immediate
+      - absolute
+      - zero page
+      - absolute x
+      - absolute y
+      - zero page x
+      - indexed indirect
+      - indirect indexed
+  - name: single-byte
+    addressing_modes:
+      - implied
+
 instructions:
+  - name: LDA
+    description: Load Accumulator with Memory
+    operations:
+     - A: M
+    group: 1
+
+  - name: STA
+    description: Store Accumulator in Memory
+    operations:
+     - M: A
+    group: 1
+
   - name: ADC
     description: Add Memory to Accumulator with Carry
-    operation: A + M + C -> A
+    operations:
+      - A: A + M + C
+    group: 1
+
+  - name: SBC
+    description: Subtract Memory from Accumulator with Borrow
+    operations:
+      - A: A - M - !C
+    group: 1
+
   - name: AND
     description: AND Memory with Accumulator
-    operation: A and M -> A
+    operations:
+      - A: A and M
+    group: 1
+
+  - name: ORA
+    description: OR Memory with Accumulator
+    operations:
+      - A: A or M
+    group: 1
+
+  - name: EOR
+    description: Exclusive OR Memory with Accumulator
+    operations:
+      - A: A xor M
+    group: 1
+
+  - name: SEC
+    description: Set Carry Flag
+    operations:
+      - C: 1
+    group: single-byte
+
+  - name: CLC
+    description: Clear Carry Flag
+    operations:
+      - C: 0
+    group: single-byte
+
+  - name: SEI
+    description: Set Interrupt Disable Status
+    operations:
+      - I: 1
+    group: single-byte
+
+  - name: CLI
+    description: Clear Interrupt Disable Bit
+    operations:
+      - I: 0
+    group: single-byte
+
+  - name: SED
+    description: Set Decimal Mode
+    operations:
+      - D: 1
+    group: single-byte
+
+  - name: CLD
+    description: Clear Decimal Mode
+    operations:
+      - D: 0
+    group: single-byte
+
+  - name: CLV
+    description: Clear Overflow Flag
+    operations:
+      - V: 0
+    group: single-byte
+
+
+  - name: LDX
+    description: Load Index X with Memory
+    operation: M -> X
+  - name: LDY
+    description: Load Index Y with Memory
+    operation: M -> Y
+
   - name: ASL
     descriptin: Shift left One Bit (Memory or Accumulator)
     variations:
@@ -285,18 +386,6 @@ instructions:
     description: Branch on Overflow Set
     operation: Branch on V = 1
 
-  - name: CLC
-    description: Clear Carry Flag
-    operation: 0 -> C
-  - name: CLD
-    description: Clear Decimal Mode
-    operation: 0 -> D
-  - name: CLI
-    description: Clear Interrupt Disable Bit
-    operation: 0 -> I
-  - name: CLV
-    description: Clear Overflow Flag
-    operation: 0 -> V
   - name: CMP
     description: Compare Memory and Accumulator
     operation: A - M
@@ -317,10 +406,6 @@ instructions:
     description: Decrement Index Y by One
     operation: Y - 1 -> Y
 
-  - name: EOR
-    description: Exclusive OR Memory with Accumulator
-    operation: A xor M -> A
-
   - name: INC
     description: Increment Memory by One
     operation: M + 1 -> M
@@ -336,24 +421,11 @@ instructions:
   - name: JSR
     description: Jump to New Location Saving Return Address
 
-  - name: LDA
-    description: Load Accumulator with Memory
-    operation: M -> A
-  - name: LDX
-    description: Load Index X with Memory
-    operation: M -> X
-  - name: LDY
-    description: Load Index Y with Memory
-    operation: M -> Y
   - name: LSR
     description: Shift One Bit Right (Memory or Accumulator)
 
   - name: NOP
     description: No Operation
-
-  - name: ORA
-    description: OR Memory with Accumulator
-    operation: A or M -> A
 
   - name: PHA
     description: Push Accumulator on Stack
@@ -375,21 +447,6 @@ instructions:
   - name: RTS
     description: Return from Subroutine
 
-  - name: SBC
-    description: Subtract Memory from Accumulator with Borrow
-    operation: A - M - !C -> A
-  - name: SEC
-    description: Set Carry Flag
-    operation: 1 -> C
-  - name: SED
-    description: Set Decimal Mode
-    operation: 1 -> D
-  - name: SEI
-    description: Set Interrupt Disable Status
-    operation: 1 -> I
-  - name: STA
-    description: Store Accumulator in Memory
-    operation: A -> M
   - name: STX
     description: Store Index X in Memory
     operation: X -> M

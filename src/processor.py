@@ -1,12 +1,12 @@
 class Processor:
-    def __init__(self, registers, lines, instructions):
+    def __init__(self, registers, connections, instructions):
         self.registers = {}
         for register in registers:
             self.registers[register.name] = register
 
-        self.lines = {}
-        for line in lines:
-            self.lines[line.name] = line
+        self.connections = {}
+        for connection in connections:
+            self.connections[connection.name] = connection
 
         self.instructions = {}
         for instruction in instructions:

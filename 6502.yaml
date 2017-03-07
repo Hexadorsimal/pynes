@@ -8,18 +8,22 @@ registers:
 
   - name: A
     description: Accumulator
+    type: accumulator
 
   - name: X
     description: Index Register X
+    type: index
 
   - name: Y
     description: Index Register Y
+    type: index
 
   - name: S
     description: Stack Pointer
 
   - name: P
     description: Processor Status Register
+    type: flags
     flags:
       - letter: C
         name: Carry
@@ -61,23 +65,6 @@ registers:
         mask: 0x80
         description: Set if bit 7 of the Accumulator is set
 
-  - name: ALU
-    description: Arithmetic Logic Unit
-    inputs:
-      - register a
-      - register b
-    outputs:
-      - output register
-    operations:
-      - add
-      - or
-      - xor
-      - and
-      - shift right
-    internal:
-      - carry out
-      - overflow
-
   - name: DL
     description: Input Data Latch
 
@@ -107,6 +94,24 @@ buses:
   - name: DB
     description: Data Bus
     width: 8
+
+components:
+  - name: ALU
+    description: Arithmetic Logic Unit
+    inputs:
+      - register a
+      - register b
+    outputs:
+      - output register
+    operations:
+      - add
+      - or
+      - xor
+      - and
+      - shift right
+    internal:
+      - carry out
+      - overflow
 
 connections:
   - name: DB-X
