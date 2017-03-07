@@ -255,6 +255,17 @@ groups:
   - name: single-byte
     addressing_modes:
       - implied
+  - name: jump
+    addressing_modes:
+      - absolute
+      - absolute indirect
+  - name: branch
+    addressing_modes:
+      - relative
+  - name: test
+    addressing_modes:
+      - zero page
+      - absolute
 
 instructions:
   - name: LDA
@@ -341,13 +352,198 @@ instructions:
       - V: 0
     group: single-byte
 
+  - name: JMP
+    description: Jump to New Location
+    operations:
+      - PCL: ADL
+      - PCH: ADH
+    group: jump
+
+  - name: BMI
+    description: Branch on Result Minus
+    operations:
+      - if: N = 1
+        PC: PC + DL
+    group: branch
+
+  - name: BPL
+    description: Branch on Result Plus
+    operations:
+      - if: N = 0
+        PC: PC + DL
+    group: branch
+
+  - name: BCC
+    description: Branch on Carry Clear
+    operations:
+      - if: C = 0
+        PC: PC + DL
+    group: branch
+
+  - name: BCS
+    description: Branch on Carry Set
+    operations:
+      - if: C = 1
+        PC: PC + DL
+    group: branch
+
+  - name: BEQ
+    description: Branch on Result Zero
+    operations:
+      - if: Z = 1
+        PC: PC + DL
+    group: branch
+
+  - name: BNE
+    description: Branch on Result not Zero
+    operations:
+      - if: Z = 0
+        PC: PC + DL
+    group: branch
+
+  - name: BVS
+    description: Branch on Overflow Set
+    operations:
+      - if: V = 1
+        PC: PC + DL
+    group: branch
+
+  - name: BVC
+    description: Branch on Overflow Clear
+    operations:
+      - if: V = 0
+        PC: PC + DL
+    group: branch
+
+  - name: CMP
+    description: Compare Memory and Accumulator
+    operations:
+      - A - M
+    group: 1
+
+  - name: BIT
+    description: Test Bits in Memory with Accumulator
+    operations:
+      - A and M
+    group: test
 
   - name: LDX
     description: Load Index X with Memory
-    operation: M -> X
+    operations:
+      - X: M
+    addressing_modes:
+      - immediate
+      - absolute
+      - zero page
+      - absolute y
+      - zero page y
+
   - name: LDY
     description: Load Index Y with Memory
-    operation: M -> Y
+    operations:
+      - Y: M
+    addressing_modes:
+      - immediate
+      - absolute
+      - zero page
+      - absolute x
+      - zero page x
+
+  - name: STX
+    description: Store Index X in Memory
+    operations:
+      - M: X
+    addressing_modes:
+      - absolute
+      - zero page
+      - zero page y
+
+  - name: STY
+    description: Store Index Y in Memory
+    operations:
+      - M: Y
+    addressing_modes:
+      - absolute
+      - zero page
+      - zero page x
+
+  - name: INX
+    description: Increment Index X by One
+    operations:
+      - X: X + 1
+    addressing_modes:
+      - implied
+
+  - name: INY
+    description: Increment Index Y by One
+    operations:
+      - Y: Y + 1
+    addressing_modes:
+      - implied
+
+  - name: DEX
+    description: Decrement Index X by One
+    operations:
+      - X: X - 1
+    addressing_modes:
+      - implied
+
+  - name: DEY
+    description: Decrement Index Y by One
+    operations:
+      Y: Y - 1
+    addressing_modes:
+      - implied
+
+  - name: CPX
+    description: Compare Memory and Index X
+    operations:
+      - X - M
+    addressing_modes:
+      - immediate
+      - absolute
+      - zero page
+
+  - name: CPY
+    description: Compare Memory and Index Y
+    operations:
+      - Y - M
+    addressing_modes:
+      - immediate
+      - absolute
+      - zero page
+
+  - name: TAX
+    description: Transfer Accumulator to Index X
+    operations:
+      - X: A
+    addressing_modes:
+      - implied
+
+  - name: TXA
+    description: Transfer Index X to Accumulator
+    operations:
+      - A: X
+    addressing_modes:
+      - implied
+
+  - name: TAY
+    description: Transfer Accumulator to Index Y
+    operations:
+      - Y: A
+    addressing_modes:
+      - implied
+
+  - name: TYA
+    description: Transfer Index Y to Accumulator
+    operations:
+      - A: Y
+    addressing_modes:
+      - implied
+
+
+
+
 
   - name: ASL
     descriptin: Shift left One Bit (Memory or Accumulator)
@@ -356,68 +552,17 @@ instructions:
         operations:
         - t1: shl A
 
-  - name: BCC
-    description: Branch on Carry Clear
-    operation: Branch on C = 0
-  - name: BCS
-    description: Branch on Carry Set
-    operation: Branch on C = 1
-  - name: BEQ
-    description: Branch on Result Zero
-    operation: Branch on Z = 1
-  - name: BIT
-    description: Test Bits in Memory with Accumulator
-    operation: A and M
-  - name: BMI
-    description: Branch on Result Minus
-    operation: Branch on N = 1
-  - name: BNE
-    description: Branch on Result not Zero
-    operation: Branch on Z = 0
-  - name: BPL
-    description: Branch on Result Plus
-    operation: Branch on N = 0
   - name: BRK
     description: Force Break
-  - name: BVC
-    description: Branch on Overflow Clear
-    operation: Branch on V = 0
-  - name: BVS
-    description: Branch on Overflow Set
-    operation: Branch on V = 1
-
-  - name: CMP
-    description: Compare Memory and Accumulator
-    operation: A - M
-  - name: CPX
-    description: Compare Memory and Index X
-    operation: X - M
-  - name: CPY
-    description: Compare Memory and Index Y
-    operation: Y - M
 
   - name: DEC
     description: Decrement Memory  by One
     operation: M - 1 -> M
-  - name: DEX
-    description: Decrement Index X by One
-    operation: X - 1 -> X
-  - name: DEY
-    description: Decrement Index Y by One
-    operation: Y - 1 -> Y
 
   - name: INC
     description: Increment Memory by One
     operation: M + 1 -> M
-  - name: INX
-    description: Increment Index X by One
-    operation: X + 1 -> X
-  - name: INY
-    description: Increment Index Y by One
-    operation: Y + 1 -> Y
 
-  - name: JMP
-    description: Jump to New Location
   - name: JSR
     description: Jump to New Location Saving Return Address
 
@@ -447,28 +592,9 @@ instructions:
   - name: RTS
     description: Return from Subroutine
 
-  - name: STX
-    description: Store Index X in Memory
-    operation: X -> M
-  - name: STY
-    description: Store Index Y in Memory
-    operation: Y -> M
-
-  - name: TAX
-    description: Transfer Accumulator to Index X
-    operation: A -> X
-  - name: TAY
-    description: Transfer Accumulator to Index Y
-    operation: A -> Y
   - name: TSX
     description: Transfer Stack Pointer to Index X
     operation: S -> X
-  - name: TXA
-    description: Transfer Index X to Accumulator
-    operation: X -> A
   - name: TXS
     description: Transfer Index X to Stack Pointer
     operation: X -> S
-  - name: TYA
-    description: Transfer Index Y to Accumulator
-    operation: Y -> A
