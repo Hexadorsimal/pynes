@@ -80,6 +80,19 @@ addressing_modes:
   - name: accumulator
     cycles:
       - name: t1
+        operations:
+      - name: t2
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC
+          - shift: A
+      - name: t3
+        operations:
+          - copy:
+              src: ALU
+              dst: A
 
   - name: immediate
     cycles:
@@ -266,6 +279,14 @@ groups:
     addressing_modes:
       - zero page
       - absolute
+  - name: read-write-modify
+    addressing_modes:
+      - accumulator
+      - zero page
+      - zero page x
+      - absolute
+      - absolute x
+
 
 instructions:
   - name: LDA
@@ -541,12 +562,250 @@ instructions:
     addressing_modes:
       - implied
 
+  - name: JSR
+    description: Jump to Subroutine
+    cycles:
+      - name: t1
+        operations:
+          read:
+            AB: PCH
+            DB: ADL
+          inc: PC
+      - name: t2
+        operations:
+          nop
+      - name: t3
+        operations:
+          - write:
+              AB: 01, S
+              DB: PCH
+          - dec: S
+      - name: t4
+        operations:
+          - write:
+              AB: 01, S
+              DB: PCL
+          - dec: S
+      - name: t5
+        operations:
+          - read:
+              AB: PC
+              DB: ADH
+          - inc: PC
+      - name: t6
+        operations:
+          - read:
+              AB: ADH, ADL
+              DB: IR
+    addressing_modes:
+      - absolute
 
+  - name: RTS
+    description: Return from Subroutine
+    addressing_modes:
+      - implied
+    cycles:
+      - name: t1
+        operations:
+          - read:
+              AB: PC
+              DB: DL
+      - name: t2
+        operations:
+          - read:
+              AB: 01, S
+              DB: DL
+          - inc: S
+      - name: t3
+        operations:
+          - read:
+              AB: 01, S
+              DB: PCL
+          - inc: S
+      - name: t4
+        operations:
+          - read:
+              AB: 01, S
+              DB: PCH
+      - name: t5
+        operations:
+          - read:
+              AB: PC
+              DB: DL
+          - inc: PC
+      - name: t6
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC
 
+  - name: PHA
+    description: Push Accumulator on Stack
+    addressing_modes:
+      - implied
+    cycles:
+      - name: t1
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+      - name: t2
+        operations:
+          - write:
+              AB: 01, S
+              DB: A
+          - dec: S
+      - name: t3
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC
 
+  - name: PLA
+    description: Pull Accumulator from Stack
+    addressing_modes:
+      - implied
+    cycles:
+      - name: t1
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+      - name: t2
+        operations:
+          - read:
+              AB: 01, S
+              DB: DL
+          - inc: S
+      - name: t3
+        operations:
+          - read:
+              AB: 01, S
+              DB: A
+      - name: t4
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC
+
+  - name: TXS
+    description: Transfer Index X to Stack Pointer
+    addressing_modes:
+      - implied
+    cycles:
+      - name: t1
+        operations:
+          - copy:
+              src: X
+              dst: S
+
+  - name: TSX
+    description: Transfer Stack Pointer to Index X
+    addressing_modes:
+      - implied
+    cycles:
+      - name: t1
+        operations:
+          - copy:
+              src: S
+              dst: X
+
+  - name: PHP
+    description: Push Processor Status on Stack
+    addressing_modes:
+      - implied
+    cycles:
+      - name: t1
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+      - name: t2
+        operations:
+          - write:
+              AB: 01, S
+              DB: P
+          - dec: S
+      - name: t3
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC
+
+  - name: PLP
+    description: Pull Processor Status from Stack
+    addressing_modes:
+      - implied
+    cycles:
+      - name: t1
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+      - name: t2
+        operations:
+          - read:
+              AB: 01, S
+              DB: DL
+          - inc: S
+      - name: t3
+        operations:
+          - read:
+              AB: 01, S
+              DB: P
+      - name: t4
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC
+
+  - name: RTI
+    description: Return from Interrupt
+    addressing_modes:
+      - implied
+    cycles:
+      - name: t1
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+      - name: t2
+        operations:
+          - read:
+              AB: 01, S
+              DB: DL
+          - inc: S
+      - name: t3
+        operations:
+          - read:
+              AB: 01, S
+              DB: P
+          - inc: S
+      - name: t4
+        operations:
+          - read:
+              AB: 01, S
+              DB: PCL
+          - inc: S
+      - name: t5
+        operations:
+          - read:
+              AB: 01, S
+              DB: PCH
+      - name: t6
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC
 
   - name: ASL
-    descriptin: Shift left One Bit (Memory or Accumulator)
+    description: Shift left One Bit (Memory or Accumulator)
     variations:
       - addressing_mode: accumulator
         operations:
@@ -563,38 +822,11 @@ instructions:
     description: Increment Memory by One
     operation: M + 1 -> M
 
-  - name: JSR
-    description: Jump to New Location Saving Return Address
-
   - name: LSR
     description: Shift One Bit Right (Memory or Accumulator)
 
   - name: NOP
     description: No Operation
 
-  - name: PHA
-    description: Push Accumulator on Stack
-    operation: A -> M[S], S - 1 -> S
-  - name: PHP
-    description: Push Processor Status on Stack
-    operation: P -> M[S], S - 1 -> S
-  - name: PLA
-    description: Pull Accumulator from Stack
-    operation: S + 1 -> S, M[S] -> A
-  - name: PLP
-    description: Pull Processor Status from Stack
-    operation: S + 1 -> S, M[S] -> P
-
   - name: ROL
     description: Rotate One Bit Left (Memory or Accumulator)
-  - name: RTI
-    description: Return from Interrupt
-  - name: RTS
-    description: Return from Subroutine
-
-  - name: TSX
-    description: Transfer Stack Pointer to Index X
-    operation: S -> X
-  - name: TXS
-    description: Transfer Index X to Stack Pointer
-    operation: X -> S
