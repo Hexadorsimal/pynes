@@ -830,3 +830,6 @@ instructions:
 
   - name: ROL
     description: Rotate One Bit Left (Memory or Accumulator)
+
+  - name: ROR
+    description: Rotate One Bit Right (Memory or Accumulator)
