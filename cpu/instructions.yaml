@@ -806,21 +806,15 @@ instructions:
 
   - name: ASL
     description: Shift left One Bit (Memory or Accumulator)
-    variations:
-      - addressing_mode: accumulator
-        operations:
-        - t1: shl A
 
   - name: BRK
     description: Force Break
 
   - name: DEC
     description: Decrement Memory  by One
-    operation: M - 1 -> M
 
   - name: INC
     description: Increment Memory by One
-    operation: M + 1 -> M
 
   - name: LSR
     description: Shift One Bit Right (Memory or Accumulator)

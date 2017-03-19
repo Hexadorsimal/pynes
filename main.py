@@ -1,11 +1,11 @@
 import yaml
-from src.addressingmode import AddressingMode
-from src.connection import Connection
-from src.counter import Counter
-from src.flagregister import FlagRegister, StatusFlag
-from src.instruction import Instruction
-from src.processor import Processor
-from src.register import Register
+from cpu.addressingmode import AddressingMode
+from cpu.connection import Connection
+from cpu.counter import Counter
+from cpu.flagregister import FlagRegister, StatusFlag
+from cpu.instruction import Instruction
+from cpu.processor import Processor
+from cpu.register import Register
 
 
 registers = []
@@ -37,17 +37,13 @@ with open('instructions.yaml') as stream:
     for addressing_mode_dict in yaml_data["addressing_modes"]:
         addressing_modes.append(AddressingMode(**addressing_mode_dict))
     for instruction_dict in yaml_data["instructions"]:
-        for variation_dict in instruction_dict["variations"]:
-            instructions.append(Instruction(name=instruction_dict["name"], **variation_dict))
+        instructions.append(Instruction(**instruction_dict))
 
 
 processor = Processor(registers, connections, instructions)
 
 for register in processor.registers.values():
     print(register)
-
-for line in processor.lines.values():
-    print(line)
 
 for (opcode, instruction) in processor.instructions.items():
     print(instruction)
