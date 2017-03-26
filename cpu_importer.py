@@ -47,7 +47,7 @@ class CpuImporter:
                     for opcode in instruction_dict["opcodes"]:
                         opcode_string = str(opcode["hex"])
                         hex_code = int(opcode_string, base=16)
-                        instruction = Instruction(opcode=hex_code,
+                        instruction = Instruction(id=hex_code,
                                                   addressing_mode=opcode["mode"],
                                                   name=instruction_dict["name"],
                                                   description=instruction_dict["description"])
