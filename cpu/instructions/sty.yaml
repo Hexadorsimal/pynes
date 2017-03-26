@@ -1,0 +1,13 @@
+---
+instructions:
+  - name: STY
+    description: Store Index Y in Memory
+    operations:
+      - M: Y
+    opcodes:
+      - hex: 84
+        mode: zero page
+      - hex: 94
+        mode: zero page x
+      - hex: 8C
+        mode: absolute

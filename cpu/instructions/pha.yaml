@@ -1,0 +1,25 @@
+---
+instructions:
+  - name: PHA
+    description: Push Accumulator on Stack
+    opcodes:
+      - hex: 48
+        mode: implied
+    cycles:
+      - name: t1
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+      - name: t2
+        operations:
+          - write:
+              AB: 01, S
+              DB: A
+          - dec: S
+      - name: t3
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC

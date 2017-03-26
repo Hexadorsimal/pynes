@@ -1,0 +1,25 @@
+---
+instructions:
+  - name: PHP
+    description: Push Processor Status on Stack
+    opcodes:
+      - hex: 08
+        mode: implied
+    cycles:
+      - name: t1
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+      - name: t2
+        operations:
+          - write:
+              AB: 01, S
+              DB: P
+          - dec: S
+      - name: t3
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC

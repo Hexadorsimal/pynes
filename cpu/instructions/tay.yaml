@@ -1,0 +1,9 @@
+---
+instructions:
+  - name: TAY
+    description: Transfer Accumulator to Index Y
+    operations:
+      - Y: A
+    opcodes:
+      - hex: A8
+        mode: implied

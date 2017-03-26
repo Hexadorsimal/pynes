@@ -1,0 +1,14 @@
+---
+instructions:
+  - name: DEC
+    description: Decrement Memory  by One
+    opcodes:
+      - hex: C6
+        mode: zero page
+      - hex: D6
+        mode: zero page x
+      - hex: CE
+        mode: absolute
+      - hex: DE
+        mode: absolute x
+        

@@ -1,0 +1,11 @@
+---
+instructions:
+  - name: BVC
+    description: Branch on Overflow Clear
+    operations:
+      - if: V = 0
+        PC: PC + DL
+    group: branch
+    opcodes:
+      - hex: 50
+        mode: relative

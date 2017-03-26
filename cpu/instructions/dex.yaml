@@ -1,0 +1,9 @@
+---
+instructions:
+  - name: DEX
+    description: Decrement Index X by One
+    operations:
+      - X: X - 1
+    opcodes:
+      - hex: CA
+        mode: implied

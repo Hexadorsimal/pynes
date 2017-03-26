@@ -1,0 +1,10 @@
+---
+instructions:
+  - name: SED
+    description: Set Decimal Mode
+    operations:
+      - D: 1
+    group: single-byte
+    opcodes:
+      - hex: F8
+        mode: implied

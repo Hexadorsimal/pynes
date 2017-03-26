@@ -1,0 +1,42 @@
+---
+instructions:
+  - name: RTI
+    description: Return from Interrupt
+    opcodes:
+      - hex: 40
+        mode: implied
+    cycles:
+      - name: t1
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+      - name: t2
+        operations:
+          - read:
+              AB: 01, S
+              DB: DL
+          - inc: S
+      - name: t3
+        operations:
+          - read:
+              AB: 01, S
+              DB: P
+          - inc: S
+      - name: t4
+        operations:
+          - read:
+              AB: 01, S
+              DB: PCL
+          - inc: S
+      - name: t5
+        operations:
+          - read:
+              AB: 01, S
+              DB: PCH
+      - name: t6
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC

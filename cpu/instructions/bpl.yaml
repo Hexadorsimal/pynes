@@ -1,0 +1,11 @@
+---
+instructions:
+  - name: BPL
+    description: Branch on Result Plus
+    operations:
+      - if: N = 0
+        PC: PC + DL
+    group: branch
+    opcodes:
+      - hex: 10
+        mode: relative

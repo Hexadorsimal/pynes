@@ -1,0 +1,11 @@
+---
+instructions:
+  - name: BCC
+    description: Branch on Carry Clear
+    operations:
+      - if: C = 0
+        PC: PC + DL
+    group: branch
+    opcodes:
+      - hex: 90
+        mode: relative

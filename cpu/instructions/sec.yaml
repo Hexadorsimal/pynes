@@ -1,0 +1,10 @@
+---
+instructions:
+  - name: SEC
+    description: Set Carry Flag
+    operations:
+      - C: 1
+    group: single-byte
+    opcodes:
+      - hex: 38
+        mode: implied

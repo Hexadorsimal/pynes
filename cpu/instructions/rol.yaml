@@ -1,0 +1,16 @@
+---
+instructions:
+  - name: ROL
+    description: Rotate One Bit Left (Memory or Accumulator)
+    opcodes:
+      - hex: 2A
+        mode: accumulator
+      - hex: 26
+        mode: zero page
+      - hex: 36
+        mode: zero page x
+      - hex: 2E
+        mode: absolute
+      - hex: 3E
+        mode: absolute x
+        

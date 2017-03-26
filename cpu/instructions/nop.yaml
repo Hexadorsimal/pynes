@@ -1,0 +1,7 @@
+---
+instructions:
+  - name: NOP
+    description: No Operation
+    opcodes:
+      - hex: EA
+        mode: implied

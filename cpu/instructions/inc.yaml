@@ -1,0 +1,14 @@
+---
+instructions:
+  - name: INC
+    description: Increment Memory by One
+    opcodes:
+      - hex: E6
+        mode: zero page
+      - hex: F6
+        mode: zero page x
+      - hex: EE
+        mode: absolute
+      - hex: FE
+        mode: absolute x
+        

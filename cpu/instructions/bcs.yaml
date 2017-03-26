@@ -1,0 +1,11 @@
+---
+instructions:
+  - name: BCS
+    description: Branch on Carry Set
+    operations:
+      - if: C = 1
+        PC: PC + DL
+    group: branch
+    opcodes:
+      - hex: B0
+        mode: relative

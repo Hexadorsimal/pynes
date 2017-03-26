@@ -1,0 +1,10 @@
+---
+instructions:
+  - name: CLD
+    description: Clear Decimal Mode
+    operations:
+      - D: 0
+    group: single-byte
+    opcodes:
+      - hex: D8
+        mode: implied

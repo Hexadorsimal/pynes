@@ -1,0 +1,10 @@
+---
+instructions:
+  - name: CLV
+    description: Clear Overflow Flag
+    operations:
+      - V: 0
+    group: single-byte
+    opcodes:
+      - hex: B8
+        mode: implied

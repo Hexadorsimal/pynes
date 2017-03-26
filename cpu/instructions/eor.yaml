@@ -1,0 +1,24 @@
+---
+instructions:
+  - name: EOR
+    description: Exclusive OR Memory with Accumulator
+    operations:
+      - A: A xor M
+    group: 1
+    opcodes:
+      - hex: 49
+        mode: immediate
+      - hex: 45
+        mode: zero page
+      - hex: 55
+        mode: zero page x
+      - hex: 4D
+        mode: absolute
+      - hex: 5D
+        mode: absolute x
+      - hex: 59
+        mode: absolute y
+      - hex: 41
+        mode: indirect x
+      - hex: 51
+        mode: indirect y

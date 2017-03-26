@@ -1,0 +1,9 @@
+---
+instructions:
+  - name: INY
+    description: Increment Index Y by One
+    operations:
+      - Y: Y + 1
+    opcodes:
+      - hex: C8
+        mode: implied

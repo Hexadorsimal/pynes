@@ -1,0 +1,11 @@
+---
+instructions:
+  - name: BMI
+    description: Branch on Result Minus
+    operations:
+      - if: N = 1
+        PC: PC + DL
+    group: branch
+    opcodes:
+      - hex: 30
+        mode: relative

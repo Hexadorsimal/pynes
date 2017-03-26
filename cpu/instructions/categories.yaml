@@ -1,0 +1,66 @@
+---
+categories:
+  - single byte instructions:
+    - ASL
+    - CLC
+    - CLD
+    - CLI
+    - CLV
+    - DEX
+    - DEY
+    - INX
+    - INY
+    - LSR
+    - NOP
+    - ROL
+    - SEC
+    - SED
+    - SEI
+    - TAX
+    - TAY
+    - TSX
+    - TXA
+    - TXS
+    - TYA
+  - internal execution on memory data:
+    - ADC
+    - AND
+    - BIT
+    - CMP
+    - CPX
+    - CPY
+    - EOR
+    - LDA
+    - LDX
+    - LDY
+    - ORA
+    - SBC
+  - store operations:
+    - STA
+    - STX
+    - STY
+  - read-modify-write operations:
+    - ASL
+    - DEC
+    - INC
+    - LSR
+    - ROL
+    - ROR
+  - miscellaneous operations:
+    - BCC
+    - BCS
+    - BEQ
+    - BMI
+    - BNE
+    - BPL
+    - BRK
+    - BVC
+    - BVS
+    - JMP
+    - JSR
+    - PHA
+    - PHP
+    - PLA
+    - PLP
+    - RTI
+    - RTS

@@ -1,0 +1,24 @@
+---
+instructions:
+  - name: AND
+    description: AND Memory with Accumulator
+    operations:
+      - A: A and M
+    group: 1
+    opcodes:
+      - hex: 29
+        mode: immediate
+      - hex: 25
+        mode: zero page
+      - hex: 35
+        mode: zero page x
+      - hex: 2D
+        mode: absolute
+      - hex: 3D
+        mode: absolute x
+      - hex: 39
+        mode: absolute y
+      - hex: 21
+        mode: indirect x
+      - hex: 31
+        mode: indirect y

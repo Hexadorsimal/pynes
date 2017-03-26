@@ -1,0 +1,11 @@
+---
+instructions:
+  - name: BVS
+    description: Branch on Overflow Set
+    operations:
+      - if: V = 1
+        PC: PC + DL
+    group: branch
+    opcodes:
+      - hex: 70
+        mode: relative

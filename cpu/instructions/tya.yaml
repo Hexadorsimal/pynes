@@ -1,0 +1,9 @@
+---
+instructions:
+  - name: TYA
+    description: Transfer Index Y to Accumulator
+    operations:
+      - A: Y
+    opcodes:
+      - hex: 98
+        mode: implied

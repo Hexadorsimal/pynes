@@ -1,0 +1,30 @@
+---
+instructions:
+  - name: PLA
+    description: Pull Accumulator from Stack
+    opcodes:
+      - hex: 68
+        mode: implied
+    cycles:
+      - name: t1
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+      - name: t2
+        operations:
+          - read:
+              AB: 01, S
+              DB: DL
+          - inc: S
+      - name: t3
+        operations:
+          - read:
+              AB: 01, S
+              DB: A
+      - name: t4
+        operations:
+          - read:
+              AB: PC
+              DB: IR
+          - inc: PC

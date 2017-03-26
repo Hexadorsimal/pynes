@@ -1,0 +1,9 @@
+---
+instructions:
+  - name: DEY
+    description: Decrement Index Y by One
+    operations:
+      Y: Y - 1
+    opcodes:
+      - hex: 88
+        mode: implied

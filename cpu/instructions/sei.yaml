@@ -1,0 +1,10 @@
+---
+instructions:
+  - name: SEI
+    description: Set Interrupt Disable Status
+    operations:
+      - I: 1
+    group: single-byte
+    opcodes:
+      - hex: 78
+        mode: implied

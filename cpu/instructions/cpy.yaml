@@ -1,0 +1,13 @@
+---
+instructions:
+  - name: CPY
+    description: Compare Memory and Index Y
+    operations:
+      - Y - M
+    opcodes:
+      - hex: C0
+        mode: immediate
+      - hex: C4
+        mode: zero page
+      - hex: CC
+        mode: absolute

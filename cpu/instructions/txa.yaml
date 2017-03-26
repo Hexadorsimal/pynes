@@ -1,0 +1,9 @@
+---
+instructions:
+  - name: TXA
+    description: Transfer Index X to Accumulator
+    operations:
+      - A: X
+    opcodes:
+      - hex: 8A
+        mode: implied

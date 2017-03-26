@@ -1,0 +1,24 @@
+---
+instructions:
+  - name: LDA
+    description: Load Accumulator with Memory
+    operations:
+     - A: M
+    group: 1
+    opcodes:
+      - hex: A9
+        mode: immediate
+      - hex: A5
+        mode: zero page
+      - hex: B5
+        mode: zero page x
+      - hex: AD
+        mode: absolute
+      - hex: BD
+        mode: absolute x
+      - hex: B9
+        mode: absolute y
+      - hex: A1
+        mode: indirect x
+      - hex: B1
+        mode: indirect y

@@ -1,0 +1,11 @@
+---
+instructions:
+  - name: BEQ
+    description: Branch on Result Zero
+    operations:
+      - if: Z = 1
+        PC: PC + DL
+    group: branch
+    opcodes:
+      - hex: F0
+        mode: relative

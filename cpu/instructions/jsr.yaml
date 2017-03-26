@@ -1,0 +1,40 @@
+---
+instructions:
+  - name: JSR
+    description: Jump to Subroutine
+    opcodes:
+      - hex: 20
+        mode: absolute
+    cycles:
+      - name: t1
+        operations:
+          read:
+            AB: PCH
+            DB: ADL
+          inc: PC
+      - name: t2
+        operations:
+          nop
+      - name: t3
+        operations:
+          - write:
+              AB: 01, S
+              DB: PCH
+          - dec: S
+      - name: t4
+        operations:
+          - write:
+              AB: 01, S
+              DB: PCL
+          - dec: S
+      - name: t5
+        operations:
+          - read:
+              AB: PC
+              DB: ADH
+          - inc: PC
+      - name: t6
+        operations:
+          - read:
+              AB: ADH, ADL
+              DB: IR

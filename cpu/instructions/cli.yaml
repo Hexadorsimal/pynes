@@ -1,0 +1,10 @@
+---
+instructions:
+  - name: CLI
+    description: Clear Interrupt Disable Bit
+    operations:
+      - I: 0
+    group: single-byte
+    opcodes:
+      - hex: 58
+        mode: implied

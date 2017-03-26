@@ -1,0 +1,24 @@
+---
+instructions:
+  - name: ADC
+    description: Add Memory to Accumulator with Carry
+    operations:
+      - A: A + M + C
+    group: 1
+    opcodes:
+      - hex: 69
+        mode: immediate
+      - hex: 65
+        mode: zero page
+      - hex: 75
+        mode: zero page x
+      - hex: 6D
+        mode: absolute
+      - hex: 7D
+        mode: absolute x
+      - hex: 79
+        mode: absolute y
+      - hex: 61
+        mode: indirect x
+      - hex: 71
+        mode: indirect y

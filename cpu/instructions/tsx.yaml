@@ -1,0 +1,13 @@
+---
+instructions:
+  - name: TSX
+    description: Transfer Stack Pointer to Index X
+    opcodes:
+      - hex: BA
+        mode: implied
+    cycles:
+      - name: t1
+        operations:
+          - copy:
+              src: S
+              dst: X

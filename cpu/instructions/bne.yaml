@@ -1,0 +1,11 @@
+---
+instructions:
+  - name: BNE
+    description: Branch on Result not Zero
+    operations:
+      - if: Z = 0
+        PC: PC + DL
+    group: branch
+    opcodes:
+      - hex: D0
+        mode: relative

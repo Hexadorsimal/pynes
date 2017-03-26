@@ -1,0 +1,10 @@
+---
+instructions:
+  - name: CLC
+    description: Clear Carry Flag
+    operations:
+      - C: 0
+    group: single-byte
+    opcodes:
+      - hex: 18
+        mode: implied

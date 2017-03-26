@@ -1,0 +1,22 @@
+---
+instructions:
+  - name: STA
+    description: Store Accumulator in Memory
+    operations:
+     - M: A
+    group: 1
+    opcodes:
+      - hex: 85
+        mode: zero page
+      - hex: 95
+        mode: zero page x
+      - hex: 8D
+        mode: absolute
+      - hex: 9D
+        mode: absolute x
+      - hex: 99
+        mode: absolute y
+      - hex: 81
+        mode: indirect x
+      - hex: 91
+        mode: indirect y

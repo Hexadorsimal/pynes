@@ -1,0 +1,12 @@
+---
+instructions:
+  - name: BIT
+    description: Test Bits in Memory with Accumulator
+    operations:
+      - A and M
+    group: test
+    opcodes:
+      - hex: 24
+        mode: zero page
+      - hex: 2C
+        mode: absolute

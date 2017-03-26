@@ -1,0 +1,17 @@
+---
+instructions:
+  - name: LDY
+    description: Load Index Y with Memory
+    operations:
+      - Y: M
+    opcodes:
+      - hex: A0
+        mode: immediate
+      - hex: A4
+        mode: zero page
+      - hex: B4
+        mode: zero page x
+      - hex: AC
+        mode: absolute
+      - hex: BC
+        mode: absolute x

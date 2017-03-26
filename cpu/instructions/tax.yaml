@@ -1,0 +1,9 @@
+---
+instructions:
+  - name: TAX
+    description: Transfer Accumulator to Index X
+    operations:
+      - X: A
+    opcodes:
+      - hex: AA
+        mode: implied

@@ -1,0 +1,13 @@
+---
+instructions:
+  - name: STX
+    description: Store Index X in Memory
+    operations:
+      - M: X
+    opcodes:
+      - hex: 86
+        mode: zero page
+      - hex: 96
+        mode: zero page y
+      - hex: 8E
+        mode: absolute

@@ -1,0 +1,13 @@
+---
+instructions:
+  - name: CPX
+    description: Compare Memory and Index X
+    operations:
+      - X - M
+    opcodes:
+      - hex: E0
+        mode: immediate
+      - hex: E4
+        mode: zero page
+      - hex: EC
+        mode: absolute

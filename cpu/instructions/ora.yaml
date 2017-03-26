@@ -1,0 +1,24 @@
+---
+instructions:
+  - name: ORA
+    description: OR Memory with Accumulator
+    operations:
+      - A: A or M
+    group: 1
+    opcodes:
+      - hex: 09
+        mode: immediate
+      - hex: 05
+        mode: zero page
+      - hex: 15
+        mode: zero page x
+      - hex: 0D
+        mode: absolute
+      - hex: 1D
+        mode: absolute x
+      - hex: 19
+        mode: absolute y
+      - hex: 01
+        mode: indirect x
+      - hex: 11
+        mode: indirect y

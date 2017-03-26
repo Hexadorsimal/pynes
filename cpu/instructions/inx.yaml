@@ -1,0 +1,9 @@
+---
+instructions:
+  - name: INX
+    description: Increment Index X by One
+    operations:
+      - X: X + 1
+    opcodes:
+      - hex: E8
+        mode: implied
