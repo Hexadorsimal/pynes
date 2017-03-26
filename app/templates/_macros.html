@@ -1,0 +1,35 @@
+{% macro paginator(pagination, endpoint) %}
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li>
+            <a href="{{ url_for(endpoint, page=1, **kwargs) }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page != pagination.page %}
+                    <li>
+                        <a href="{{ url_for(endpoint, page=page, **kwargs) }}">
+                            <span aria-hidden="true">{{ page }}</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="active">
+                        <a>{{ page }}</a>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li>
+                    <span class=ellipsis>…</span>
+                </li>
+            {% endif %}
+        {% endfor %}
+        <li>
+            <a href="{{ url_for(endpoint, page=pagination.pages, **kwargs) }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+{% endmacro %}
