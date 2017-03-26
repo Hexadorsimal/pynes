@@ -1,5 +1,5 @@
 class Instruction:
-    def __init__(self, opcode, addressing_mode, name, cycles, description=None, legal=True):
+    def __init__(self, opcode, addressing_mode, name, cycles, description, legal=True):
         self.opcode = opcode
         self.addressing_mode = addressing_mode
         self.name = name

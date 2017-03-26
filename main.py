@@ -1,5 +1,5 @@
+import os
 import yaml
-from cpu.addressingmode import AddressingMode
 from cpu.connection import Connection
 from cpu.counter import Counter
 from cpu.flagregister import FlagRegister, StatusFlag
@@ -11,7 +11,7 @@ from cpu.register import Register
 registers = []
 connections = []
 
-with open('6502.yaml', 'r') as stream:
+with open('cpu/6502.yaml', 'r') as stream:
     yaml_data = yaml.load(stream)
     for register_dict in yaml_data["registers"]:
         type = register_dict.pop("type", None)
@@ -29,16 +29,22 @@ with open('6502.yaml', 'r') as stream:
     for connection_dict in yaml_data["connections"]:
         connections.append(Connection(**connection_dict))
 
-instructions = []
-addressing_modes = []
+instructions = {}
 
-with open('instructions.yaml') as stream:
-    yaml_data = yaml.load(stream)
-    for addressing_mode_dict in yaml_data["addressing_modes"]:
-        addressing_modes.append(AddressingMode(**addressing_mode_dict))
-    for instruction_dict in yaml_data["instructions"]:
-        instructions.append(Instruction(**instruction_dict))
-
+instruction_dir = "cpu/instructions"
+instruction_files = os.listdir(instruction_dir)
+for filename in instruction_files:
+    with open(os.path.join(instruction_dir, filename)) as stream:
+        yaml_data = yaml.load(stream)
+        for instruction in yaml_data["instructions"]:
+            for opcode in instruction["opcodes"]:
+                opcode_string = str(opcode["hex"])
+                hex_code = int(opcode_string, base=16)
+                instructions[hex_code] = Instruction(name=instruction["name"],
+                                                     description=instruction["description"],
+                                                     opcode=hex_code,
+                                                     addressing_mode=opcode["mode"],
+                                                     cycles=0)
 
 processor = Processor(registers, connections, instructions)
 

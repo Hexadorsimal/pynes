@@ -8,6 +8,4 @@ class Processor:
         for connection in connections:
             self.connections[connection.name] = connection
 
-        self.instructions = {}
-        for instruction in instructions:
-            self.instructions[instruction.opcode] = instruction
+        self.instructions = instructions
