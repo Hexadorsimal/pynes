@@ -5,7 +5,7 @@ from cpu.counter import Counter
 from cpu.flagregister import FlagRegister, StatusFlag
 from cpu.register import Register
 from app import db
-from app.model import AddressingMode, Instruction
+from app.model import AddressingMode, Instruction, OpCode
 
 
 class CpuImporter:
@@ -49,6 +49,14 @@ class CpuImporter:
             for connection_dict in yaml_data["connections"]:
                 connections.append(Connection(**connection_dict))
 
+    def import_instruction(self, name, description):
+        instruction = Instruction.query.filter_by(name=name).first()
+        if not instruction:
+            instruction = Instruction(name=name, description=description)
+            db.session.add(instruction)
+            db.session.commit()
+        return instruction
+
     def import_instructions(self, instruction_dir):
         instruction_files = os.listdir(instruction_dir)
         for filename in instruction_files:
@@ -60,10 +68,10 @@ class CpuImporter:
                         hex_code = int(opcode_string, base=16)
 
                         addressing_mode = AddressingMode.query.filter_by(name=opcode["mode"]).first()
+                        instruction = self.import_instruction(instruction_dict["name"], instruction_dict["description"])
 
-                        instruction = Instruction(id=hex_code,
-                                                  addressing_mode_id=addressing_mode.id,
-                                                  name=instruction_dict["name"],
-                                                  description=instruction_dict["description"])
-                        db.session.add(instruction)
+                        opcode = OpCode(id=hex_code,
+                                        addressing_mode_id=addressing_mode.id,
+                                        instruction_id=instruction.id)
+                        db.session.add(opcode)
         db.session.commit()
