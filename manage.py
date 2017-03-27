@@ -32,6 +32,7 @@ class ImportFileCommand(Command):
 
     def run(self, filename):
         with CpuImporter() as importer:
+            importer.import_addressing_modes("cpu/addressing_modes.yaml")
             importer.import_instructions("cpu/instructions")
 
 

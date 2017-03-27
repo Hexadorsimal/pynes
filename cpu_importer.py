@@ -5,7 +5,7 @@ from cpu.counter import Counter
 from cpu.flagregister import FlagRegister, StatusFlag
 from cpu.register import Register
 from app import db
-from app.model import Instruction
+from app.model import AddressingMode, Instruction
 
 
 class CpuImporter:
@@ -18,6 +18,17 @@ class CpuImporter:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
+
+    def import_addressing_modes(self, filename):
+        with open(filename) as stream:
+            yaml_data = yaml.load(stream)
+            for addressing_mode_dict in yaml_data["addressing_modes"]:
+                name = addressing_mode_dict["name"]
+                if name == "fetch":
+                    continue
+                addressing_mode = AddressingMode(name)
+                db.session.add(addressing_mode)
+            db.session.commit()
 
     def import_registers(self, filename):
         with open('cpu/6502.yaml', 'r') as stream:
