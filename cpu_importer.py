@@ -63,14 +63,15 @@ class CpuImporter:
             with open(os.path.join(instruction_dir, filename)) as stream:
                 yaml_data = yaml.load(stream)
                 for instruction_dict in yaml_data["instructions"]:
-                    for opcode in instruction_dict["opcodes"]:
-                        opcode_string = str(opcode["hex"])
-                        hex_code = int(opcode_string, base=16)
+                    instruction = self.import_instruction(instruction_dict["name"], instruction_dict["description"])
 
-                        addressing_mode = AddressingMode.query.filter_by(name=opcode["mode"]).first()
-                        instruction = self.import_instruction(instruction_dict["name"], instruction_dict["description"])
+                    for opcode_dict in instruction_dict["opcodes"]:
+                        hex_opcode_string = str(opcode_dict["hex"])
+                        code = int(hex_opcode_string, base=16)
 
-                        opcode = OpCode(id=hex_code,
+                        addressing_mode = AddressingMode.query.filter_by(name=opcode_dict["mode"]).first()
+
+                        opcode = OpCode(id=code,
                                         addressing_mode_id=addressing_mode.id,
                                         instruction_id=instruction.id)
                         db.session.add(opcode)
