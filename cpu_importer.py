@@ -58,8 +58,11 @@ class CpuImporter:
                     for opcode in instruction_dict["opcodes"]:
                         opcode_string = str(opcode["hex"])
                         hex_code = int(opcode_string, base=16)
+
+                        addressing_mode = AddressingMode.query.filter_by(name=opcode["mode"]).first()
+
                         instruction = Instruction(id=hex_code,
-                                                  addressing_mode=opcode["mode"],
+                                                  addressing_mode_id=addressing_mode.id,
                                                   name=instruction_dict["name"],
                                                   description=instruction_dict["description"])
                         db.session.add(instruction)

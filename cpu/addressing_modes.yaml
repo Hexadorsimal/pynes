@@ -169,7 +169,7 @@ addressing_modes:
         DB: DL
         when: C = 1 or read-modify-write or STA
 
-  - name: absolute indirect
+  - name: indirect absolute
     cycles:
       - name: t1
         AB: PC

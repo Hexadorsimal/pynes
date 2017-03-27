@@ -19,6 +19,6 @@ instructions:
       - hex: F9
         mode: absolute y
       - hex: E1
-        mode: indirect x
+        mode: indexed indirect
       - hex: F1
-        mode: indirect y
+        mode: indirect indexed

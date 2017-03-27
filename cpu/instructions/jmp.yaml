@@ -10,4 +10,4 @@ instructions:
       - hex: 4C
         mode: absolute
       - hex: 6C
-        mode: indirect
+        mode: indirect absolute

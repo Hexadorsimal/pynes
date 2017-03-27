@@ -3,13 +3,15 @@ from .. import db
 
 class Instruction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    addressing_mode = db.Column(db.String)
     name = db.Column(db.String)
     description = db.Column(db.String)
+    addressing_mode_id = db.Column(db.Integer, db.ForeignKey("addressing_mode.id"))
 
-    def __init__(self, id, addressing_mode, name, description):
+    addressing_mode = db.relationship("AddressingMode", backref=db.backref("instructions"))
+
+    def __init__(self, id, addressing_mode_id, name, description):
         self.id = id
-        self.addressing_mode = addressing_mode
+        self.addressing_mode_id = addressing_mode_id
         self.name = name
         self.description = description
 
