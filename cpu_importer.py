@@ -1,7 +1,7 @@
 import os
 import yaml
 from app import db
-from app.model import AddressingMode, Instruction, OpCode, Register, SignalLine
+from app.model import AddressingMode, Flag, Instruction, OpCode, Register, SignalLine
 
 
 class CpuImporter:
@@ -34,7 +34,17 @@ class CpuImporter:
                                     description=register_dict.get("description"),
                                     type=register_dict.get("type"))
                 db.session.add(register)
-            db.session.commit()
+                db.session.commit()
+
+                if "flags" in register_dict:
+                    for flag_dict in register_dict.get("flags"):
+                        flag = Flag(letter=flag_dict.get("letter"),
+                                    name=flag_dict.get("name"),
+                                    description=flag_dict.get("description"),
+                                    mask=flag_dict.get("mask"),
+                                    register_id=register.id)
+                        db.session.add(flag)
+                        db.session.commit()
 
     def import_signal_lines(self, filename):
         with open(filename, 'r') as stream:
