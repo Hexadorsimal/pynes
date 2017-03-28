@@ -1,11 +1,7 @@
 import os
 import yaml
-from cpu.connection import Connection
-from cpu.counter import Counter
-from cpu.flagregister import FlagRegister, StatusFlag
-from cpu.register import Register
 from app import db
-from app.model import AddressingMode, Instruction, OpCode
+from app.model import AddressingMode, Instruction, OpCode, Register, SignalLine
 
 
 class CpuImporter:
@@ -31,23 +27,23 @@ class CpuImporter:
             db.session.commit()
 
     def import_registers(self, filename):
-        with open('cpu/6502.yaml', 'r') as stream:
+        with open(filename, 'r') as stream:
             yaml_data = yaml.load(stream)
             for register_dict in yaml_data["registers"]:
-                type = register_dict.pop("type", None)
-                if type == "flags":
-                    flags = []
-                    for flag_dict in register_dict["flags"]:
-                        flags.append(StatusFlag(**flag_dict))
-                    register_dict["flags"] = flags
-                    registers.append(FlagRegister(**register_dict))
-                elif type == "accumulator" or type == "index":
-                    registers.append(Counter(**register_dict))
-                else:
-                    registers.append(Register(**register_dict))
+                register = Register(name=register_dict.get("name"),
+                                    description=register_dict.get("description"),
+                                    type=register_dict.get("type"))
+                db.session.add(register)
+            db.session.commit()
 
-            for connection_dict in yaml_data["connections"]:
-                connections.append(Connection(**connection_dict))
+    def import_signal_lines(self, filename):
+        with open(filename, 'r') as stream:
+            yaml_data = yaml.load(stream)
+            for signal_dict in yaml_data["signals"]:
+                signal_line = SignalLine(name=signal_dict.get("name"),
+                                         description=signal_dict.get("description"))
+                db.session.add(signal_line)
+            db.session.commit()
 
     def import_instruction(self, name, description):
         instruction = Instruction.query.filter_by(name=name).first()

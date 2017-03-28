@@ -34,6 +34,8 @@ class ImportFileCommand(Command):
         with CpuImporter() as importer:
             importer.import_addressing_modes("cpu/addressing_modes.yaml")
             importer.import_instructions("cpu/instructions")
+            importer.import_registers("cpu/6502.yaml")
+            importer.import_signal_lines("cpu/6502.yaml")
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
