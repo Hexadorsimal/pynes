@@ -1,6 +1,6 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}Cordyceps Database{% endblock %}
+{% block title %}NES Database{% endblock %}
 
 {% block navbar %}
 <div class="navbar navbar-inverse" role="navigation">
@@ -12,23 +12,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">Cordyceps Database</a>
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">NES Database</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('main.benchmarks') }}">Benchmarks</a></li>
-                <li><a href="{{ url_for('main.platforms') }}">Platforms</a></li>
-                <li><a href="{{ url_for('main.profiles') }}">Profiles</a></li>
-                <li><a href="{{ url_for('main.groups') }}">Groups</a></li>
-                <li><a href="{{ url_for('main.rules') }}">Rules</a></li>
-                <li><a href="{{ url_for('main.values') }}">Values</a></li>
-                <li><a href="{{ url_for('main.references') }}">References</a></li>
-
-                <li><a href="{{ url_for('main.definitions') }}">Definitions</a></li>
-                <li><a href="{{ url_for('main.tests') }}">Tests</a></li>
-                <li><a href="{{ url_for('main.states') }}">States</a></li>
-                <li><a href="{{ url_for('main.objects') }}">Objects</a></li>
-                <li><a href="{{ url_for('main.variables') }}">Variables</a></li>
+                <li><a href="{{ url_for('main.instructions') }}">Instructions</a></li>
+                <li><a href="{{ url_for('main.opcodes') }}">Opcodes</a></li>
+                <li><a href="{{ url_for('main.addressing_modes') }}">Addressing Modes</a></li>
             </ul>
         </div>
     </div>

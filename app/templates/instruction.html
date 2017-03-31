@@ -14,7 +14,17 @@
         </tr>
         <tr>
             <th>Description</th>
-            <td><pre>{{ instruction.description | safe }}</pre></td>
+            <td>{{ instruction.description }}</td>
+        </tr>
+        <tr>
+            <th>Opcodes</th>
+            <td>
+                <div class="list-group">
+                    {% for opcode in instruction.opcodes %}
+                        <a class="list-group-item" href="{{ url_for('.opcode', id=opcode.id) }}">{{ "%02X" | format(opcode.id) }}: {{ opcode.addressing_mode.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
         </tr>
     </table>
 </div>
