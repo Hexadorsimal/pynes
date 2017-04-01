@@ -11,6 +11,5 @@ def addressing_mode(id):
 
 @main.route('/addressing_modes/', methods=['GET'])
 def addressing_modes():
-    page = request.args.get("page", 1, type=int)
-    pagination = AddressingMode.query.paginate(page, per_page=25)
-    return render_template("list_page.html", singular="addressing_mode", plural="addressing_modes", items=pagination.items, pagination=pagination)
+    items = AddressingMode.query.all()
+    return render_template("list_page.html", singular="addressing_mode", plural="addressing_modes", items=items)

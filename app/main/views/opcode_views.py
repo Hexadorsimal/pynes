@@ -11,6 +11,5 @@ def opcode(id):
 
 @main.route('/opcodes/')
 def opcodes():
-    page = request.args.get("page", 1, type=int)
-    pagination = OpCode.query.paginate(page, per_page=25)
-    return render_template("list_page.html", singular="opcode", plural="opcodes", items=pagination.items, pagination=pagination)
+    items = OpCode.query.all()
+    return render_template("list_page.html", singular="opcode", plural="opcodes", items=items)

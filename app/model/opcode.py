@@ -13,3 +13,7 @@ class OpCode(db.Model):
         self.id = id
         self.instruction_id = instruction_id
         self.addressing_mode_id = addressing_mode_id
+
+    @property
+    def name(self):
+        return hex(self.id)[2:].upper()
