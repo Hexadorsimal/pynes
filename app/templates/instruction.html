@@ -1,31 +1,39 @@
 {% extends "base.html" %}
 
 {% block page_content %}
-<div class="panel panel-primary">
-    <div class="panel-heading">Instruction: {{ instruction.name }}</div>
-    <table class="table table-condensed table-striped table-hover">
-        <tr>
-            <th>ID</th>
-            <td>{{ instruction.id }}</td>
-        </tr>
-        <tr>
-            <th>Name</th>
-            <td>{{ instruction.name }}</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>{{ instruction.description }}</td>
-        </tr>
-        <tr>
-            <th>Opcodes</th>
-            <td>
-                <div class="list-group">
-                    {% for opcode in instruction.opcodes %}
-                        <a class="list-group-item" href="{{ url_for('.opcode', id=opcode.id) }}">{{ "%02X" | format(opcode.id) }}: {{ opcode.addressing_mode.name }}</a>
-                    {% endfor %}
-                </div>
-            </div>
-        </tr>
-    </table>
-</div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Instruction: {{ instruction.name }}</div>
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>ID</th>
+                <td>{{ instruction.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ instruction.name }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ instruction.description }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="panel panel-default">
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>Opcode</th>
+                <th>Addressing Mode</th>
+            </tr>
+            {% for opcode in instruction.opcodes %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('.opcode', id=opcode.id) }}">{{ "%02X" | format(opcode.id) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('.addressing_mode', id=opcode.addressing_mode.id) }}">{{ opcode.addressing_mode.name }}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}
