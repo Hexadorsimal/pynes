@@ -14,7 +14,7 @@
         </tr>
         <tr>
             <th>Addressing Mode</th>
-            <td>{{ opcode.addressing_mode.name }}</td>
+            <td><a href="{{ url_for('.addressing_mode', id=opcode.addressing_mode.id) }}">{{ opcode.addressing_mode.name }}</a></td>
         </tr>
     </table>
 </div>
