@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 
 {% block page_content %}
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('.addressing_modes') }}">Addressing Modes</a></li>
+        <li class="active">{{ addressing_mode.name }}</li>
+    </ol>
     <div class="panel panel-primary">
         <div class="panel-heading">Addressing Modes: {{ addressing_mode.name }}</div>
         <table class="table table-condensed table-striped table-hover">
