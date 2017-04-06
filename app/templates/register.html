@@ -12,6 +12,38 @@
                 <th>Name</th>
                 <td>{{ register.name }}</td>
             </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ register.description }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ register.type }}</td>
+            </tr>
+            <tr>
+                <th>Flags</th>
+                <td>
+                    {% for flag in register.flags %}
+                        <div class="panel panel-info">
+                            <div class="panel-heading">{{ flag.letter }}</div>
+                            <table class="table table-condensed table-striped table-hover">
+                                <tr>
+                                    <th>Name</th>
+                                    <td>{{ flag.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>{{ flag.description }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Mask</th>
+                                    <td>{{ "0x%02X" | format(flag.mask) }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    {% endfor %}
+                </td>
+            </tr>
         </table>
     </div>
 {% endblock %}
