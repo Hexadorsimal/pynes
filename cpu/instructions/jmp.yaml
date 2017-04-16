@@ -2,9 +2,14 @@
 instructions:
   - name: JMP
     description: Jump to New Location
-    operations:
-      - PCL: ADL
-      - PCH: ADH
+    cycles:
+      - operations:
+          - move:
+              src: ADL
+              dst: PCL
+          - move:
+              src: ADH
+              dst: PCH
     group: jump
     opcodes:
       - hex: 4C

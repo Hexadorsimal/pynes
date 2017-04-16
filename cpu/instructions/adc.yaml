@@ -2,8 +2,14 @@
 instructions:
   - name: ADC
     description: Add Memory to Accumulator with Carry
-    operations:
-      - A: A + M + C
+    cycles:
+      - operations:
+          - alu:
+              function: add
+              input-a: A
+              input-b: DL
+              input-c: C
+              dst: A
     group: 1
     opcodes:
       - hex: 69

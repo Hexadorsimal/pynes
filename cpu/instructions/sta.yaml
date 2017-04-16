@@ -2,8 +2,11 @@
 instructions:
   - name: STA
     description: Store Accumulator in Memory
-    operations:
-     - M: A
+    cycles:
+      - operations:
+          - move:
+              src: A
+              dst: DL
     group: 1
     opcodes:
       - hex: 85

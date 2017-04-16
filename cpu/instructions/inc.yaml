@@ -2,6 +2,13 @@
 instructions:
   - name: INC
     description: Increment Memory by One
+    cycles:
+      - operations:
+          - alu:
+              function: add
+              input-a: DL
+              input-b: 1
+              dst: DL
     opcodes:
       - hex: E6
         mode: zero page

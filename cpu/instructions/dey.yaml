@@ -2,8 +2,13 @@
 instructions:
   - name: DEY
     description: Decrement Index Y by One
-    operations:
-      Y: Y - 1
+    cycles:
+      - operations:
+          - alu:
+              function: sub
+              input-a: Y
+              input-b: 1
+              dst: Y
     opcodes:
       - hex: 88
         mode: implied

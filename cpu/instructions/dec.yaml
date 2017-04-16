@@ -1,7 +1,14 @@
 ---
 instructions:
   - name: DEC
-    description: Decrement Memory  by One
+    description: Decrement Memory by One
+    cycles:
+      - operations:
+          - alu:
+              function: sub
+              input-a: DL
+              input-b: 1
+              dst: DL
     opcodes:
       - hex: C6
         mode: zero page

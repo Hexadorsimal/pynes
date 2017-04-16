@@ -2,8 +2,12 @@
 instructions:
   - name: CMP
     description: Compare Memory and Accumulator
-    operations:
-      - A - M
+    cycles:
+      - operations:
+          - alu:
+              function: sub
+              input-a: A
+              input-b: DL
     group: 1
     opcodes:
       - hex: C9

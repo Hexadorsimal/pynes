@@ -2,8 +2,14 @@
 instructions:
   - name: SBC
     description: Subtract Memory from Accumulator with Borrow
-    operations:
-      - A: A - M - !C
+    cycles:
+      - operations:
+          - alu:
+              function: sub
+              input-a: A
+              input-b: DL
+              input-c: !C
+              dst: A
     group: 1
     opcodes:
       - hex: E9

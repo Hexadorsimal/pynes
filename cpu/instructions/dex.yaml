@@ -2,8 +2,13 @@
 instructions:
   - name: DEX
     description: Decrement Index X by One
-    operations:
-      - X: X - 1
+    cycles:
+      - operations:
+          - alu:
+              function: sub
+              input-a: X
+              input-b: 1
+              dst: X
     opcodes:
       - hex: CA
         mode: implied

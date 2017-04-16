@@ -2,6 +2,8 @@
 instructions:
   - name: NOP
     description: No Operation
+    cycles:
+      - operations:
     opcodes:
       - hex: EA
         mode: implied

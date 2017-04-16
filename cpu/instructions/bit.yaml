@@ -2,8 +2,12 @@
 instructions:
   - name: BIT
     description: Test Bits in Memory with Accumulator
-    operations:
-      - A and M
+    cycles:
+      - operations:
+          - alu:
+              function: and
+              input-a: A
+              input-b: DL
     group: test
     opcodes:
       - hex: 24

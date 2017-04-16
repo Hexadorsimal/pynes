@@ -2,6 +2,12 @@
 instructions:
   - name: ASL
     description: Shift left One Bit (Memory or Accumulator)
+    cycles:
+      - operations:
+          - alu:
+              function: arithmetic-shift-left
+              input-a: A
+              dst: A
     opcodes:
       - hex: 0A
         mode: accumulator

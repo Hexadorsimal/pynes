@@ -2,8 +2,11 @@
 instructions:
   - name: STX
     description: Store Index X in Memory
-    operations:
-      - M: X
+    cycles:
+      - operations:
+          - move:
+              src: X
+              dst: DL
     opcodes:
       - hex: 86
         mode: zero page

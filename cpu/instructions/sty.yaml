@@ -2,8 +2,11 @@
 instructions:
   - name: STY
     description: Store Index Y in Memory
-    operations:
-      - M: Y
+    cycles:
+      - operations:
+          - move:
+              src: Y
+              dst: DL
     opcodes:
       - hex: 84
         mode: zero page

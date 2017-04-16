@@ -2,6 +2,12 @@
 instructions:
   - name: LSR
     description: Shift One Bit Right (Memory or Accumulator)
+    cycles:
+      - operations:
+          - alu:
+              function: logical-shift-right
+              input-a: A
+              dst: A
     opcodes:
       - hex: 4A
         mode: accumulator

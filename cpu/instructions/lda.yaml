@@ -2,8 +2,11 @@
 instructions:
   - name: LDA
     description: Load Accumulator with Memory
-    operations:
-     - A: M
+    cycles:
+      - operations:
+          - move:
+              src: DL
+              dst: A
     group: 1
     opcodes:
       - hex: A9

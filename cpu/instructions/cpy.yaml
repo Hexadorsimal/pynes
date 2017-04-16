@@ -2,8 +2,12 @@
 instructions:
   - name: CPY
     description: Compare Memory and Index Y
-    operations:
-      - Y - M
+    cycles:
+      - operations:
+          - alu:
+              function: sub
+              input-a: Y
+              input-b: DL
     opcodes:
       - hex: C0
         mode: immediate

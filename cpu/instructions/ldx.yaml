@@ -2,8 +2,11 @@
 instructions:
   - name: LDX
     description: Load Index X with Memory
-    operations:
-      - X: M
+    cycles:
+      - operations:
+          - move:
+              src: DL
+              dst: X
     opcodes:
       - hex: A2
         mode: immediate

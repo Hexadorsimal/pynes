@@ -2,6 +2,12 @@
 instructions:
   - name: ROL
     description: Rotate One Bit Left (Memory or Accumulator)
+    cycles:
+      - operations:
+          - alu:
+              function: rotate-left
+              input-a: A
+              dst: A
     opcodes:
       - hex: 2A
         mode: accumulator

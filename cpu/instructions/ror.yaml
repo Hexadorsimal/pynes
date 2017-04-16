@@ -2,6 +2,12 @@
 instructions:
   - name: ROR
     description: Rotate One Bit Right (Memory or Accumulator)
+    cycles:
+      - operations:
+          - alu:
+              function: rotate-right
+              input-a: A
+              dst: A
     opcodes:
       - hex: 6A
         mode: accumulator

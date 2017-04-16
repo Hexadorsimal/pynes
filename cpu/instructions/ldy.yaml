@@ -2,8 +2,11 @@
 instructions:
   - name: LDY
     description: Load Index Y with Memory
-    operations:
-      - Y: M
+    cycles:
+      - operations:
+          - move:
+              src: DL
+              dst: Y
     opcodes:
       - hex: A0
         mode: immediate

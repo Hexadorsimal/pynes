@@ -2,8 +2,12 @@
 instructions:
   - name: CPX
     description: Compare Memory and Index X
-    operations:
-      - X - M
+    cycles:
+      - operations:
+          - alu:
+              function: sub
+              input-a: X
+              input-b: DL
     opcodes:
       - hex: E0
         mode: immediate

@@ -6,24 +6,20 @@ instructions:
       - hex: 68
         mode: implied
     cycles:
-      - name: t1
-        operations:
+      - operations:
           - read:
               AB: PC
               DB: IR
-      - name: t2
-        operations:
+      - operations:
           - read:
               AB: 01, S
               DB: DL
           - inc: S
-      - name: t3
-        operations:
+      - operations:
           - read:
               AB: 01, S
               DB: A
-      - name: t4
-        operations:
+      - operations:
           - read:
               AB: PC
               DB: IR

@@ -2,8 +2,13 @@
 instructions:
   - name: EOR
     description: Exclusive OR Memory with Accumulator
-    operations:
-      - A: A ^ M
+    cycles:
+      - operations:
+          - alu:
+              function: xor
+              input-a: A
+              input-b: DL
+              dst: A
     group: 1
     opcodes:
       - hex: 49

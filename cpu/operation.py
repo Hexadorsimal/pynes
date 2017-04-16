@@ -19,8 +19,10 @@ class AluFunction(Enum):
     and_ = auto()
     or_ = auto()
     xor = auto()
-    shift_left = auto()
-    shift_right = auto()
+    arithmetic_shift_left = auto()
+    arithmetic_shift_right = auto()
+    logical_shift_left = auto()
+    logical_shift_right = auto()
     rotate_left = auto()
     rotate_right = auto()
 
