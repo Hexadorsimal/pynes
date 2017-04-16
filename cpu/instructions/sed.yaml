@@ -2,8 +2,9 @@
 instructions:
   - name: SED
     description: Set Decimal Mode
-    operations:
-      - D: 1
+    cycles:
+      - operations:
+          - set: D
     group: single-byte
     opcodes:
       - hex: F8

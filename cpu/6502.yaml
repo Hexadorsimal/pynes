@@ -71,6 +71,9 @@ registers:
   - name: IR
     description: Instruction Register
 
+  - name: TC
+    description: Timing Counter
+
   - name: ADL
     description: Internal Address Low
   - name: ADH

@@ -2,8 +2,11 @@
 instructions:
   - name: TAX
     description: Transfer Accumulator to Index X
-    operations:
-      - X: A
+    cycles:
+      - operations:
+          - move:
+              src: A
+              dst: X
     opcodes:
       - hex: AA
         mode: implied

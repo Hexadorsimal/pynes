@@ -2,9 +2,15 @@
 instructions:
   - name: BCS
     description: Branch on Carry Set
-    operations:
-      - if: C = 1
-        PC: PC + DL
+    cycles:
+      - operations:
+          - test: C
+              1:
+                alu:
+                  function: add
+                  input-a: PC
+                  input-b: DL
+                  dst: PC
     group: branch
     opcodes:
       - hex: B0

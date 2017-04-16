@@ -2,8 +2,9 @@
 instructions:
   - name: SEI
     description: Set Interrupt Disable Status
-    operations:
-      - I: 1
+    cycles:
+      - operations:
+          - set: I
     group: single-byte
     opcodes:
       - hex: 78

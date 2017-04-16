@@ -2,8 +2,9 @@
 instructions:
   - name: CLD
     description: Clear Decimal Mode
-    operations:
-      - D: 0
+    cycles:
+      - operations:
+          - clear: D
     group: single-byte
     opcodes:
       - hex: D8

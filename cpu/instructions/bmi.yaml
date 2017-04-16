@@ -2,9 +2,15 @@
 instructions:
   - name: BMI
     description: Branch on Result Minus
-    operations:
-      - if: N = 1
-        PC: PC + DL
+    cycles:
+      - operations:
+          - test: N
+              1:
+                alu:
+                  function: add
+                  input-a: PC
+                  input-b: DL
+                  dst: PC
     group: branch
     opcodes:
       - hex: 30

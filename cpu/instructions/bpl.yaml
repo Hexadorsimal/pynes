@@ -2,9 +2,15 @@
 instructions:
   - name: BPL
     description: Branch on Result Plus
-    operations:
-      - if: N = 0
-        PC: PC + DL
+    cycles:
+      - operations:
+          - test: N
+              0:
+                alu:
+                  function: add
+                  input-a: PC
+                  input-b: DL
+                  dst: PC
     group: branch
     opcodes:
       - hex: 10

@@ -2,8 +2,9 @@
 instructions:
   - name: CLV
     description: Clear Overflow Flag
-    operations:
-      - V: 0
+    cycles:
+      - operations:
+          - clear: V
     group: single-byte
     opcodes:
       - hex: B8

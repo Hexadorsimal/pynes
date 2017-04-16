@@ -2,8 +2,11 @@
 instructions:
   - name: TYA
     description: Transfer Index Y to Accumulator
-    operations:
-      - A: Y
+    cycles:
+      - operations:
+          - move:
+              src: Y
+              dst: A
     opcodes:
       - hex: 98
         mode: implied

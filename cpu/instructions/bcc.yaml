@@ -2,9 +2,15 @@
 instructions:
   - name: BCC
     description: Branch on Carry Clear
-    operations:
-      - if: C = 0
-        PC: PC + DL
+    cycles:
+      - operations:
+          - test: C
+              0:
+                alu:
+                  function: add
+                  input-a: PC
+                  input-b: DL
+                  dst: PC
     group: branch
     opcodes:
       - hex: 90

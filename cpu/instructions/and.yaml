@@ -3,7 +3,7 @@ instructions:
   - name: AND
     description: AND Memory with Accumulator
     operations:
-      - A: A and M
+      - A: A & M
     group: 1
     opcodes:
       - hex: 29

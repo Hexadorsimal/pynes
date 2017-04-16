@@ -2,8 +2,11 @@
 instructions:
   - name: TAY
     description: Transfer Accumulator to Index Y
-    operations:
-      - Y: A
+    cycles:
+      - operations:
+          - move:
+              src: A
+              dst: Y
     opcodes:
       - hex: A8
         mode: implied

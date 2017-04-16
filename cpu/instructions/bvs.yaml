@@ -2,9 +2,15 @@
 instructions:
   - name: BVS
     description: Branch on Overflow Set
-    operations:
-      - if: V = 1
-        PC: PC + DL
+    cycles:
+      - operations:
+          - test: V
+              1:
+                alu:
+                  function: add
+                  input-a: PC
+                  input-b: DL
+                  dst: PC
     group: branch
     opcodes:
       - hex: 70

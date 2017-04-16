@@ -2,8 +2,11 @@
 instructions:
   - name: TXA
     description: Transfer Index X to Accumulator
-    operations:
-      - A: X
+    cycles:
+      - operations:
+          - move:
+              src: X
+              dst: A
     opcodes:
       - hex: 8A
         mode: implied

@@ -2,9 +2,15 @@
 instructions:
   - name: BNE
     description: Branch on Result not Zero
-    operations:
-      - if: Z = 0
-        PC: PC + DL
+    cycles:
+      - operations:
+          - test: Z
+              0:
+                alu:
+                  function: add
+                  input-a: PC
+                  input-b: DL
+                  dst: PC
     group: branch
     opcodes:
       - hex: D0

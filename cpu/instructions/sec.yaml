@@ -2,8 +2,9 @@
 instructions:
   - name: SEC
     description: Set Carry Flag
-    operations:
-      - C: 1
+    cycles:
+      - operations:
+          - set: C
     group: single-byte
     opcodes:
       - hex: 38
