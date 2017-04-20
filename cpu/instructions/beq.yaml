@@ -4,13 +4,13 @@ instructions:
     description: Branch on Result Zero
     cycles:
       - operations:
-          - test: Z
-              1:
-                alu:
-                  function: add
-                  input-a: PC
-                  input-b: DL
-                  dst: PC
+          - if: Z==1
+            then:
+              alu:
+                function: add
+                input-a: PC
+                input-b: DL
+                dst: PC
     group: branch
     opcodes:
       - hex: F0

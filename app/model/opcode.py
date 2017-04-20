@@ -9,11 +9,6 @@ class OpCode(db.Model):
     instruction = db.relationship("Instruction", backref=db.backref("opcodes"))
     addressing_mode = db.relationship("AddressingMode", backref=db.backref("opcodes"))
 
-    def __init__(self, id, instruction_id, addressing_mode_id):
-        self.id = id
-        self.instruction_id = instruction_id
-        self.addressing_mode_id = addressing_mode_id
-
     @property
     def name(self):
         return hex(self.id)[2:].upper()

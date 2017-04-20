@@ -8,7 +8,7 @@ instructions:
               function: sub
               input-a: A
               input-b: DL
-              input-c: !C
+              input-c: ~C
               dst: A
     group: 1
     opcodes:

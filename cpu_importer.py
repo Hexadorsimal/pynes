@@ -69,7 +69,9 @@ class CpuImporter:
             with open(os.path.join(instruction_dir, filename)) as stream:
                 yaml_data = yaml.load(stream)
                 for instruction_dict in yaml_data["instructions"]:
-                    instruction = self.import_instruction(instruction_dict["name"], instruction_dict["description"])
+                    name = instruction_dict["name"]
+                    print("Importing instruction: " + name)
+                    instruction = self.import_instruction(name, instruction_dict["description"])
 
                     for opcode_dict in instruction_dict["opcodes"]:
                         hex_opcode_string = str(opcode_dict["hex"])

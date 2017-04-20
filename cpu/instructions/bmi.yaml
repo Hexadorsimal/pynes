@@ -4,13 +4,13 @@ instructions:
     description: Branch on Result Minus
     cycles:
       - operations:
-          - test: N
-              1:
-                alu:
-                  function: add
-                  input-a: PC
-                  input-b: DL
-                  dst: PC
+          - if: N==1
+            then:
+              alu:
+                function: add
+                input-a: PC
+                input-b: DL
+                dst: PC
     group: branch
     opcodes:
       - hex: 30

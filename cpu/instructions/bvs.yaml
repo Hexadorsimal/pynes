@@ -4,13 +4,13 @@ instructions:
     description: Branch on Overflow Set
     cycles:
       - operations:
-          - test: V
-              1:
-                alu:
-                  function: add
-                  input-a: PC
-                  input-b: DL
-                  dst: PC
+          - if: V==1
+            then:
+              alu:
+                function: add
+                input-a: PC
+                input-b: DL
+                dst: PC
     group: branch
     opcodes:
       - hex: 70
