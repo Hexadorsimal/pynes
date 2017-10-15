@@ -28,23 +28,37 @@ class AluFunction(Enum):
 
 
 class Operation:
-    pass
+    def execute(self, processor):
+        raise NotImplementedError
 
 
 class SetFlagOperation(Operation):
     def __init__(self, flag):
         self.flag = flag
 
+    def execute(self, processor):
+        flag_register = processor.registers['P']
+        flag_register.set_flag(self.flag)
+
 
 class ClearFlagOperation(Operation):
     def __init__(self, flag):
         self.flag = flag
+
+    def execute(self, processor):
+        flag_register = processor.registers['P']
+        flag_register.clear_flag(self.flag)
 
 
 class MoveOperation(Operation):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
+
+    def execute(self, processor):
+        src_register = processor.registers[self.src]
+        dst_register = processor.registers[self.dst]
+        dst_register.value = src_register.value
 
 
 class AluOperation(Operation):
@@ -53,3 +67,6 @@ class AluOperation(Operation):
         self.input_b = input_b
         self.alu_function = alu_functionn
         self.dst_register = dst_register
+
+    def execute(self, processor):
+        pass

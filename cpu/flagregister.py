@@ -31,6 +31,12 @@ class FlagRegister(Register):
 
         return "<FlagRegister {name}:{flags}>".format(name=self.name, flags=flag_string)
 
+    def set_flag(self, flag_letter):
+        self.flags[flag_letter].set = True
+
+    def clear_flag(self, flag_letter):
+        self.flags[flag_letter].set = False
+
     @property
     def value(self):
         val = 0

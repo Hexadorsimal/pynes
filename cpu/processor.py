@@ -9,3 +9,9 @@ class Processor:
             self.connections[connection.name] = connection
 
         self.instructions = instructions
+
+        self.cycles = []
+
+    def step(self):
+        cycle = self.cycles.pop(0)
+        cycle.execute()
