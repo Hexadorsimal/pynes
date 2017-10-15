@@ -3,24 +3,24 @@ from ..operation import ClearFlagOperation
 from ..implied_instruction import ImpliedInstruction
 
 
-class ClearInterruptDisableBitOperation(ClearFlagOperation):
+class ClearOverflowFlagOperation(ClearFlagOperation):
     def __init__(self):
         super().__init__('I')
 
 
-class Cli(ImpliedInstruction):
+class Clv(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([ClearInterruptDisableBitOperation()]))
+        self.cycles.append(Cycle([ClearOverflowFlagOperation()]))
 
     @property
     def name(self):
-        return 'CLI'
+        return 'CLV'
 
     @property
     def opcode(self):
-        return 0x58
+        return 0xB8
 
     @property
     def description(self):
-        return 'Clear Interrupt Disable Bit'
+        return 'Clear Overflow Flag'

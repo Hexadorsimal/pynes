@@ -3,24 +3,24 @@ from ..operation import ClearFlagOperation
 from ..implied_instruction import ImpliedInstruction
 
 
-class ClearInterruptDisableBitOperation(ClearFlagOperation):
+class ClearDecimalFlagOperation(ClearFlagOperation):
     def __init__(self):
-        super().__init__('I')
+        super().__init__('D')
 
 
-class Cli(ImpliedInstruction):
+class Cld(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([ClearInterruptDisableBitOperation()]))
+        self.cycles.append(Cycle([ClearDecimalFlagOperation()]))
 
     @property
     def name(self):
-        return 'CLI'
+        return 'CLD'
 
     @property
     def opcode(self):
-        return 0x58
+        return 0xD8
 
     @property
     def description(self):
-        return 'Clear Interrupt Disable Bit'
+        return 'Clear Decimal Mode'
