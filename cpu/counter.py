@@ -15,6 +15,11 @@ class Counter(Register):
 
     def inc(self):
         self.data += 1
+        if self.data >= 0x100:
+            self.data -= 0x100
+            return 1
+        else:
+            return 0
 
     def dec(self):
         self.data -= 1
