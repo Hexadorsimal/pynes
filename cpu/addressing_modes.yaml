@@ -1,16 +1,5 @@
 ---
 addressing_modes:
-  - name: fetch
-    cycles:
-      - name: t0
-        AB: PC
-        DB: IR
-        PC: PC + 1
-
-  - name: implied
-    cycles:
-      - name: t1
-
   - name: accumulator
     cycles:
       - name: t1
@@ -58,15 +47,6 @@ addressing_modes:
       - name: t2
         AB: 00, ADL
         DB: DL
-
-  - name: relative
-    cycles:
-      - name: t1
-        AB: PC
-        DB: DL
-        PC: PC + 1
-      - name: t2
-        PC: PC + DL
 
   - name: absolute x
     cycles:
