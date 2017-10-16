@@ -17,7 +17,7 @@ class LdaImmediate(ImmediateInstruction):
 
     @property
     def name(self):
-        return 'LDA #x'
+        return 'LDA #'
 
     @property
     def opcode(self):
@@ -35,7 +35,7 @@ class LdaZeroPage(ZeroPageInstruction):
 
     @property
     def name(self):
-        return 'LDA $00xx'
+        return 'LDA zpg'
 
     @property
     def opcode(self):
@@ -53,7 +53,7 @@ class LdaZeroPageX(ZeroPageXInstruction):
 
     @property
     def name(self):
-        return 'LDA 00,(xx)'
+        return 'LDA zpg,X'
 
     @property
     def opcode(self):
@@ -71,7 +71,7 @@ class LdaAbsolute(AbsoluteInstruction):
 
     @property
     def name(self):
-        return 'LDA'
+        return 'LDA abs'
 
     @property
     def opcode(self):
@@ -89,7 +89,7 @@ class LdaAbsoluteX(AbsoluteXInstruction):
 
     @property
     def name(self):
-        return 'LDA'
+        return 'LDA abs,X'
 
     @property
     def opcode(self):
@@ -107,7 +107,7 @@ class LdaAbsoluteY(AbsoluteYInstruction):
 
     @property
     def name(self):
-        return 'LDA'
+        return 'LDA abs,Y'
 
     @property
     def opcode(self):
@@ -125,7 +125,7 @@ class LdaIndexedIndirect(IndexedIndirectInstruction):
 
     @property
     def name(self):
-        return 'LDA'
+        return 'LDA (ind,X)'
 
     @property
     def opcode(self):
@@ -143,7 +143,7 @@ class LdaIndirectIndexed(IndirectIndexedInstruction):
 
     @property
     def name(self):
-        return 'LDA'
+        return 'LDA (ind),Y'
 
     @property
     def opcode(self):
