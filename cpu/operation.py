@@ -114,3 +114,18 @@ class WriteOperation(Operation):
     def execute(self, processor):
         src = processor.registers[self.src]
         processor.write_memory(self.addr_hi, self.addr_lo, src.value)
+
+
+class BranchOperation(Operation):
+    def __init__(self, flag, is_set):
+        self.flag = flag
+        self.is_set = is_set
+
+    def execute(self, processor):
+        flags_register = processor.registers['P']
+        if flags_register.is_flag_set(self.flag) == self.is_set:
+            offset = processor.registers['DL'].data
+            processor.registers['PCL'].data += offset
+            if processor.registers['PCL'] >= 0x100:
+                processor.registers['PCL'].data -= 0x100
+                processor.registers['PCH'].data += 0x100

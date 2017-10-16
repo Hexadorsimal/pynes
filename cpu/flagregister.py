@@ -37,6 +37,9 @@ class FlagRegister(Register):
     def clear_flag(self, flag_letter):
         self.flags[flag_letter].set = False
 
+    def is_flag_set(self, flag_letter):
+        return self.flags[flag_letter].set
+
     @property
     def value(self):
         val = 0
