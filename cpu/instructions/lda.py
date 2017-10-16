@@ -70,8 +70,16 @@ class LdaAbsolute(AbsoluteInstruction):
         self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
 
     @property
+    def name(self):
+        return 'LDA'
+
+    @property
     def opcode(self):
         return 0xAD
+
+    @property
+    def description(self):
+        return 'Load Accumulator with Memory (Absolute)'
 
 
 class LdaAbsoluteX(AbsoluteXInstruction):
@@ -80,8 +88,16 @@ class LdaAbsoluteX(AbsoluteXInstruction):
         self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
 
     @property
+    def name(self):
+        return 'LDA'
+
+    @property
     def opcode(self):
         return 0xBD
+
+    @property
+    def description(self):
+        return 'Load Accumulator with Memory (AbsoluteX)'
 
 
 class LdaAbsoluteY(AbsoluteYInstruction):
@@ -90,8 +106,16 @@ class LdaAbsoluteY(AbsoluteYInstruction):
         self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
 
     @property
+    def name(self):
+        return 'LDA'
+
+    @property
     def opcode(self):
         return 0xB9
+
+    @property
+    def description(self):
+        return 'Load Accumulator with Memory (AbsoluteY)'
 
 
 class LdaIndexedIndirect(IndexedIndirectInstruction):
@@ -100,8 +124,16 @@ class LdaIndexedIndirect(IndexedIndirectInstruction):
         self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
 
     @property
+    def name(self):
+        return 'LDA'
+
+    @property
     def opcode(self):
         return 0xA1
+
+    @property
+    def description(self):
+        return 'Load Accumulator with Memory (IndexedIndirect)'
 
 
 class LdaIndirectIndexed(IndirectIndexedInstruction):
@@ -110,5 +142,13 @@ class LdaIndirectIndexed(IndirectIndexedInstruction):
         self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
 
     @property
+    def name(self):
+        return 'LDA'
+
+    @property
     def opcode(self):
         return 0xB1
+
+    @property
+    def description(self):
+        return 'Load Accumulator with Memory (IndirectIndexed)'
