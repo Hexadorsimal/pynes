@@ -3,7 +3,7 @@ from .instruction import Instruction
 from .operation import ReadOperation, IncrementOperation
 
 
-class ZeroPageXInstruction(Instruction):
+class ZeroPageYInstruction(Instruction):
     def __init__(self):
         super().__init__()
         self.cycles.append(Cycle([ReadOperation('PCH', 'PCL', 'BAL'), IncrementOperation('PCL', 'PCH')]))
