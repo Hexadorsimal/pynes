@@ -8,22 +8,18 @@ registers:
 
   - name: A
     description: Accumulator
-    type: accumulator
 
   - name: X
     description: Index Register X
-    type: index
 
   - name: Y
     description: Index Register Y
-    type: index
 
   - name: S
     description: Stack Pointer
 
   - name: P
     description: Processor Status Register
-    type: flags
     flags:
       - letter: C
         name: Carry

@@ -1,9 +1,2 @@
-flask
-flask-bootstrap
-flask-migrate
-flask-moment
-flask-restful
-flask-sqlalchemy
-flask-wtf
 pyyaml
 six
