@@ -1,32 +1,3 @@
-from enum import Enum, auto
-
-
-class OperationType(Enum):
-    set = auto()
-    clear = auto()
-    move = auto()
-    alu = auto()
-
-
-class AluFunction(Enum):
-    increment = auto()
-    decrement = auto()
-    add = auto()
-    subtract = auto()
-    multiply = auto()
-    divide = auto()
-    compare = auto()
-    and_ = auto()
-    or_ = auto()
-    xor = auto()
-    arithmetic_shift_left = auto()
-    arithmetic_shift_right = auto()
-    logical_shift_left = auto()
-    logical_shift_right = auto()
-    rotate_left = auto()
-    rotate_right = auto()
-
-
 class Operation:
     def execute(self, processor):
         raise NotImplementedError
@@ -58,7 +29,7 @@ class MoveOperation(Operation):
     def execute(self, processor):
         src_register = processor.registers[self.src]
         dst_register = processor.registers[self.dst]
-        dst_register.value = src_register.value
+        dst_register.contents = src_register.contents
 
 
 class IncrementOperation(Operation):
@@ -83,17 +54,6 @@ class DecrementOperation(Operation):
         register.dec()
 
 
-class AluOperation(Operation):
-    def __init__(self, input_a, input_b, alu_function, dst_register):
-        self.input_a = input_a
-        self.input_b = input_b
-        self.alu_function = alu_function
-        self.dst_register = dst_register
-
-    def execute(self, processor):
-        pass
-
-
 class ReadOperation(Operation):
     def __init__(self, addr_hi, addr_lo, dst):
         self.addr_hi = addr_hi
@@ -102,7 +62,7 @@ class ReadOperation(Operation):
 
     def execute(self, processor):
         dst = processor.registers[self.dst]
-        dst.value = processor.read_memory(self.addr_hi, self.addr_lo)
+        dst.contents = processor.read_memory(self.addr_hi, self.addr_lo)
 
 
 class WriteOperation(Operation):
@@ -113,7 +73,7 @@ class WriteOperation(Operation):
 
     def execute(self, processor):
         src = processor.registers[self.src]
-        processor.write_memory(self.addr_hi, self.addr_lo, src.value)
+        processor.write_memory(self.addr_hi, self.addr_lo, src.contents)
 
 
 class BranchOperation(Operation):

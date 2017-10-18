@@ -7,16 +7,6 @@ class Flag:
         self.name = name
         self.mask = mask
         self.description = description
-        self.value = 0
-
-    def set(self):
-        self.value = 1
-
-    def clear(self):
-        self.value = 0
-
-    def is_set(self):
-        return self.value == 1
 
 
 class FlagRegister(Register):
@@ -27,20 +17,17 @@ class FlagRegister(Register):
         for flag in flags:
             self.flags[flag.letter] = flag
 
-    def __repr__(self):
-        flag_string = ""
-        for (letter, flag) in self.flags.items():
-            if flag.is_set():
-                flag_string += flag.letter
-            else:
-                flag_string += '-'
+    def is_flag_set(self, letter):
+        flag = self.flags[letter]
+        if self.contents & flag.mask:
+            return True
+        else:
+            return False
 
-        return "{name}:{flags}".format(name=self.name, flags=flag_string)
+    def set_flag(self, letter):
+        flag = self.flags[letter]
+        self.contents |= flag.mask
 
-    @property
-    def contents(self):
-        val = 0
-        for (letter, flag) in self.flags.items():
-            if flag.set:
-                val |= flag.mask
-        return val
+    def clear_flag(self, letter):
+        flag = self.flags[letter]
+        self.contents &= ~flag.mask
