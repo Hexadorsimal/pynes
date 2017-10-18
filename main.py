@@ -1,10 +1,10 @@
-from cpu_importer import CpuImporter
+from system.cpu import Processor
 
 
 def run(filename):
-    cpu = CpuImporter.load_from_file(filename)
+    cpu = Processor.load(filename)
     cpu.step()
 
 
 if __name__ == '__main__':
-    run('cpu/6502.yaml')
+    run('system/cpu/6502.yaml')

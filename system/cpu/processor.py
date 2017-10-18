@@ -1,12 +1,18 @@
 import yaml
-from cpu.processor import Processor
-from cpu.register import Register
-from cpu.flag_register import FlagRegister, Flag
+from .flag_register import Flag, FlagRegister
+from .register import Register
 
 
-class CpuImporter:
+class Processor:
+    def __init__(self, registers):
+        self.registers = {}
+        for register in registers:
+            self.registers[register.name] = register
+
+        self.cycle_queue = []
+
     @classmethod
-    def load_from_file(cls, filename):
+    def load(cls, filename):
         with open(filename, 'rt') as stream:
             yaml_data = yaml.load(stream)
             registers = cls.import_registers(yaml_data['registers'])
@@ -40,3 +46,9 @@ class CpuImporter:
                             mask=flag_dict.get('mask'))
                 flags.append(flag)
         return flags
+
+    def step(self):
+        if self.cycle_queue:
+            cycle = self.cycle_queue.pop(0)
+            for operation in cycle:
+                operation.execute()
