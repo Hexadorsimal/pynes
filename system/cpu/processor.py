@@ -1,14 +1,18 @@
 import yaml
 from .flag_register import Flag, FlagRegister
+from .interrupt_vector import InterruptVector
 from .register import Register
 
 
 class Processor:
-    def __init__(self, registers):
+    def __init__(self, registers, vectors):
         self.registers = {}
         for register in registers:
             self.registers[register.name] = register
 
+        self.vectors = {}
+        for vector in vectors:
+            self.vectors[vector.name] = vector
         self.cycle_queue = []
 
     @classmethod
@@ -16,7 +20,8 @@ class Processor:
         with open(filename, 'rt') as stream:
             yaml_data = yaml.load(stream)
             registers = cls.import_registers(yaml_data['registers'])
-            return Processor(registers)
+            vectors = cls.import_vectors(yaml_data['interrupt_vectors'])
+            return Processor(registers, vectors)
 
     @classmethod
     def import_registers(cls, registers_dict):
@@ -46,6 +51,16 @@ class Processor:
                             mask=flag_dict.get('mask'))
                 flags.append(flag)
         return flags
+
+    @staticmethod
+    def import_vectors(vector_dict):
+        vectors = []
+
+        for vector_dict in vector_dict:
+            vector = InterruptVector(name=vector_dict.get('name'),
+                                     address=vector_dict.get('address'))
+            vectors.append(vector)
+        return vectors
 
     def step(self):
         if self.cycle_queue:

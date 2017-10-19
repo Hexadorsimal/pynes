@@ -85,6 +85,16 @@ registers:
   - name: IAH
     description: Indirect Address High
 
+interrupt_vectors:
+  - name: NMI
+    address: 0xFFFA
+
+  - name: RESET
+    address: 0xFFFC
+
+  - name: IRQ/BRK
+    address: 0xFFFE
+
 buses:
   - name: AB
     description: Address Bus
