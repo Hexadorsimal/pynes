@@ -3,7 +3,7 @@ from .trainer import Trainer
 from .playchoice10 import PlayChoice10
 
 
-class Rom:
+class RomFile:
     def __init__(self, filename, header, prg_rom, chr_rom, prg_ram, trainer, pc10, extra):
         self.filename = filename
         self.header = header
