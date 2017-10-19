@@ -1,4 +1,4 @@
-class MemoryArea:
+class AddressRange:
     def __init__(self, start, size):
         self._start = start
         self._size = size
@@ -17,9 +17,3 @@ class MemoryArea:
     @property
     def end(self):
         return self.start + self.size
-
-    def read(self, addr):
-        raise NotImplementedError
-
-    def write(self, addr, data):
-        raise NotImplementedError
