@@ -62,6 +62,12 @@ class Processor:
             vectors.append(vector)
         return vectors
 
+    def reset(self):
+        # Read from the reset vector of Main memory
+        # Move the PC there
+        # start fetching
+        pass
+
     def step(self):
         if self.cycle_queue:
             cycle = self.cycle_queue.pop(0)

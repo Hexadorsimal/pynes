@@ -1,9 +1,11 @@
+from .cartridge import RomFile
 from .cpu import Processor
 from .memory import AddressRange, MemoryMap, Ram
 
 
 class Nes:
     def __init__(self, cpu):
+        self.cartridge = None
         self.cpu = cpu
 
         self.cpu_mem = MemoryMap()
@@ -26,12 +28,15 @@ class Nes:
         oam_mem.add_memory(AddressRange(0x00, 256), Ram(256))
 
     @staticmethod
-    def load(filename):
+    def create(filename):
         cpu = Processor.load(filename)
         return Nes(cpu)
 
+    def load_cartridge(self, filename):
+        self.cartridge = RomFile.load(filename)
+
     def power_up(self):
-        # TODO: Load ROM file here
-        # TODO: Follow CPU Reset interrupt vector protocol
+        self.cpu.reset()
+
         while True:
             self.cpu.step()

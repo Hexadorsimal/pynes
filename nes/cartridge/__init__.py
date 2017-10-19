@@ -1,1 +1,1 @@
-from .rom_file import Rom
+from .rom_file import RomFile
