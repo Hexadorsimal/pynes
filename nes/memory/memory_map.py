@@ -16,7 +16,7 @@ class MemoryMap(Memory):
                 break
 
     def _find_memory(self, logical_addr):
-        for address_range, memory in self.entries:
+        for address_range, memory in self.entries.items():
             if logical_addr in address_range:
                 virtual_addr = logical_addr - address_range.start
                 local_addr = virtual_addr % memory.size

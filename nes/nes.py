@@ -40,6 +40,10 @@ class Nes:
         self.cartridge = None
 
     def power_up(self):
+        # temp
+        reset_lo = self.cpu_mem.read(0xfffc)
+        reset_hi = self.cpu_mem.read(0xfffd)
+
         self.cpu.reset()
 
         while True:
