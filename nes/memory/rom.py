@@ -2,9 +2,9 @@ from .memory import Memory
 
 
 class Rom(Memory):
-    def __init__(self, size):
+    def __init__(self, size, data):
         super().__init__(size)
-        self._data = bytearray(size)
+        self._data = data
 
     def read(self, addr):
         return self._data[addr]
