@@ -9,6 +9,12 @@ class MemoryMap(Memory):
     def add_memory(self, address_range, memory):
         self.entries[address_range] = memory
 
+    def remove_memory(self, memory):
+        for rng, mem in self.entries.items():
+            if mem == memory:
+                self.entries.pop(rng)
+                break
+
     def _find_memory(self, logical_addr):
         for address_range, memory in self.entries:
             if logical_addr in address_range:

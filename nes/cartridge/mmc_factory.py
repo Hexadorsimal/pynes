@@ -8,5 +8,6 @@ class MmcFactory:
         }
 
     def create_mmc(self, rom_file):
-        if rom_file.mapper in self.mmc_map.keys():
-            return self.mmc_map[rom_file.mapper](rom_file)
+        mapper = rom_file.header.mapper
+        if mapper in self.mmc_map.keys():
+            return self.mmc_map[mapper](rom_file)

@@ -36,6 +36,7 @@ class Nes:
         self.cpu_mem.add_memory(AddressRange(0x6000, 0xA000), cartridge.mmc)
 
     def remove_cartridge(self):
+        self.cpu_mem.remove_memory(self.cartridge.mmc)
         self.cartridge = None
 
     def power_up(self):
