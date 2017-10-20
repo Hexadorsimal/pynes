@@ -1,0 +1,12 @@
+from .mmc import Nrom
+
+
+class MmcFactory:
+    def __init__(self):
+        self.mmc_map = {
+            0: Nrom
+        }
+
+    def create_mmc(self, rom_file):
+        if rom_file.mapper in self.mmc_map.keys():
+            return self.mmc_map[rom_file.mapper](rom_file)

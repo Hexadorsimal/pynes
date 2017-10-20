@@ -39,11 +39,11 @@ class RomFile:
 
             remaining_data = f.read()
 
-            return Rom(filename=filename,
-                       header=header,
-                       prg_rom=prg_rom_pages,
-                       chr_rom=chr_rom_pages,
-                       prg_ram=None,
-                       trainer=trainer,
-                       pc10=pc10,
-                       extra=remaining_data)
+            return RomFile(filename=filename,
+                           header=header,
+                           prg_rom=prg_rom_pages,
+                           chr_rom=chr_rom_pages,
+                           prg_ram=None,
+                           trainer=trainer,
+                           pc10=pc10,
+                           extra=remaining_data)

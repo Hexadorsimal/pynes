@@ -1,5 +1,9 @@
-class MemoryMap:
-    def __init__(self):
+from .memory import Memory
+
+
+class MemoryMap(Memory):
+    def __init__(self, size):
+        super().__init__(size)
         self.entries = {}
 
     def add_memory(self, address_range, memory):
