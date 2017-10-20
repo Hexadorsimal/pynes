@@ -1,6 +1,7 @@
 from .cartridge import RomFile
 from .cpu import Processor
 from .memory import AddressRange, MemoryMap, Ram
+from .ppu import PpuRegisterSet
 
 
 class Nes:
@@ -10,7 +11,7 @@ class Nes:
 
         self.cpu_mem = MemoryMap(0x10000)
         self.cpu_mem.add_memory(AddressRange(0x0000, 0x2000), Ram(0x0800))  # RAM
-        self.cpu_mem.add_memory(AddressRange(0x2000, 0x2000), Ram(0x0008))  # PPU Registers
+        self.cpu_mem.add_memory(AddressRange(0x2000, 0x2000), PpuRegisterSet.create('nes/ppu/ppu.yaml'))  # PPU Registers
         self.cpu_mem.add_memory(AddressRange(0x4000, 0x0018), Ram(0x0018))  # APU and IO Registers
         self.cpu_mem.add_memory(AddressRange(0x4018, 0x0008), Ram(0x0008))  # Disabled APU and IO functionality
 

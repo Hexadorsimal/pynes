@@ -1,0 +1,33 @@
+---
+registers:
+  - name: PPUCTRL
+    description: PPU Controller
+    address: 0x2000
+
+  - name: PPUMASK
+    description: PPU Mask
+    address: 0x2001
+
+  - name: PPUSTATUS
+    description: PPU Status
+    address: 0x2002
+
+  - name: OAMADDR
+    description: OAM Address
+    address: 0x2003
+
+  - name: OAMDATA
+    description: OAM Data
+    address: 0x2004
+
+  - name: PPUSCROLL
+    description: PPU Scroll
+    address: 0x2005
+
+  - name: PPUADDR
+    description: PPU Read/Write Address
+    address: 0x2006
+
+  - name: PPUDATA
+    description: PPU Data Read/Write
+    address: 0x2007
