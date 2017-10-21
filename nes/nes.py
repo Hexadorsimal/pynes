@@ -1,5 +1,4 @@
-from .cartridge import RomFile
-from .cpu import Processor
+from .cpu import Cpu
 from .memory import AddressRange, MemoryMap, Ram
 from .ppu import PpuRegisterSet
 
@@ -29,7 +28,7 @@ class Nes:
 
     @staticmethod
     def create(filename):
-        cpu = Processor.load(filename)
+        cpu = Cpu.load(filename)
         return Nes(cpu)
 
     def insert_cartridge(self, cartridge):

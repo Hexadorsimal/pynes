@@ -4,7 +4,7 @@ from .interrupt_vector import InterruptVector
 from .register import Register
 
 
-class Processor:
+class Cpu:
     def __init__(self, registers, vectors):
         self.registers = {}
         for register in registers:
@@ -21,7 +21,7 @@ class Processor:
             yaml_data = yaml.load(stream)
             registers = cls.import_registers(yaml_data['registers'])
             vectors = cls.import_vectors(yaml_data['interrupt_vectors'])
-            return Processor(registers, vectors)
+            return Cpu(registers, vectors)
 
     @classmethod
     def import_registers(cls, registers_dict):
