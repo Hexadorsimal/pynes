@@ -8,7 +8,7 @@ class SetDecimalFlagOperation(SetFlagOperation):
         super().__init__('D')
 
 
-class Cld(ImpliedInstruction):
+class Sed(ImpliedInstruction):
     def __init__(self):
         super().__init__()
         self.cycles.append(Cycle([SetDecimalFlagOperation()]))

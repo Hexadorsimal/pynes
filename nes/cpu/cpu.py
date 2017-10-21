@@ -1,7 +1,9 @@
 import yaml
 from .flag_register import Flag, FlagRegister
+from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
 from .register import Register
+from .operation import ReadOperation, IncrementOperation, ReadVectorOperation
 
 
 class Cpu:
@@ -13,10 +15,13 @@ class Cpu:
         self.vectors = {}
         for vector in vectors:
             self.vectors[vector.name] = vector
+
+        self.memory = None
+        self.decoder = InstructionDecoder()
         self.cycle_queue = []
 
     @classmethod
-    def load(cls, filename):
+    def create(cls, filename):
         with open(filename, 'rt') as stream:
             yaml_data = yaml.load(stream)
             registers = cls.import_registers(yaml_data['registers'])
@@ -63,13 +68,36 @@ class Cpu:
         return vectors
 
     def reset(self):
-        # Read from the reset vector of Main memory
-        # Move the PC there
-        # start fetching
+        addr = self.vectors['RESET'].address
+        ReadOperation(addr, 'PCL').execute(self)
+        ReadOperation(addr + 1, 'PCH').execute(self)
+        self.run()
+
+    def irq(self):
         pass
 
+    def nmi(self):
+        pass
+
+    def run(self):
+        while True:
+            self.step()
+
     def step(self):
-        if self.cycle_queue:
+        self.fetch()
+        self.decode()
+        self.execute()
+
+    def fetch(self):
+        ReadOperation('PCH', 'PCL', 'IR').execute(self)
+        IncrementOperation('PCL', 'PCH').execute(self)
+
+    def decode(self):
+        instruction = self.decoder.get_instruction(self.registers['IR'])
+        self.cycle_queue.append(instruction.cycles)
+
+    def execute(self):
+        while self.cycle_queue:
             cycle = self.cycle_queue.pop(0)
             for operation in cycle:
                 operation.execute()

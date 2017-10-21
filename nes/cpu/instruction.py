@@ -1,10 +1,6 @@
-from .cycle import Cycle
-from .operation import ReadOperation, IncrementOperation
-
-
 class Instruction:
     def __init__(self):
-        self.cycles = [Cycle([ReadOperation('PCH', 'PCL', 'IR'), IncrementOperation('PCL', 'PCH')])]
+        self.cycles = []
 
     @property
     def name(self):

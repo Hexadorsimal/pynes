@@ -8,11 +8,11 @@ class Nes:
         self.cartridge = None
         self.cpu = cpu
 
-        self.cpu_mem = MemoryMap(0x10000)
-        self.cpu_mem.add_memory(AddressRange(0x0000, 0x2000), Ram(0x0800))  # RAM
-        self.cpu_mem.add_memory(AddressRange(0x2000, 0x2000), PpuRegisterSet.create('nes/ppu/ppu.yaml'))  # PPU Registers
-        self.cpu_mem.add_memory(AddressRange(0x4000, 0x0018), Ram(0x0018))  # APU and IO Registers
-        self.cpu_mem.add_memory(AddressRange(0x4018, 0x0008), Ram(0x0008))  # Disabled APU and IO functionality
+        self.cpu.memory = MemoryMap(0x10000)
+        self.cpu.memory.add_memory(AddressRange(0x0000, 0x2000), Ram(0x0800))  # RAM
+        self.cpu.memory.add_memory(AddressRange(0x2000, 0x2000), PpuRegisterSet.create('nes/ppu/ppu.yaml'))  # PPU Registers
+        self.cpu.memory.add_memory(AddressRange(0x4000, 0x0018), Ram(0x0018))  # APU and IO Registers
+        self.cpu.memory.add_memory(AddressRange(0x4018, 0x0008), Ram(0x0008))  # Disabled APU and IO functionality
 
         ppu_mem = MemoryMap(0x4000)
         ppu_mem.add_memory(AddressRange(0x0000, 0x1000), Ram(0x1000))  # Pattern Table 0
@@ -28,23 +28,16 @@ class Nes:
 
     @staticmethod
     def create(filename):
-        cpu = Cpu.load(filename)
+        cpu = Cpu.create(filename)
         return Nes(cpu)
 
     def insert_cartridge(self, cartridge):
         self.cartridge = cartridge
-        self.cpu_mem.add_memory(AddressRange(0x6000, 0xA000), cartridge.mmc)
+        self.cpu.memory.add_memory(AddressRange(0x6000, 0xA000), cartridge.mmc)
 
     def remove_cartridge(self):
-        self.cpu_mem.remove_memory(self.cartridge.mmc)
+        self.cpu.memory.remove_memory(self.cartridge.mmc)
         self.cartridge = None
 
     def power_up(self):
-        # temp
-        reset_lo = self.cpu_mem.read(0xfffc)
-        reset_hi = self.cpu_mem.read(0xfffd)
-
         self.cpu.reset()
-
-        while True:
-            self.cpu.step()

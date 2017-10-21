@@ -54,26 +54,35 @@ class DecrementOperation(Operation):
         register.dec()
 
 
+class ReadVectorOperation(Operation):
+    def __init__(self, vector, dst):
+        self.vector = vector
+        self.dst = dst
+
+    def execute(self, processor):
+        addr = processor.vectors[self.vector].address
+        dst = processor.registers[self.dst]
+        dst.contents = processor.memory.read(addr)
+
+
 class ReadOperation(Operation):
-    def __init__(self, addr_hi, addr_lo, dst):
-        self.addr_hi = addr_hi
-        self.addr_lo = addr_lo
+    def __init__(self, addr, dst):
+        self.addr = addr
         self.dst = dst
 
     def execute(self, processor):
         dst = processor.registers[self.dst]
-        dst.contents = processor.read_memory(self.addr_hi, self.addr_lo)
+        dst.contents = processor.memory.read(self.addr)
 
 
 class WriteOperation(Operation):
-    def __init__(self, addr_hi, addr_lo, src):
-        self.addr_hi = addr_hi
-        self.addr_lo = addr_lo
+    def __init__(self, addr, src):
+        self.addr = addr
         self.src = src
 
     def execute(self, processor):
         src = processor.registers[self.src]
-        processor.write_memory(self.addr_hi, self.addr_lo, src.contents)
+        processor.memory.write(self.addr, src.contents)
 
 
 class BranchOperation(Operation):
