@@ -60,10 +60,10 @@ class Cpu:
 
     def decode(self):
         instruction = self.decoder.get_instruction(self.registers['IR'].contents)
-        self.pipeline.append(instruction.cycles)
+        self.pipeline.extend(instruction.cycles)
 
     def execute(self):
         while self.pipeline:
             cycle = self.pipeline.pop(0)
-            for operation in cycle:
-                operation.execute()
+            for operation in cycle.operations:
+                operation.execute(self)
