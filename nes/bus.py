@@ -5,6 +5,9 @@ class Bus:
         self.width = width
         self.value = 0
 
+    def __repr__(self):
+        return hex(self.value)
+
     def put(self, value):
         self.value = value
 

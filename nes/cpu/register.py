@@ -8,6 +8,9 @@ class Register(Memory):
         self.description = description
         self.contents = 0
 
+    def __repr__(self):
+        return hex(self.contents)
+
     def read(self, addr):
         if addr != 0:
             raise IndexError
