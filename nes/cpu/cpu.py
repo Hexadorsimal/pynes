@@ -1,8 +1,9 @@
 import yaml
 
+from .alu.alu import AluIncrementOperation
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
-from .operation import ReadOperation, IncrementOperation
+from .operation import ReadOperation
 from .register_factory import RegisterFactory
 from ..memory.address import AbsoluteAddress, VectorAddress
 
@@ -56,7 +57,7 @@ class Cpu:
 
     def fetch(self):
         ReadOperation(AbsoluteAddress('PCH', 'PCL'), 'IR').execute(self)
-        IncrementOperation('PCL', 'PCH').execute(self)
+        AluIncrementOperation('PCL').execute(self)
 
     def decode(self):
         instruction = self.decoder.get_instruction(self.registers['IR'].contents)

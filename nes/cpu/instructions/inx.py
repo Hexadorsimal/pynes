@@ -1,12 +1,12 @@
+from ..alu.alu import AluIncrementOperation
 from ..cycle import Cycle
-from ..operation import IncrementOperation
 from ..implied_instruction import ImpliedInstruction
 
 
 class Inx(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([IncrementOperation('X')]))
+        self.cycles.append(Cycle([AluIncrementOperation('X')]))
 
     @property
     def name(self):

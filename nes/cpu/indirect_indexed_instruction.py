@@ -1,13 +1,14 @@
+from .alu.alu import AluIncrementOperation
 from .cycle import Cycle
 from .instruction import Instruction
-from .operation import ReadOperation, IncrementOperation
+from .operation import ReadOperation
 from ..memory.address import AbsoluteAddress, ZeroPageAddress
 
 
 class IndirectIndexedInstruction(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([ReadOperation(AbsoluteAddress('PCH', 'PCL'), 'IAL'), IncrementOperation('PCL', 'PCH')]))
+        self.cycles.append(Cycle([ReadOperation(AbsoluteAddress('PCH', 'PCL'), 'IAL'), AluIncrementOperation('PCL')]))
         self.cycles.append(Cycle([ReadOperation(ZeroPageAddress('IAL'), 'BAL')]))
         self.cycles.append(Cycle([ReadOperation(ZeroPageAddress('IAL + 1'), 'BAH')]))
         self.cycles.append(Cycle([ReadOperation(AbsoluteAddress('BAH', 'BAL + Y'), 'DL')]))

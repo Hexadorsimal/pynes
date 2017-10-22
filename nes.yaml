@@ -12,5 +12,17 @@ buses:
     width: 8
 
   - name: R/W
-    description: Write Enable
+    description: Read/Write (1 = Read, 0 = Write)
+    width: 1
+
+  - name: NMI
+    description: Non-Maskable Interrupt
+    width: 1
+
+  - name: IRQ
+    description: Interrupt Request
+    width: 1
+
+  - name: RES
+    description: Reset
     width: 1

@@ -1,12 +1,12 @@
+from ..alu.alu import AluDecrementOperation
 from ..cycle import Cycle
-from ..operation import DecrementOperation
 from ..implied_instruction import ImpliedInstruction
 
 
 class Dex(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([DecrementOperation('X')]))
+        self.cycles.append(Cycle([AluDecrementOperation('X')]))
 
     @property
     def name(self):

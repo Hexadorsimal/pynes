@@ -32,28 +32,6 @@ class MoveOperation(Operation):
         dst_register.contents = src_register.contents
 
 
-class IncrementOperation(Operation):
-    def __init__(self, register, overflow_register=None):
-        self.register = register
-        self.overflow_register = overflow_register
-
-    def execute(self, processor):
-        register = processor.registers[self.register]
-        # overflow = register.inc()
-        # if overflow:
-            # overflow_register = processor.registers[self.overflow_register]
-            # overflow_register.inc()
-
-
-class DecrementOperation(Operation):
-    def __init__(self, register):
-        self.register = register
-
-    def execute(self, processor):
-        register = processor.registers[self.register]
-        # register.dec()
-
-
 class ReadOperation(Operation):
     def __init__(self, addr, dst):
         self.addr = addr
