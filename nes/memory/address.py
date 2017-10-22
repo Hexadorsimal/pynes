@@ -23,7 +23,7 @@ class StackAddress(PagedAddress):
         super().__init__(0x01, reg_lo)
 
 
-class FullAddress(Address):
+class AbsoluteAddress(Address):
     def __init__(self, reg_hi, reg_lo):
         self.reg_hi = reg_hi
         self.reg_lo = reg_lo

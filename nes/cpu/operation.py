@@ -39,10 +39,10 @@ class IncrementOperation(Operation):
 
     def execute(self, processor):
         register = processor.registers[self.register]
-        overflow = register.inc()
-        if overflow:
-            overflow_register = processor.registers[self.overflow_register]
-            overflow_register.inc()
+        # overflow = register.inc()
+        # if overflow:
+            # overflow_register = processor.registers[self.overflow_register]
+            # overflow_register.inc()
 
 
 class DecrementOperation(Operation):
@@ -51,18 +51,7 @@ class DecrementOperation(Operation):
 
     def execute(self, processor):
         register = processor.registers[self.register]
-        register.dec()
-
-
-class ReadVectorOperation(Operation):
-    def __init__(self, vector, dst):
-        self.vector = vector
-        self.dst = dst
-
-    def execute(self, processor):
-        addr = processor.vectors[self.vector].address
-        dst = processor.registers[self.dst]
-        dst.contents = processor.memory.read(addr)
+        # register.dec()
 
 
 class ReadOperation(Operation):
@@ -72,7 +61,8 @@ class ReadOperation(Operation):
 
     def execute(self, processor):
         dst = processor.registers[self.dst]
-        dst.contents = processor.memory.read(self.addr)
+        addr = self.addr.evaluate(processor)
+        dst.contents = processor.memory.read(addr)
 
 
 class WriteOperation(Operation):
@@ -82,7 +72,8 @@ class WriteOperation(Operation):
 
     def execute(self, processor):
         src = processor.registers[self.src]
-        processor.memory.write(self.addr, src.contents)
+        addr = self.addr.evaluate(processor)
+        processor.memory.write(addr, src.contents)
 
 
 class BranchOperation(Operation):

@@ -1,76 +1,42 @@
 import yaml
-from .flag_register import Flag, FlagRegister
+
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
-from .register import Register
-from .operation import ReadOperation, IncrementOperation, ReadVectorOperation
+from .operation import ReadOperation, IncrementOperation
+from .register_factory import RegisterFactory
+from ..memory.address import AbsoluteAddress, VectorAddress
 
 
 class Cpu:
-    def __init__(self, registers, vectors):
+    def __init__(self, yaml_data, nes):
         self.registers = {}
-        for register in registers:
+        for register_data in yaml_data['registers']:
+            register = RegisterFactory.create_register(register_data)
             self.registers[register.name] = register
 
         self.vectors = {}
-        for vector in vectors:
+        for vector_data in yaml_data['interrupt_vectors']:
+            vector = InterruptVector(**vector_data)
             self.vectors[vector.name] = vector
+
+        self.buses = {}
+        for bus_data in yaml_data['buses']:
+            name = bus_data['name']
+            self.buses[name] = nes.buses[name]
 
         self.memory = None
         self.decoder = InstructionDecoder()
-        self.cycle_queue = []
+        self.pipeline = []
 
     @classmethod
-    def create(cls, filename):
+    def create(cls, filename, nes):
         with open(filename, 'rt') as stream:
             yaml_data = yaml.load(stream)
-            registers = cls.import_registers(yaml_data['registers'])
-            vectors = cls.import_vectors(yaml_data['interrupt_vectors'])
-            return Cpu(registers, vectors)
-
-    @classmethod
-    def import_registers(cls, registers_dict):
-        registers = []
-
-        for register_dict in registers_dict:
-            if 'flags' in register_dict:
-                flags = cls.import_flags(register_dict)
-                register = FlagRegister(name=register_dict.get('name'),
-                                        description=register_dict.get('description'),
-                                        flags=flags)
-            else:
-                register = Register(name=register_dict.get('name'),
-                                    description=register_dict.get('description'))
-            registers.append(register)
-        return registers
-
-    @staticmethod
-    def import_flags(register_dict):
-        flags = []
-
-        if 'flags' in register_dict:
-            for flag_dict in register_dict.get('flags'):
-                flag = Flag(letter=flag_dict.get('letter'),
-                            name=flag_dict.get('name'),
-                            description=flag_dict.get('description'),
-                            mask=flag_dict.get('mask'))
-                flags.append(flag)
-        return flags
-
-    @staticmethod
-    def import_vectors(vector_dict):
-        vectors = []
-
-        for vector_dict in vector_dict:
-            vector = InterruptVector(name=vector_dict.get('name'),
-                                     address=vector_dict.get('address'))
-            vectors.append(vector)
-        return vectors
+            return Cpu(yaml_data, nes)
 
     def reset(self):
-        addr = self.vectors['RESET'].address
-        ReadOperation(addr, 'PCL').execute(self)
-        ReadOperation(addr + 1, 'PCH').execute(self)
+        ReadOperation(VectorAddress('RESET', 0), 'PCL').execute(self)
+        ReadOperation(VectorAddress('RESET', 1), 'PCH').execute(self)
         self.run()
 
     def irq(self):
@@ -89,15 +55,15 @@ class Cpu:
         self.execute()
 
     def fetch(self):
-        ReadOperation('PCH', 'PCL', 'IR').execute(self)
+        ReadOperation(AbsoluteAddress('PCH', 'PCL'), 'IR').execute(self)
         IncrementOperation('PCL', 'PCH').execute(self)
 
     def decode(self):
-        instruction = self.decoder.get_instruction(self.registers['IR'])
-        self.cycle_queue.append(instruction.cycles)
+        instruction = self.decoder.get_instruction(self.registers['IR'].contents)
+        self.pipeline.append(instruction.cycles)
 
     def execute(self):
-        while self.cycle_queue:
-            cycle = self.cycle_queue.pop(0)
+        while self.pipeline:
+            cycle = self.pipeline.pop(0)
             for operation in cycle:
                 operation.execute()

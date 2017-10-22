@@ -2,7 +2,7 @@ from nes import Nes, Cartridge
 
 
 if __name__ == '__main__':
-    nes = Nes.create('nes/cpu/6502.yaml')
+    nes = Nes.create('nes.yaml')
     cart = Cartridge.create('donkey-kong.nes')
 
     nes.insert_cartridge(cart)

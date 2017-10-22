@@ -97,12 +97,8 @@ interrupt_vectors:
 
 buses:
   - name: AB
-    description: Address Bus
-    width: 16
-
   - name: DB
-    description: Data Bus
-    width: 8
+  - name: R/W
 
 components:
   - name: ALU

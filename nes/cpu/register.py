@@ -8,8 +8,12 @@ class Register(Memory):
         self.description = description
         self.contents = 0
 
-    def read(self):
+    def read(self, addr):
+        if addr != 0:
+            raise IndexError
         return self.contents
 
-    def write(self, data):
+    def write(self, addr, data):
+        if addr != 0:
+            raise IndexError
         self.contents = data

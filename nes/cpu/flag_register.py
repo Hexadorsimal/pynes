@@ -1,12 +1,5 @@
+from .flag import Flag
 from .register import Register
-
-
-class Flag:
-    def __init__(self, letter, name, description, mask):
-        self.letter = letter
-        self.name = name
-        self.mask = mask
-        self.description = description
 
 
 class FlagRegister(Register):
@@ -14,7 +7,8 @@ class FlagRegister(Register):
         super().__init__(name, description)
 
         self.flags = {}
-        for flag in flags:
+        for flag_dict in flags:
+            flag = Flag(**flag_dict)
             self.flags[flag.letter] = flag
 
     def is_flag_set(self, letter):

@@ -1,12 +1,20 @@
+import yaml
+from .bus import Bus
 from .cpu import Cpu
 from .memory import AddressRange, MemoryMap, Ram
 from .ppu import PpuRegisterSet
 
 
 class Nes:
-    def __init__(self, cpu):
+    def __init__(self, yaml_data):
         self.cartridge = None
-        self.cpu = cpu
+
+        self.buses = {}
+        for bus_data in yaml_data['buses']:
+            bus = Bus(**bus_data)
+            self.buses[bus.name] = bus
+
+        self.cpu = Cpu.create(yaml_data['cpu']['filename'], self)
 
         self.cpu.memory = MemoryMap(0x10000)
         self.cpu.memory.add_memory(AddressRange(0x0000, 0x2000), Ram(0x0800))  # RAM
@@ -28,8 +36,9 @@ class Nes:
 
     @staticmethod
     def create(filename):
-        cpu = Cpu.create(filename)
-        return Nes(cpu)
+        with open(filename, 'rt') as stream:
+            yaml_data = yaml.load(stream)
+            return Nes(yaml_data)
 
     def insert_cartridge(self, cartridge):
         self.cartridge = cartridge

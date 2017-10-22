@@ -5,7 +5,8 @@ class InstructionDecoder:
     def __init__(self):
         self.map = {}
 
-        for instruction in all_instructions:
+        for inst_type in all_instructions:
+            instruction = inst_type()
             self.map[instruction.opcode] = instruction
 
     def get_instruction(self, opcode):
