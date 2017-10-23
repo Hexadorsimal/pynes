@@ -1,4 +1,4 @@
-from .alu.alu import AluIncrementOperation
+from .alu.alu_operations import AluIncrementOperation
 from .cycle import Cycle
 from .instruction import Instruction
 from .operation import ReadOperation

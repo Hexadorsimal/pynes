@@ -1,6 +1,6 @@
 import yaml
 
-from .alu.alu import AluIncrementOperation
+from .alu.alu_operations import AluIncrementOperation
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
 from .operation import ReadOperation

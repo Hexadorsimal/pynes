@@ -1,4 +1,4 @@
-from ..alu.alu import AluDecrementOperation
+from ..alu.alu_operations import AluDecrementOperation
 from ..cycle import Cycle
 from ..implied_instruction import ImpliedInstruction
 

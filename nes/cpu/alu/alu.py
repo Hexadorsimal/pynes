@@ -1,94 +1,57 @@
-from ..operation import Operation
+from enum import Enum
+from ..register import Register
 
 
-class AluOperation(Operation):
-    def __init__(self, dst, a, b=None):
-        super().__init__()
-        self.dst = dst
-        self.a = a
-        self.b = b
+class Alu:
+    class Function(Enum):
+        sum = 'SUM'
+        logical_and = 'AND'
+        logical_or = 'OR'
+        logical_exclusive_or = 'EOR'
+        shift_right = 'SR'
 
-    def execute(self, cpu):
-        raise NotImplementedError
+    def __init__(self):
+        self.ai = Register('AI', 'A Input Register')
+        self.bi = Register('BI', 'B Input Register')
+        self.carry_in = 0
 
+        self.output = Register('ADD', 'Adder Hold Register')
+        self.overflow = 0
+        self.carry_out = 0
 
-class AluIncrementOperation(AluOperation):
-    def __init__(self, a):
-        super().__init__(a, a)
+    def sum(self):
+        self.output.contents = self.ai.contents + self.bi.contents + self.carry_in
+        if self.output.contents > 0xff:
+            self.carry_out = 1
+            self.output.contents &= 0xff
 
-    def execute(self, cpu):
-        dst = cpu.registers[self.dst]
-        a = cpu.registers[self.a]
-        p = cpu.registers['P']
-
-        dst.contents = a.contents + 1
-        if dst.contents > 0xff:
-            dst.contents = 0
-            p.set_flag('V')
+        if (not self.ai.contents & 0x80 and not self.bi.contents & 0x80 and self.output.contents & 0x80) or \
+           (self.ai.contents & 0x80 and self.bi.contents & 0x80 and not self.output.contents & 0x80):
+            self.overflow = 1
         else:
-            p.clear_flag('V')
+            self.overflow = 0
 
-        if dst.contents == 0:
-            p.set_flag('Z')
+    def logical_and(self):
+        self.output.contents = self.ai.contents & self.bi.contents
+        self.carry_out = self.overflow = 0
+
+    def logical_or(self):
+        self.output.contents = self.ai.contents | self.bi.contents
+        self.carry_out = self.overflow = 0
+
+    def logical_exclusive_or(self):
+        self.output.contents = self.ai.contents ^ self.bi.contents
+        self.carry_out = self.overflow = 0
+
+    def shift_right(self):
+        if self.ai.contents & 0x01:
+            self.carry_out = 1
         else:
-            p.clear_flag('Z')
+            self.carry_out = 0
 
-        if dst.contents & 0x80:
-            p.set_flag('N')
-        else:
-            p.clear_flag('N')
+        self.output.contents = self.ai.contents >> 1
 
+        if self.carry_in:
+            self.output.contents |= 0x80
 
-class AluDecrementOperation(AluIncrementOperation):
-    pass
-
-
-class AluAddOperation(AluOperation):
-    def execute(self, cpu):
-        acc = cpu.registers['A']
-        p = cpu.registers['P']
-
-        a = self.a.evaluate(cpu)
-        b = self.b.evaulate(cpu)
-
-        acc.contents = a + b + p.get_flag_value['C']
-
-
-class AluSubtractOperation(AluOperation):
-    def execute(self, processor):
-        pass
-
-
-class AluLogicalAndOperation(AluOperation):
-    def execute(self, processor):
-        pass
-
-
-class AluLogicalOrOperation(AluOperation):
-    def execute(self, processor):
-        pass
-
-
-class AluExclusiveOrOperation(AluOperation):
-    def execute(self, execute):
-        pass
-
-
-class AluArithmeticShiftLeftOperation(AluOperation):
-    def execute(self, processor):
-        pass
-
-
-class AluLogicalShiftRightOperation(AluOperation):
-    def execute(self, processor):
-        pass
-
-
-class AluRotateLeftOperation(AluOperation):
-    def execute(self, processor):
-        pass
-
-
-class AluRotateRightOperation(AluOperation):
-    def execute(self, processor):
-        pass
+        self.overflow = 0
