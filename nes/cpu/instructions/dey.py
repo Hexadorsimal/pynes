@@ -1,12 +1,12 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import DecrementOperation
+from nes.cpu.microinstructions import DecrementMicroinstruction
 from .implied_instruction import ImpliedInstruction
 
 
 class Dey(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([DecrementOperation('Y')]))
+        self.cycles.append(Cycle([DecrementMicroinstruction('Y')]))
 
     @property
     def name(self):

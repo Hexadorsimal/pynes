@@ -1,9 +1,9 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import ClearFlagOperation
+from nes.cpu.microinstructions import ClearFlagMicroinstruction
 from .implied_instruction import ImpliedInstruction
 
 
-class ClearInterruptDisableBitOperation(ClearFlagOperation):
+class ClearInterruptDisableBitOperation(ClearFlagMicroinstruction):
     def __init__(self):
         super().__init__('I')
 

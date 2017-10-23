@@ -1,9 +1,9 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import SetFlagOperation
+from nes.cpu.microinstructions import SetFlagMicroinstruction
 from .implied_instruction import ImpliedInstruction
 
 
-class SetDecimalFlagOperation(SetFlagOperation):
+class SetDecimalFlagOperation(SetFlagMicroinstruction):
     def __init__(self):
         super().__init__('D')
 

@@ -1,12 +1,12 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import BranchOperation
+from nes.cpu.microinstructions import BranchMicroinstruction
 from .relative_instruction import RelativeInstruction
 
 
 class Bpl(RelativeInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([BranchOperation('N', False)]))
+        self.cycles.append(Cycle([BranchMicroinstruction('N', False)]))
 
     @property
     def name(self):

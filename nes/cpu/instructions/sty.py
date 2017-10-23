@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import MoveOperation
+from nes.cpu.microinstructions import MoveMicroinstruction
 from .zeropage_instruction import ZeroPageInstruction
 from .zeropagex_instruction import ZeroPageXInstruction
 from .absolute_instruction import AbsoluteInstruction
@@ -8,7 +8,7 @@ from .absolute_instruction import AbsoluteInstruction
 class StyZeroPage(ZeroPageInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('Y', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('Y', 'DL')]))
 
     @property
     def name(self):
@@ -26,7 +26,7 @@ class StyZeroPage(ZeroPageInstruction):
 class StyZeroPageX(ZeroPageXInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('Y', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('Y', 'DL')]))
 
     @property
     def name(self):
@@ -44,7 +44,7 @@ class StyZeroPageX(ZeroPageXInstruction):
 class StyAbsolute(AbsoluteInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('Y', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('Y', 'DL')]))
 
     @property
     def name(self):

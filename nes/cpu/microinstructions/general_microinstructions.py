@@ -1,7 +1,7 @@
-from .operation import Operation
+from .microinstruction import Microinstruction
 
 
-class SetFlagOperation(Operation):
+class SetFlagMicroinstruction(Microinstruction):
     def __init__(self, flag):
         self.flag = flag
 
@@ -10,7 +10,7 @@ class SetFlagOperation(Operation):
         flag_register.set_flag(self.flag)
 
 
-class ClearFlagOperation(Operation):
+class ClearFlagMicroinstruction(Microinstruction):
     def __init__(self, flag):
         self.flag = flag
 
@@ -19,7 +19,7 @@ class ClearFlagOperation(Operation):
         flag_register.clear_flag(self.flag)
 
 
-class MoveOperation(Operation):
+class MoveMicroinstruction(Microinstruction):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
@@ -30,7 +30,7 @@ class MoveOperation(Operation):
         dst_register.contents = src_register.contents
 
 
-class ReadOperation(Operation):
+class ReadMicroinstruction(Microinstruction):
     def __init__(self, addr, dst):
         self.addr = addr
         self.dst = dst
@@ -41,7 +41,7 @@ class ReadOperation(Operation):
         dst.contents = processor.memory.read(addr)
 
 
-class WriteOperation(Operation):
+class WriteMicroinstruction(Microinstruction):
     def __init__(self, addr, src):
         self.addr = addr
         self.src = src
@@ -52,7 +52,7 @@ class WriteOperation(Operation):
         processor.memory.write(addr, src.contents)
 
 
-class BranchOperation(Operation):
+class BranchMicroinstruction(Microinstruction):
     def __init__(self, flag, is_set):
         self.flag = flag
         self.is_set = is_set

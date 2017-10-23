@@ -1,12 +1,12 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import BranchOperation
+from nes.cpu.microinstructions import BranchMicroinstruction
 from .relative_instruction import RelativeInstruction
 
 
 class Beq(RelativeInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([BranchOperation('Z', True)]))
+        self.cycles.append(Cycle([BranchMicroinstruction('Z', True)]))
 
     @property
     def name(self):

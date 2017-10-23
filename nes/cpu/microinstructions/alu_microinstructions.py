@@ -1,8 +1,8 @@
 from nes.alu import Alu
-from .operation import Operation
+from .microinstruction import Microinstruction
 
 
-class AluOperation(Operation):
+class AluMicroinstruction(Microinstruction):
     def __init__(self, dst, a, b=None):
         super().__init__()
         self.dst = dst
@@ -13,7 +13,7 @@ class AluOperation(Operation):
         raise NotImplementedError
 
 
-class AddOperation(AluOperation):
+class AddMicroinstruction(AluMicroinstruction):
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         b_input = cpu.registers[self.b].contents
@@ -30,22 +30,22 @@ class AddOperation(AluOperation):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class IncrementOperation(AddOperation):
+class IncrementMicroinstruction(AddMicroinstruction):
     def __init__(self, a):
         super().__init__(dst=a, a=a, b='1')
 
 
-class ArithmeticShiftLeftOperation(AddOperation):
+class ArithmeticShiftLeftMicroinstruction(AddMicroinstruction):
     def __init__(self, dst, a):
         super().__init__(dst=dst, a=a, b=a)
 
 
-class RotateLeftOperation(AluOperation):
+class RotateLeftMicroinstruction(AluMicroinstruction):
     def execute(self, processor):
         pass
 
 
-class SubtractOperation(AluOperation):
+class SubtractMicroinstruction(AluMicroinstruction):
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         b_input = cpu.registers[self.b].contents
@@ -64,17 +64,17 @@ class SubtractOperation(AluOperation):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class DecrementOperation(SubtractOperation):
+class DecrementMicroinstruction(SubtractMicroinstruction):
     def __init__(self, a):
         super().__init__(dst=a, a=a, b='1')
 
 
-class CompareOperation(SubtractOperation):
+class CompareMicroinstruction(SubtractMicroinstruction):
     def __init__(self, a, b):
         super().__init__(dst=None, a=a, b=b)
 
 
-class BitwiseAndOperation(AluOperation):
+class BitwiseAndMicroinstruction(AluMicroinstruction):
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         b_input = cpu.registers[self.b].contents
@@ -88,12 +88,12 @@ class BitwiseAndOperation(AluOperation):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class BitTestOperation(BitwiseAndOperation):
+class BitTestMicroinstruction(BitwiseAndMicroinstruction):
     def __init__(self, a, b):
         super().__init__(dst=None, a=a, b=b)
 
 
-class BitwiseOrOperation(AluOperation):
+class BitwiseOrMicroinstruction(AluMicroinstruction):
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         b_input = cpu.registers[self.b].contents
@@ -105,7 +105,7 @@ class BitwiseOrOperation(AluOperation):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class BitwiseXOrOperation(AluOperation):
+class BitwiseXorMicroinstruction(AluMicroinstruction):
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         b_input = cpu.registers[self.b].contents
@@ -117,7 +117,7 @@ class BitwiseXOrOperation(AluOperation):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class LogicalShiftRightOperation(AluOperation):
+class LogicalShiftRightMicroinstruction(AluMicroinstruction):
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
 
@@ -131,7 +131,7 @@ class LogicalShiftRightOperation(AluOperation):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class RotateRightOperation(AluOperation):
+class RotateRightMicroinstruction(AluMicroinstruction):
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         carry_in = cpu.registers['P'].get_flag_value('C')

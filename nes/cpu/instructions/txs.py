@@ -1,12 +1,12 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import MoveOperation
+from nes.cpu.microinstructions import MoveMicroinstruction
 from .implied_instruction import ImpliedInstruction
 
 
 class Txs(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('X', 'S')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('X', 'S')]))
 
     @property
     def name(self):

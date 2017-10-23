@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import ReadOperation, WriteOperation, IncrementOperation
+from nes.cpu.microinstructions import ReadMicroinstruction, WriteMicroinstruction, IncrementMicroinstruction
 from nes.memory import AbsoluteAddress, StackAddress
 from .implied_instruction import ImpliedInstruction
 
@@ -7,10 +7,10 @@ from .implied_instruction import ImpliedInstruction
 class Plp(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([ReadOperation(AbsoluteAddress('PCH', 'PCL'), 'IR')]))
-        self.cycles.append(Cycle([WriteOperation(StackAddress('S'), 'DL'), IncrementOperation('S')]))
-        self.cycles.append(Cycle([WriteOperation(StackAddress('S'), 'P')]))
-        self.cycles.append(Cycle([ReadOperation(AbsoluteAddress('PCH', 'PCL'), 'IR'), IncrementOperation('PCL')]))
+        self.cycles.append(Cycle([ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'IR')]))
+        self.cycles.append(Cycle([WriteMicroinstruction(StackAddress('S'), 'DL'), IncrementMicroinstruction('S')]))
+        self.cycles.append(Cycle([WriteMicroinstruction(StackAddress('S'), 'P')]))
+        self.cycles.append(Cycle([ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'IR'), IncrementMicroinstruction('PCL')]))
 
     @property
     def name(self):

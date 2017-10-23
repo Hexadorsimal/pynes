@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import MoveOperation
+from nes.cpu.microinstructions import MoveMicroinstruction
 from .absolute_instruction import AbsoluteInstruction
 from .indirect_absolute_instruction import IndirectAbsoluteInstruction
 
@@ -7,8 +7,8 @@ from .indirect_absolute_instruction import IndirectAbsoluteInstruction
 class JmpAbsolute(AbsoluteInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('ADL', 'PCL')]))
-        self.cycles.append(Cycle([MoveOperation('ADH', 'PCH')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('ADL', 'PCL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('ADH', 'PCH')]))
 
     @property
     def name(self):
@@ -26,8 +26,8 @@ class JmpAbsolute(AbsoluteInstruction):
 class JmpIndirectAbsolute(IndirectAbsoluteInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('ADL', 'PCL')]))
-        self.cycles.append(Cycle([MoveOperation('ADH', 'PCH')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('ADL', 'PCL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('ADH', 'PCH')]))
 
     @property
     def name(self):

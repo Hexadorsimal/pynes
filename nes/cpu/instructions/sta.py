@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import MoveOperation
+from nes.cpu.microinstructions import MoveMicroinstruction
 from .zeropage_instruction import ZeroPageInstruction
 from .zeropagex_instruction import ZeroPageXInstruction
 from .absolute_instruction import AbsoluteInstruction
@@ -12,7 +12,7 @@ from .indirect_indexed_instruction import IndirectIndexedInstruction
 class StaZeroPage(ZeroPageInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('A', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('A', 'DL')]))
 
     @property
     def name(self):
@@ -30,7 +30,7 @@ class StaZeroPage(ZeroPageInstruction):
 class StaZeroPageX(ZeroPageXInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('A', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('A', 'DL')]))
 
     @property
     def name(self):
@@ -48,7 +48,7 @@ class StaZeroPageX(ZeroPageXInstruction):
 class StaAbsolute(AbsoluteInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('A', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('A', 'DL')]))
 
     @property
     def name(self):
@@ -66,7 +66,7 @@ class StaAbsolute(AbsoluteInstruction):
 class StaAbsoluteX(AbsoluteXInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('A', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('A', 'DL')]))
 
     @property
     def name(self):
@@ -84,7 +84,7 @@ class StaAbsoluteX(AbsoluteXInstruction):
 class StaAbsoluteY(AbsoluteYInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('A', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('A', 'DL')]))
 
     @property
     def name(self):
@@ -102,7 +102,7 @@ class StaAbsoluteY(AbsoluteYInstruction):
 class StaIndexedIndirect(IndexedIndirectInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('A', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('A', 'DL')]))
 
     @property
     def name(self):
@@ -120,7 +120,7 @@ class StaIndexedIndirect(IndexedIndirectInstruction):
 class StaIndirectIndexed(IndirectIndexedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('A', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('A', 'DL')]))
 
     @property
     def name(self):

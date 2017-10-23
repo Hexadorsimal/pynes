@@ -1,9 +1,9 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import Operation
+from nes.cpu.microinstructions import Microinstruction
 from .implied_instruction import ImpliedInstruction
 
 
-class BreakOperation(Operation):
+class BreakMicroinstruction(Microinstruction):
     def __init__(self):
         super().__init__()
 
@@ -14,7 +14,7 @@ class BreakOperation(Operation):
 class Brk(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([BreakOperation()]))
+        self.cycles.append(Cycle([BreakMicroinstruction()]))
 
     @property
     def name(self):

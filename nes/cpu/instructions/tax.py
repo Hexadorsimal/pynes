@@ -1,12 +1,12 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import MoveOperation
+from nes.cpu.microinstructions import MoveMicroinstruction
 from .implied_instruction import ImpliedInstruction
 
 
 class Tax(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('A', 'X')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('A', 'X')]))
 
     @property
     def name(self):

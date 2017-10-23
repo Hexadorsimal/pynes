@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import MoveOperation
+from nes.cpu.microinstructions import MoveMicroinstruction
 from .immediate_instruction import ImmediateInstruction
 from .zeropage_instruction import ZeroPageInstruction
 from .zeropagex_instruction import ZeroPageXInstruction
@@ -10,7 +10,7 @@ from .absolutex_instruction import AbsoluteXInstruction
 class LdyImmediate(ImmediateInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'Y')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'Y')]))
 
     @property
     def name(self):
@@ -28,7 +28,7 @@ class LdyImmediate(ImmediateInstruction):
 class LdyZeroPage(ZeroPageInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'Y')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'Y')]))
 
     @property
     def name(self):
@@ -46,7 +46,7 @@ class LdyZeroPage(ZeroPageInstruction):
 class LdyZeroPageX(ZeroPageXInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'Y')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'Y')]))
 
     @property
     def name(self):
@@ -64,7 +64,7 @@ class LdyZeroPageX(ZeroPageXInstruction):
 class LdyAbsolute(AbsoluteInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'Y')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'Y')]))
 
     @property
     def name(self):
@@ -82,7 +82,7 @@ class LdyAbsolute(AbsoluteInstruction):
 class LdyAbsoluteX(AbsoluteXInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'Y')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'Y')]))
 
     @property
     def name(self):

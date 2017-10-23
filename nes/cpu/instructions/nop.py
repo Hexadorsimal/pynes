@@ -1,9 +1,9 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import Operation
+from nes.cpu.microinstructions import Microinstruction
 from .implied_instruction import ImpliedInstruction
 
 
-class NopOperation(Operation):
+class NopMicroinstruction(Microinstruction):
     def __init__(self):
         super().__init__()
 
@@ -14,7 +14,7 @@ class NopOperation(Operation):
 class Nop(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([NopOperation()]))
+        self.cycles.append(Cycle([NopMicroinstruction()]))
 
     @property
     def name(self):

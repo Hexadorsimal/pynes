@@ -4,7 +4,7 @@ from nes.alu import Alu
 from nes.memory import AbsoluteAddress, VectorAddress
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
-from .operations import ReadOperation, IncrementOperation
+from .microinstructions import ReadMicroinstruction, IncrementMicroinstruction
 from .registers import RegisterFactory
 
 
@@ -37,8 +37,8 @@ class Cpu:
             return Cpu(yaml_data, nes)
 
     def reset(self):
-        ReadOperation(VectorAddress('RESET', 0), 'PCL').execute(self)
-        ReadOperation(VectorAddress('RESET', 1), 'PCH').execute(self)
+        ReadMicroinstruction(VectorAddress('RESET', 0), 'PCL').execute(self)
+        ReadMicroinstruction(VectorAddress('RESET', 1), 'PCH').execute(self)
         self.run()
 
     def irq(self):
@@ -57,8 +57,8 @@ class Cpu:
         self.execute()
 
     def fetch(self):
-        ReadOperation(AbsoluteAddress('PCH', 'PCL'), 'IR').execute(self)
-        IncrementOperation('PCL').execute(self)
+        ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'IR').execute(self)
+        IncrementMicroinstruction('PCL').execute(self)
 
     def decode(self):
         instruction = self.decoder.get_instruction(self.registers['IR'].contents)

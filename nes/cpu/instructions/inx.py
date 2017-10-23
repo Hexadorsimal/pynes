@@ -1,12 +1,12 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import IncrementOperation
+from nes.cpu.microinstructions import IncrementMicroinstruction
 from .implied_instruction import ImpliedInstruction
 
 
 class Inx(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([IncrementOperation('X')]))
+        self.cycles.append(Cycle([IncrementMicroinstruction('X')]))
 
     @property
     def name(self):

@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.operations import MoveOperation
+from nes.cpu.microinstructions import MoveMicroinstruction
 from .immediate_instruction import ImmediateInstruction
 from .zeropage_instruction import ZeroPageInstruction
 from .zeropagex_instruction import ZeroPageXInstruction
@@ -13,7 +13,7 @@ from .indirect_indexed_instruction import IndirectIndexedInstruction
 class LdaImmediate(ImmediateInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'A')]))
 
     @property
     def name(self):
@@ -31,7 +31,7 @@ class LdaImmediate(ImmediateInstruction):
 class LdaZeroPage(ZeroPageInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'A')]))
 
     @property
     def name(self):
@@ -49,7 +49,7 @@ class LdaZeroPage(ZeroPageInstruction):
 class LdaZeroPageX(ZeroPageXInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'A')]))
 
     @property
     def name(self):
@@ -67,7 +67,7 @@ class LdaZeroPageX(ZeroPageXInstruction):
 class LdaAbsolute(AbsoluteInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'A')]))
 
     @property
     def name(self):
@@ -85,7 +85,7 @@ class LdaAbsolute(AbsoluteInstruction):
 class LdaAbsoluteX(AbsoluteXInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'A')]))
 
     @property
     def name(self):
@@ -103,7 +103,7 @@ class LdaAbsoluteX(AbsoluteXInstruction):
 class LdaAbsoluteY(AbsoluteYInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'A')]))
 
     @property
     def name(self):
@@ -121,7 +121,7 @@ class LdaAbsoluteY(AbsoluteYInstruction):
 class LdaIndexedIndirect(IndexedIndirectInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'A')]))
 
     @property
     def name(self):
@@ -139,7 +139,7 @@ class LdaIndexedIndirect(IndexedIndirectInstruction):
 class LdaIndirectIndexed(IndirectIndexedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveOperation('DL', 'A')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('DL', 'A')]))
 
     @property
     def name(self):
