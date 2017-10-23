@@ -1,0 +1,19 @@
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import IncrementOperation, ReadOperation
+from nes.memory import AbsoluteAddress
+from .instruction import Instruction
+
+
+class AbsoluteXInstruction(Instruction):
+    def __init__(self):
+        super().__init__()
+        self.cycles.append(Cycle([ReadOperation(AbsoluteAddress('PCH', 'PCL'), 'BAL'), IncrementOperation('PCL')]))
+        self.cycles.append(Cycle([ReadOperation(AbsoluteAddress('PCH', 'PCL'), 'BAH'), IncrementOperation('PCL')]))
+        self.cycles.append(Cycle([ReadOperation(AbsoluteAddress('BAH', 'BAL + X'), 'DL')]))
+
+        # When C = 1
+        self.cycles.append(Cycle([ReadOperation(AbsoluteAddress('BAH + 1', 'BAL + X'), 'DL')]))
+
+    @property
+    def size(self):
+        return 3

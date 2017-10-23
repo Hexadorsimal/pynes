@@ -1,4 +1,4 @@
-from ..memory import Memory
+from nes.memory import Memory
 
 
 class Register(Memory):
@@ -20,3 +20,6 @@ class Register(Memory):
         if addr != 0:
             raise IndexError
         self.contents = data
+
+    def copy(self, src):
+        self.contents = src.contents

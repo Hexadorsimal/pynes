@@ -1,6 +1,6 @@
-from ..cycle import Cycle
-from ..operation import DecrementOperation, IncrementOperation, ReadOperation, WriteOperation
-from ..absolute_instruction import AbsoluteInstruction
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import DecrementOperation, IncrementOperation, ReadOperation, WriteOperation
+from .absolute_instruction import AbsoluteInstruction
 
 
 class Jsr(AbsoluteInstruction):

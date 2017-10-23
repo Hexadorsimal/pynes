@@ -1,12 +1,12 @@
-from ..alu.alu_operations import AluIncrementOperation
-from ..cycle import Cycle
-from ..implied_instruction import ImpliedInstruction
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import IncrementOperation
+from .implied_instruction import ImpliedInstruction
 
 
 class Iny(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([AluIncrementOperation('Y')]))
+        self.cycles.append(Cycle([IncrementOperation('Y')]))
 
     @property
     def name(self):

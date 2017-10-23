@@ -1,13 +1,13 @@
-from ..cycle import Cycle
-from ..operation import MoveOperation
-from ..immediate_instruction import ImmediateInstruction
-from ..zeropage_instruction import ZeroPageInstruction
-from ..zeropagex_instruction import ZeroPageXInstruction
-from ..absolute_instruction import AbsoluteInstruction
-from ..absolutex_instruction import AbsoluteXInstruction
-from ..absolutey_instruction import AbsoluteYInstruction
-from ..indexed_indirect_instruction import IndexedIndirectInstruction
-from ..indirect_indexed_instruction import IndirectIndexedInstruction
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import MoveOperation
+from .immediate_instruction import ImmediateInstruction
+from .zeropage_instruction import ZeroPageInstruction
+from .zeropagex_instruction import ZeroPageXInstruction
+from .absolute_instruction import AbsoluteInstruction
+from .absolutex_instruction import AbsoluteXInstruction
+from .absolutey_instruction import AbsoluteYInstruction
+from .indexed_indirect_instruction import IndexedIndirectInstruction
+from .indirect_indexed_instruction import IndirectIndexedInstruction
 
 
 class LdaImmediate(ImmediateInstruction):

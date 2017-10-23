@@ -1,12 +1,12 @@
-from ..alu.alu_operations import AluDecrementOperation
-from ..cycle import Cycle
-from ..implied_instruction import ImpliedInstruction
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import DecrementOperation
+from .implied_instruction import ImpliedInstruction
 
 
 class Dey(ImpliedInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([AluDecrementOperation('Y')]))
+        self.cycles.append(Cycle([DecrementOperation('Y')]))
 
     @property
     def name(self):

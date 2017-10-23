@@ -1,6 +1,6 @@
-from ..cycle import Cycle
-from ..operation import MoveOperation
-from ..implied_instruction import ImpliedInstruction
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import MoveOperation
+from .implied_instruction import ImpliedInstruction
 
 
 class Tya(ImpliedInstruction):

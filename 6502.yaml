@@ -85,6 +85,10 @@ registers:
   - name: IAH
     description: Indirect Address High
 
+  - name: "1"
+    description: Constant 1
+    value: 0x01
+
 interrupt_vectors:
   - name: NMI
     address: 0xFFFA

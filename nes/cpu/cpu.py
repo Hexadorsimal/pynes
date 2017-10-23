@@ -1,11 +1,11 @@
 import yaml
 
-from .alu.alu_operations import AluIncrementOperation
+from nes.alu import Alu
+from nes.memory import AbsoluteAddress, VectorAddress
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
-from .operation import ReadOperation
-from .register_factory import RegisterFactory
-from ..memory.address import AbsoluteAddress, VectorAddress
+from .operations import ReadOperation, IncrementOperation
+from .registers import RegisterFactory
 
 
 class Cpu:
@@ -26,6 +26,7 @@ class Cpu:
             self.buses[name] = nes.buses[name]
 
         self.memory = None
+        self.alu = Alu()
         self.decoder = InstructionDecoder()
         self.pipeline = []
 
@@ -57,7 +58,7 @@ class Cpu:
 
     def fetch(self):
         ReadOperation(AbsoluteAddress('PCH', 'PCL'), 'IR').execute(self)
-        AluIncrementOperation('PCL').execute(self)
+        IncrementOperation('PCL').execute(self)
 
     def decode(self):
         instruction = self.decoder.get_instruction(self.registers['IR'].contents)

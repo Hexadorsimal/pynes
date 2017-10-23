@@ -1,7 +1,7 @@
-from ..cycle import Cycle
-from ..operation import MoveOperation
-from ..absolute_instruction import AbsoluteInstruction
-from ..indirect_absolute_instruction import IndirectAbsoluteInstruction
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import MoveOperation
+from .absolute_instruction import AbsoluteInstruction
+from .indirect_absolute_instruction import IndirectAbsoluteInstruction
 
 
 class JmpAbsolute(AbsoluteInstruction):

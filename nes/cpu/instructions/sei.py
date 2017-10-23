@@ -1,6 +1,6 @@
-from ..cycle import Cycle
-from ..operation import SetFlagOperation
-from ..implied_instruction import ImpliedInstruction
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import SetFlagOperation
+from .implied_instruction import ImpliedInstruction
 
 
 class SetInterruptDisableBitOperation(SetFlagOperation):

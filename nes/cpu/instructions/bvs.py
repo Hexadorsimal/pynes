@@ -1,6 +1,6 @@
-from ..cycle import Cycle
-from ..operation import BranchOperation
-from ..relative_instruction import RelativeInstruction
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import BranchOperation
+from .relative_instruction import RelativeInstruction
 
 
 class Bvs(RelativeInstruction):

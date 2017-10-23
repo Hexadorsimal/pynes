@@ -1,8 +1,8 @@
-from ..cycle import Cycle
-from ..operation import MoveOperation
-from ..zeropage_instruction import ZeroPageInstruction
-from ..zeropagey_instruction import ZeroPageYInstruction
-from ..absolute_instruction import AbsoluteInstruction
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import MoveOperation
+from .zeropage_instruction import ZeroPageInstruction
+from .zeropagey_instruction import ZeroPageYInstruction
+from .absolute_instruction import AbsoluteInstruction
 
 
 class StxZeroPage(ZeroPageInstruction):

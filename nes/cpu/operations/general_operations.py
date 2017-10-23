@@ -1,6 +1,4 @@
-class Operation:
-    def execute(self, processor):
-        raise NotImplementedError
+from .operation import Operation
 
 
 class SetFlagOperation(Operation):

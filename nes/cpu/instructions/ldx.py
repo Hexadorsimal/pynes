@@ -1,10 +1,10 @@
-from ..cycle import Cycle
-from ..operation import MoveOperation
-from ..immediate_instruction import ImmediateInstruction
-from ..zeropage_instruction import ZeroPageInstruction
-from ..zeropagey_instruction import ZeroPageYInstruction
-from ..absolute_instruction import AbsoluteInstruction
-from ..absolutey_instruction import AbsoluteYInstruction
+from nes.cpu.cycle import Cycle
+from nes.cpu.operations import MoveOperation
+from .immediate_instruction import ImmediateInstruction
+from .zeropage_instruction import ZeroPageInstruction
+from .zeropagey_instruction import ZeroPageYInstruction
+from .absolute_instruction import AbsoluteInstruction
+from .absolutey_instruction import AbsoluteYInstruction
 
 
 class LdxImmediate(ImmediateInstruction):

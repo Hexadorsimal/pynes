@@ -1,6 +1,6 @@
 import yaml
 from ..memory import MemoryMap, AddressRange
-from ..cpu import Register
+from nes.cpu.registers import Register
 
 
 class PpuRegisterSet(MemoryMap):

@@ -18,8 +18,14 @@ class FlagRegister(Register):
         else:
             return False
 
+    def set_flag_value(self, name, value):
+        if value:
+            self.set_flag(name)
+        else:
+            self.clear_flag(name)
+
     def get_flag_value(self, name):
-        if self.flags[name].is_flag_set():
+        if self.is_flag_set(name):
             return 1
         else:
             return 0
