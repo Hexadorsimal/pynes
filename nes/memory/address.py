@@ -8,6 +8,9 @@ class PagedAddress(Address):
         self.page = page
         self.reg_lo = reg_lo
 
+    def __repr__(self):
+        return '({hi},{lo})'.format(hi=self.page, lo=self.reg_lo)
+
     def evaluate(self, cpu):
         reg_lo = cpu.registers[self.reg_lo]
         return (self.page << 8) | reg_lo.contents
@@ -28,6 +31,9 @@ class AbsoluteAddress(Address):
         self.reg_hi = reg_hi
         self.reg_lo = reg_lo
 
+    def __repr__(self):
+        return '({hi},{lo})'.format(hi=self.reg_hi, lo=self.reg_lo)
+
     def evaluate(self, cpu):
         reg_hi = cpu.registers[self.reg_hi]
         reg_lo = cpu.registers[self.reg_lo]
@@ -38,6 +44,9 @@ class VectorAddress(Address):
     def __init__(self, vector, offset):
         self.vector = vector
         self.offset = offset
+
+    def __repr__(self):
+        return '({vector} + {offset})'.format(vector=self.vector, offset=self.offset)
 
     def evaluate(self, cpu):
         vector = cpu.vectors[self.vector]

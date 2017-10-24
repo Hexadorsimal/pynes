@@ -14,6 +14,9 @@ class AluMicroinstruction(Microinstruction):
 
 
 class AddMicroinstruction(AluMicroinstruction):
+    def __repr__(self):
+        return '{dst} <- {a} + {b} + C'.format(dst=self.dst, a=self.a, b=self.b)
+
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         b_input = cpu.registers[self.b].contents
@@ -34,18 +37,30 @@ class IncrementMicroinstruction(AddMicroinstruction):
     def __init__(self, a):
         super().__init__(dst=a, a=a, b='1')
 
+    def __repr__(self):
+        return '{dst} <- {a} + 1'.format(dst=self.dst, a=self.a)
+
 
 class ArithmeticShiftLeftMicroinstruction(AddMicroinstruction):
     def __init__(self, dst, a):
         super().__init__(dst=dst, a=a, b=a)
 
+    def __repr__(self):
+        return '{dst} <- shl {a}'.format(dst=self.dst, a=self.a)
+
 
 class RotateLeftMicroinstruction(AluMicroinstruction):
+    def __repr__(self):
+        return '{dst} <- rol {a}'.format(dst=self.dst, a=self.a)
+
     def execute(self, processor):
         pass
 
 
 class SubtractMicroinstruction(AluMicroinstruction):
+    def __repr__(self):
+        return '{dst} <- {a} - {b}'.format(dst=self.dst, a=self.a, b=self.b)
+
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         b_input = cpu.registers[self.b].contents
@@ -68,13 +83,22 @@ class DecrementMicroinstruction(SubtractMicroinstruction):
     def __init__(self, a):
         super().__init__(dst=a, a=a, b='1')
 
+    def __repr__(self):
+        return '{dst} <- {a} - 1'.format(dst=self.dst, a=self.a)
+
 
 class CompareMicroinstruction(SubtractMicroinstruction):
     def __init__(self, a, b):
         super().__init__(dst=None, a=a, b=b)
 
+    def __repr__(self):
+        return 'cmp {a} - {b}'.format(a=self.a, b=self.b)
+
 
 class BitwiseAndMicroinstruction(AluMicroinstruction):
+    def __repr__(self):
+        return '{dst} <- {a} & {b}'.format(dst=self.dst, a=self.a, b=self.b)
+
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         b_input = cpu.registers[self.b].contents
@@ -92,8 +116,14 @@ class BitTestMicroinstruction(BitwiseAndMicroinstruction):
     def __init__(self, a, b):
         super().__init__(dst=None, a=a, b=b)
 
+    def __repr__(self):
+        return 'test {a} & {b}'.format(dst=self.dst, a=self.a, b=self.b)
+
 
 class BitwiseOrMicroinstruction(AluMicroinstruction):
+    def __repr__(self):
+        return '{dst} <- {a} | {b}'.format(dst=self.dst, a=self.a, b=self.b)
+
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         b_input = cpu.registers[self.b].contents
@@ -106,6 +136,9 @@ class BitwiseOrMicroinstruction(AluMicroinstruction):
 
 
 class BitwiseXorMicroinstruction(AluMicroinstruction):
+    def __repr__(self):
+        return '{dst} <- {a} ^ {b}'.format(dst=self.dst, a=self.a, b=self.b)
+
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         b_input = cpu.registers[self.b].contents
@@ -118,6 +151,9 @@ class BitwiseXorMicroinstruction(AluMicroinstruction):
 
 
 class LogicalShiftRightMicroinstruction(AluMicroinstruction):
+    def __repr__(self):
+        return '{dst} <- shr {a}'.format(dst=self.dst, a=self.a)
+
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
 
@@ -132,6 +168,9 @@ class LogicalShiftRightMicroinstruction(AluMicroinstruction):
 
 
 class RotateRightMicroinstruction(AluMicroinstruction):
+    def __repr__(self):
+        return '{dst} <- ror {a}'.format(dst=self.dst, a=self.a)
+
     def execute(self, cpu):
         a_input = cpu.registers[self.a].contents
         carry_in = cpu.registers['P'].get_flag_value('C')

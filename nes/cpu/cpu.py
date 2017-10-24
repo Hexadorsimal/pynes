@@ -72,5 +72,18 @@ class Cpu:
     def execute(self):
         while self.pipeline:
             cycle = self.pipeline.pop(0)
-            for microinstruction in cycle.microinstructions:
-                microinstruction.execute(self)
+            cycle.execute(cpu=self)
+
+    def read_data(self):
+        addr_lo = self.registers['ADL'].contents
+        addr_hi = self.registers['ADH'].contents
+        addr = (addr_hi << 8) | addr_lo
+
+        self.registers['DL'].contents = self.memory.read(addr)
+
+    def write_data(self):
+        addr_lo = self.registers['ADL'].contents
+        addr_hi = self.registers['ADH'].contents
+        addr = (addr_hi << 8) | addr_lo
+
+        self.memory.write(addr, self.registers['DL'].contents)

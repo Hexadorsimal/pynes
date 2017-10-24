@@ -5,6 +5,9 @@ class SetFlagMicroinstruction(Microinstruction):
     def __init__(self, flag):
         self.flag = flag
 
+    def __repr__(self):
+        return self.flag + ' <- 1'
+
     def execute(self, processor):
         flag_register = processor.registers['P']
         flag_register.set_flag(self.flag)
@@ -13,6 +16,9 @@ class SetFlagMicroinstruction(Microinstruction):
 class ClearFlagMicroinstruction(Microinstruction):
     def __init__(self, flag):
         self.flag = flag
+
+    def __repr__(self):
+        return self.flag + ' <- 0'
 
     def execute(self, processor):
         flag_register = processor.registers['P']
@@ -23,6 +29,9 @@ class MoveMicroinstruction(Microinstruction):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
+
+    def __repr__(self):
+        return self.dst + ' <- ' + self.src
 
     def execute(self, processor):
         src_register = processor.registers[self.src]
@@ -35,6 +44,9 @@ class ReadMicroinstruction(Microinstruction):
         self.addr = addr
         self.dst = dst
 
+    def __repr__(self):
+        return self.dst + ' <- $' + str(self.addr)
+
     def execute(self, processor):
         dst = processor.registers[self.dst]
         addr = self.addr.evaluate(processor)
@@ -46,6 +58,9 @@ class WriteMicroinstruction(Microinstruction):
         self.addr = addr
         self.src = src
 
+    def __repr__(self):
+        return '$' + str(self.addr) + ' <- ' + self.src
+
     def execute(self, processor):
         src = processor.registers[self.src]
         addr = self.addr.evaluate(processor)
@@ -56,6 +71,9 @@ class BranchMicroinstruction(Microinstruction):
     def __init__(self, flag, is_set):
         self.flag = flag
         self.is_set = is_set
+
+    def __repr__(self):
+        return 'Branch on {flag} = {value}'.format(flag=self.flag, value = self.is_set)
 
     def execute(self, processor):
         flags_register = processor.registers['P']
