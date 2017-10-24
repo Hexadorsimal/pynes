@@ -7,6 +7,10 @@ from .indirect_absolute_instruction import IndirectAbsoluteInstruction
 class JmpAbsolute(AbsoluteInstruction):
     def __init__(self):
         super().__init__()
+
+        # JMP is the only Absolute Addressing mode instruction that skips the last step of that mode
+        self.cycles.pop()
+
         self.cycles.append(Cycle([MoveMicroinstruction('ADL', 'PCL')]))
         self.cycles.append(Cycle([MoveMicroinstruction('ADH', 'PCH')]))
 

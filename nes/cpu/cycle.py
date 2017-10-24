@@ -1,10 +1,10 @@
 class Cycle:
-    def __init__(self, operations=[]):
-        self.operations = operations
+    def __init__(self, microinstructions=[]):
+        self.microinstructions = microinstructions
 
-    def add_operation(self, operation):
-        self.operations.append(operation)
+    def add_microinstruction(self, microinstruction):
+        self.microinstructions.append(microinstruction)
 
     def execute(self):
-        for operation in self.operations:
-            operation.execute()
+        for microinstruction in self.microinstructions:
+            microinstruction.execute()

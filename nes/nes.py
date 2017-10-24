@@ -49,4 +49,4 @@ class Nes:
         self.cartridge = None
 
     def power_up(self):
-        self.cpu.reset()
+        self.cpu.power_on()

@@ -36,6 +36,11 @@ class Cpu:
             yaml_data = yaml.load(stream)
             return Cpu(yaml_data, nes)
 
+    def power_on(self):
+        self.registers['PCL'].contents = 0x00
+        self.registers['PCH'].contents = 0xC0
+        self.run()
+
     def reset(self):
         ReadMicroinstruction(VectorAddress('RESET', 0), 'PCL').execute(self)
         ReadMicroinstruction(VectorAddress('RESET', 1), 'PCH').execute(self)
@@ -67,5 +72,5 @@ class Cpu:
     def execute(self):
         while self.pipeline:
             cycle = self.pipeline.pop(0)
-            for operation in cycle.operations:
-                operation.execute(self)
+            for microinstruction in cycle.microinstructions:
+                microinstruction.execute(self)

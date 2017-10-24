@@ -104,24 +104,6 @@ buses:
   - name: DB
   - name: R/W
 
-components:
-  - name: ALU
-    description: Arithmetic Logic Unit
-    inputs:
-      - register a
-      - register b
-    outputs:
-      - output register
-    operations:
-      - add
-      - or
-      - xor
-      - and
-      - shift right
-    internal:
-      - carry out
-      - overflow
-
 connections:
   - name: DB-X
   - name: DB-Y
