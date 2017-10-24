@@ -11,6 +11,16 @@ class FlagRegister(Register):
             flag = Flag(**flag_dict)
             self.flags[flag.letter] = flag
 
+    def __repr__(self):
+        flag_string = ""
+        for (name, flag) in self.flags.items():
+            if self.is_flag_set(name):
+                flag_string += flag.letter
+            else:
+                flag_string += '-'
+
+        return '{name}:{flags}'.format(name=self.name, flags=flag_string)
+
     def is_flag_set(self, name):
         flag = self.flags[name]
         if self.contents & flag.mask:
