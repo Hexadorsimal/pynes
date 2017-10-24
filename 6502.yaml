@@ -85,6 +85,10 @@ registers:
   - name: IAH
     description: Indirect Address High
 
+  - name: "0"
+    description: Constant 0
+    value: 0x00
+
   - name: "1"
     description: Constant 1
     value: 0x01

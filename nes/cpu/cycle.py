@@ -4,7 +4,7 @@ class Cycle:
         self.microinstructions = microinstructions
 
     def __repr__(self):
-        return str(self.microinstructions)
+        return str(self.microinstructions) + ' ' + self.read_write
 
     def add_microinstruction(self, microinstruction):
         self.microinstructions.append(microinstruction)

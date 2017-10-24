@@ -8,7 +8,7 @@ from .absolute_instruction import AbsoluteInstruction
 class StxZeroPage(ZeroPageInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveMicroinstruction('X', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('X', 'DL')], 'write'))
 
     @property
     def name(self):
@@ -26,7 +26,7 @@ class StxZeroPage(ZeroPageInstruction):
 class StxZeroPageY(ZeroPageYInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveMicroinstruction('X', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('X', 'DL')], 'write'))
 
     @property
     def name(self):
@@ -44,7 +44,7 @@ class StxZeroPageY(ZeroPageYInstruction):
 class StxAbsolute(AbsoluteInstruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveMicroinstruction('X', 'DL')]))
+        self.cycles.append(Cycle([MoveMicroinstruction('X', 'DL')], 'write'))
 
     @property
     def name(self):
