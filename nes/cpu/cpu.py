@@ -1,6 +1,7 @@
 import yaml
 
 from nes.alu import Alu
+from nes.clock import ClockListener
 from nes.memory import AbsoluteAddress, VectorAddress
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
@@ -8,7 +9,7 @@ from .microinstructions import ReadMicroinstruction, IncrementMicroinstruction
 from .registers import RegisterFactory
 
 
-class Cpu:
+class Cpu(ClockListener):
     def __init__(self, yaml_data, nes):
         self.registers = {}
         for register_data in yaml_data['registers']:
@@ -25,7 +26,6 @@ class Cpu:
             name = bus_data['name']
             self.buses[name] = nes.buses[name]
 
-        self.memory = None
         self.alu = Alu()
         self.decoder = InstructionDecoder()
         self.pipeline = []
@@ -39,12 +39,10 @@ class Cpu:
     def power_on(self):
         self.registers['PCL'].contents = 0x00
         self.registers['PCH'].contents = 0xC0
-        self.run()
 
     def reset(self):
         ReadMicroinstruction(VectorAddress('RESET', 0), 'PCL').execute(self)
         ReadMicroinstruction(VectorAddress('RESET', 1), 'PCH').execute(self)
-        self.run()
 
     def irq(self):
         pass
@@ -52,14 +50,29 @@ class Cpu:
     def nmi(self):
         pass
 
-    def run(self):
-        while True:
-            self.step()
+    def clock_tick(self, event_name):
+        if event_name == 'phase 1':
+            if not self.pipeline:
+                self.fetch()
+                self.decode()
 
-    def step(self):
-        self.fetch()
-        self.decode()
-        self.execute()
+            cycle = self.pipeline.pop(0)
+
+            addr_lo = self.registers['ADL'].contents
+            addr_hi = self.registers['ADH'].contents
+            addr = (addr_hi << 8) | addr_lo
+            self.buses['AB'].put(addr)
+            self.buses['R/W'].put(cycle.read_write)
+
+            cycle.execute(cpu=self)
+
+        elif event_name == 'phase 2':
+            if self.buses['R/W'].get() == 'write':
+                self.buses['DB'].put(self.registers['DL'].contents)
+
+        elif event_name == 'cycle complete':
+            if self.buses['R/W'].get() == 'read':
+                self.registers['DL'].contents = self.buses['DB'].get()
 
     def fetch(self):
         ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'IR').execute(self)
@@ -68,22 +81,3 @@ class Cpu:
     def decode(self):
         instruction = self.decoder.get_instruction(self.registers['IR'].contents)
         self.pipeline.extend(instruction.cycles)
-
-    def execute(self):
-        while self.pipeline:
-            cycle = self.pipeline.pop(0)
-            cycle.execute(cpu=self)
-
-    def read_data(self):
-        addr_lo = self.registers['ADL'].contents
-        addr_hi = self.registers['ADH'].contents
-        addr = (addr_hi << 8) | addr_lo
-
-        self.registers['DL'].contents = self.memory.read(addr)
-
-    def write_data(self):
-        addr_lo = self.registers['ADL'].contents
-        addr_hi = self.registers['ADH'].contents
-        addr = (addr_hi << 8) | addr_lo
-
-        self.memory.write(addr, self.registers['DL'].contents)

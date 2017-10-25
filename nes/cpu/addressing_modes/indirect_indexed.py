@@ -1,10 +1,10 @@
 from nes.cpu.cycle import Cycle
 from nes.cpu.microinstructions import IncrementMicroinstruction ,ReadMicroinstruction
 from nes.memory import AbsoluteAddress, ZeroPageAddress
-from .instruction import Instruction
+from .addressing_mode import AddressingMode
 
 
-class IndirectIndexedInstruction(Instruction):
+class IndirectIndexedAddressing(AddressingMode):
     def __init__(self):
         super().__init__()
         self.cycles.append(Cycle([ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'IAL'), IncrementMicroinstruction('PCL')]))

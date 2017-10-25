@@ -1,26 +1,26 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import ReadMicroinstruction, IncrementMicroinstruction
+from nes.cpu.microinstructions import AddressBus, Read, Increment
 from nes.memory import AbsoluteAddress, StackAddress
-from .implied_instruction import ImpliedInstruction
+from ..addressing_modes import ImpliedAddressing
+from .instruction import Instruction
 
 
-class Rts(ImpliedInstruction):
+class Rts(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'DL')]))
-        self.cycles.append(Cycle([ReadMicroinstruction(StackAddress('S'), 'DL'), IncrementMicroinstruction('S')]))
-        self.cycles.append(Cycle([ReadMicroinstruction(StackAddress('S'), 'PCL'), IncrementMicroinstruction('S')]))
-        self.cycles.append(Cycle([ReadMicroinstruction(StackAddress('S'), 'PCH')]))
-        self.cycles.append(Cycle([ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'DL'), IncrementMicroinstruction('PCL')]))
-        self.cycles.append(Cycle([ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'IR'), IncrementMicroinstruction('PCL')]))
+        self.cycles.append(Cycle([AddressBus(AbsoluteAddress('PCH', 'PCL')), Read()]))
+        self.cycles.append(Cycle([AddressBus(StackAddress('S')), Read(), Increment('S')]))
+        self.cycles.append(Cycle([AddressBus(StackAddress('S')), Read(), Increment('S')]))
+        self.cycles.append(Cycle([AddressBus(StackAddress('S')), Read()]))
+        self.cycles.append(Cycle([AddressBus(AbsoluteAddress('PCH', 'PCL')), Read(), Increment('PCL')]))
+        self.cycles.append(Cycle([AddressBus(AbsoluteAddress('PCH', 'PCL')), Read(), Increment('PCL')]))
+        self.addressing_modes = {
+            0x60: ImpliedAddressing
+        }
 
     @property
     def name(self):
         return 'RTS'
-
-    @property
-    def opcode(self):
-        return 0x60
 
     @property
     def description(self):

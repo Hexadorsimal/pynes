@@ -1,12 +1,14 @@
 import yaml
 from .bus import Bus
+from .clock import ClockGenerator
 from .cpu import Cpu
 from .memory import AddressRange, MemoryMap, Ram
-from .ppu import PpuRegisterSet
+from .memory.memory_control_unit import MemoryControlUnit
 
 
 class Nes:
     def __init__(self, yaml_data):
+        self.clock = ClockGenerator(yaml_data['clock'])
         self.cartridge = None
 
         self.buses = {}
@@ -15,12 +17,10 @@ class Nes:
             self.buses[bus.name] = bus
 
         self.cpu = Cpu.create(yaml_data['cpu']['filename'], self)
+        self.cpu_mem = MemoryControlUnit()
 
-        self.cpu.memory = MemoryMap(0x10000)
-        self.cpu.memory.add_memory(AddressRange(0x0000, 0x2000), Ram(0x0800))  # RAM
-        self.cpu.memory.add_memory(AddressRange(0x2000, 0x2000), PpuRegisterSet.create('nes/ppu/ppu.yaml'))  # PPU Registers
-        self.cpu.memory.add_memory(AddressRange(0x4000, 0x0018), Ram(0x0018))  # APU and IO Registers
-        self.cpu.memory.add_memory(AddressRange(0x4018, 0x0008), Ram(0x0008))  # Disabled APU and IO functionality
+        self.clock.add_listener(self.cpu)
+        self.clock.add_listener(self.cpu_mem)
 
         ppu_mem = MemoryMap(0x4000)
         ppu_mem.add_memory(AddressRange(0x0000, 0x1000), Ram(0x1000))  # Pattern Table 0
@@ -42,7 +42,7 @@ class Nes:
 
     def insert_cartridge(self, cartridge):
         self.cartridge = cartridge
-        self.cpu.memory.add_memory(AddressRange(0x6000, 0xA000), cartridge.mmc)
+        self.cpu_mem.memory.add_memory(AddressRange(0x6000, 0xA000), cartridge.mmc)
 
     def remove_cartridge(self):
         self.cpu.memory.remove_memory(self.cartridge.mmc)
@@ -50,3 +50,4 @@ class Nes:
 
     def power_up(self):
         self.cpu.power_on()
+        self.clock.run()

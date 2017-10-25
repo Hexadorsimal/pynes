@@ -1,5 +1,5 @@
 import yaml
-from ..memory import MemoryMap, AddressRange
+from nes.memory import MemoryMap, AddressRange
 from nes.cpu.registers import Register
 
 

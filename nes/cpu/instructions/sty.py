@@ -1,59 +1,23 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import MoveMicroinstruction
-from .zeropage_instruction import ZeroPageInstruction
-from .zeropagex_instruction import ZeroPageXInstruction
-from .absolute_instruction import AbsoluteInstruction
+from nes.cpu.microinstructions import Move
+from ..addressing_modes import *
+from .instruction import Instruction
 
 
-class StyZeroPage(ZeroPageInstruction):
+class Sty(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveMicroinstruction('Y', 'DL')]))
+        self.cycles.append(Cycle([Move('Y', 'DL')]))
+        self.addressing_modes = {
+            0x84: ZeroPageAddressing,
+            0x94: ZeroPageXAddressing,
+            0x8C: AbsoluteAddressing,
+        }
 
     @property
     def name(self):
-        return 'STY zpg'
-
-    @property
-    def opcode(self):
-        return 0x84
+        return 'STY'
 
     @property
     def description(self):
-        return 'Store Index Y in Memory (ZeroPage)'
-
-
-class StyZeroPageX(ZeroPageXInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([MoveMicroinstruction('Y', 'DL')]))
-
-    @property
-    def name(self):
-        return 'STY zpg,X'
-
-    @property
-    def opcode(self):
-        return 0x94
-
-    @property
-    def description(self):
-        return 'Store Index Y in Memory (ZeroPageX)'
-
-
-class StyAbsolute(AbsoluteInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([MoveMicroinstruction('Y', 'DL')]))
-
-    @property
-    def name(self):
-        return 'STY abs'
-
-    @property
-    def opcode(self):
-        return 0x8C
-
-    @property
-    def description(self):
-        return 'Store Index Y in Memory (Absolute)'
+        return 'Store Index Y in Memory'

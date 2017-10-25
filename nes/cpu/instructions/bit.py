@@ -1,39 +1,21 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import BitTestMicroinstruction
-from .zeropage_instruction import ZeroPageInstruction
-from .absolute_instruction import AbsoluteInstruction
+from nes.cpu.microinstructions import BitTest
+from ..addressing_modes import *
+from .instruction import Instruction
 
 
-class BitZeroPage(ZeroPageInstruction):
+class Bit(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([BitTestMicroinstruction('A', 'DL')]))
+        self.cycles.append(Cycle([BitTest('A', 'DL')]))
+        self.addressing_modes = {
+            0x24: ZeroPageAddressing,
+            0x2C: AbsoluteAddressing,
+        }
 
     @property
     def name(self):
         return 'BIT'
-
-    @property
-    def opcode(self):
-        return 0x24
-
-    @property
-    def description(self):
-        return 'Test Bits in Memory with Accumulator'
-
-
-class BitAbsolute(AbsoluteInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([BitTestMicroinstruction('A', 'DL')]))
-
-    @property
-    def name(self):
-        return 'BIT'
-
-    @property
-    def opcode(self):
-        return 0x2C
 
     @property
     def description(self):

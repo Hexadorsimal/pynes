@@ -1,4 +1,10 @@
 ---
+clock:
+  events:
+    - phase 1
+    - phase 2
+    - cycle complete
+
 cpu:
   filename: 6502.yaml
 

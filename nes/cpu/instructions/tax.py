@@ -1,20 +1,20 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import MoveMicroinstruction
-from .implied_instruction import ImpliedInstruction
+from nes.cpu.microinstructions import Move
+from ..addressing_modes import ImpliedAddressing
+from .instruction import Instruction
 
 
-class Tax(ImpliedInstruction):
+class Tax(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveMicroinstruction('A', 'X')]))
+        self.cycles.append(Cycle([Move('A', 'X')]))
+        self.addressing_modes = {
+            0xAA: ImpliedAddressing
+        }
 
     @property
     def name(self):
         return 'TAX'
-
-    @property
-    def opcode(self):
-        return 0xAA
 
     @property
     def description(self):

@@ -1,96 +1,25 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import ArithmeticShiftLeftMicroinstruction
-from .accumulator_instruction import AccumulatorInstruction
-from .zeropage_instruction import ZeroPageInstruction
-from .zeropagex_instruction import ZeroPageXInstruction
-from .absolute_instruction import AbsoluteInstruction
-from .absolutex_instruction import AbsoluteXInstruction
+from nes.cpu.microinstructions import ArithmeticShiftLeft
+from ..addressing_modes import *
+from .instruction import Instruction
 
 
-class AslAccumulator(AccumulatorInstruction):
+class Asl(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([ArithmeticShiftLeftMicroinstruction('A', 'A')]))
+        self.cycles.append(Cycle([ArithmeticShiftLeft('DL', 'DL')]))
+
+        self.addressing_modes = {
+            0x0A: AccumulatorAddressing,
+            0x06: ZeroPageAddressing,
+            0x16: ZeroPageXAddressing,
+            0x0E: AbsoluteAddressing,
+            0x1E: AbsoluteXAddressing,
+        }
 
     @property
     def name(self):
         return 'ASL'
-
-    @property
-    def opcode(self):
-        return 0x0A
-
-    @property
-    def description(self):
-        return 'Shift left One Bit (Memory or Accumulator)'
-
-
-class AslZeroPage(ZeroPageInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([ArithmeticShiftLeftMicroinstruction('DL', 'DL')]))
-
-    @property
-    def name(self):
-        return 'ASL'
-
-    @property
-    def opcode(self):
-        return 0x06
-
-    @property
-    def description(self):
-        return 'Shift left One Bit (Memory or Accumulator)'
-
-
-class AslZeroPageX(ZeroPageXInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([ArithmeticShiftLeftMicroinstruction('DL', 'DL')]))
-
-    @property
-    def name(self):
-        return 'ASL'
-
-    @property
-    def opcode(self):
-        return 0x16
-
-    @property
-    def description(self):
-        return 'Shift left One Bit (Memory or Accumulator)'
-
-
-class AslAbsolute(AbsoluteInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([ArithmeticShiftLeftMicroinstruction('DL', 'DL')]))
-
-    @property
-    def name(self):
-        return 'ASL'
-
-    @property
-    def opcode(self):
-        return 0x0E
-
-    @property
-    def description(self):
-        return 'Shift left One Bit (Memory or Accumulator)'
-
-
-class AslAbsoluteX(AbsoluteXInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([ArithmeticShiftLeftMicroinstruction('DL', 'DL')]))
-
-    @property
-    def name(self):
-        return 'ASL'
-
-    @property
-    def opcode(self):
-        return 0x1E
 
     @property
     def description(self):

@@ -1,25 +1,20 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import ClearFlagMicroinstruction
-from .implied_instruction import ImpliedInstruction
+from nes.cpu.microinstructions import ClearFlag
+from ..addressing_modes import ImpliedAddressing
+from .instruction import Instruction
 
 
-class ClearOverflowFlagOperation(ClearFlagMicroinstruction):
-    def __init__(self):
-        super().__init__('I')
-
-
-class Clv(ImpliedInstruction):
+class Clv(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([ClearOverflowFlagOperation()]))
+        self.cycles.append(Cycle([ClearFlag('V')]))
+        self.addressing_modes = {
+            0xB8: ImpliedAddressing
+        }
 
     @property
     def name(self):
         return 'CLV'
-
-    @property
-    def opcode(self):
-        return 0xB8
 
     @property
     def description(self):

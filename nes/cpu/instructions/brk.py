@@ -1,9 +1,10 @@
 from nes.cpu.cycle import Cycle
 from nes.cpu.microinstructions import Microinstruction
-from .implied_instruction import ImpliedInstruction
+from ..addressing_modes import ImpliedAddressing
+from .instruction import Instruction
 
 
-class BreakMicroinstruction(Microinstruction):
+class Break(Microinstruction):
     def __init__(self):
         super().__init__()
 
@@ -11,18 +12,17 @@ class BreakMicroinstruction(Microinstruction):
         pass
 
 
-class Brk(ImpliedInstruction):
+class Brk(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([BreakMicroinstruction()]))
+        self.cycles.append(Cycle([Break()]))
+        self.addressing_modes = {
+            0x00: ImpliedAddressing
+        }
 
     @property
     def name(self):
         return 'BRK'
-
-    @property
-    def opcode(self):
-        return 0x00
 
     @property
     def description(self):

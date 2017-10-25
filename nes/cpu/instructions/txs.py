@@ -1,20 +1,20 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import MoveMicroinstruction
-from .implied_instruction import ImpliedInstruction
+from nes.cpu.microinstructions import Move
+from ..addressing_modes import ImpliedAddressing
+from .instruction import Instruction
 
 
-class Txs(ImpliedInstruction):
+class Txs(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveMicroinstruction('X', 'S')]))
+        self.cycles.append(Cycle([Move('X', 'S')]))
+        self.addressing_modes = {
+            0x9A: ImpliedAddressing
+        }
 
     @property
     def name(self):
         return 'TXS'
-
-    @property
-    def opcode(self):
-        return 0x9A
 
     @property
     def description(self):

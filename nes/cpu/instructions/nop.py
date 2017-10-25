@@ -1,6 +1,7 @@
 from nes.cpu.cycle import Cycle
 from nes.cpu.microinstructions import Microinstruction
-from .implied_instruction import ImpliedInstruction
+from ..addressing_modes import ImpliedAddressing
+from .instruction import Instruction
 
 
 class NopMicroinstruction(Microinstruction):
@@ -11,18 +12,17 @@ class NopMicroinstruction(Microinstruction):
         pass
 
 
-class Nop(ImpliedInstruction):
+class Nop(Instruction):
     def __init__(self):
         super().__init__()
         self.cycles.append(Cycle([NopMicroinstruction()]))
+        self.addressing_modes = {
+            0xEA: ImpliedAddressing
+        }
 
     @property
     def name(self):
         return 'NOP'
-
-    @property
-    def opcode(self):
-        return 0xEA
 
     @property
     def description(self):

@@ -1,7 +1,7 @@
 from .microinstruction import Microinstruction
 
 
-class SetFlagMicroinstruction(Microinstruction):
+class SetFlag(Microinstruction):
     def __init__(self, flag):
         self.flag = flag
 
@@ -13,7 +13,7 @@ class SetFlagMicroinstruction(Microinstruction):
         flag_register.set_flag(self.flag)
 
 
-class ClearFlagMicroinstruction(Microinstruction):
+class ClearFlag(Microinstruction):
     def __init__(self, flag):
         self.flag = flag
 
@@ -25,7 +25,7 @@ class ClearFlagMicroinstruction(Microinstruction):
         flag_register.clear_flag(self.flag)
 
 
-class MoveMicroinstruction(Microinstruction):
+class Move(Microinstruction):
     def __init__(self, src, dst):
         self.src = src
         self.dst = dst
@@ -39,35 +39,35 @@ class MoveMicroinstruction(Microinstruction):
         dst_register.contents = src_register.contents
 
 
-class ReadMicroinstruction(Microinstruction):
-    def __init__(self, addr, dst):
+class AddressBus(Microinstruction):
+    def __init__(self, addr):
         self.addr = addr
-        self.dst = dst
 
     def __repr__(self):
-        return self.dst + ' <- $' + str(self.addr)
+        return 'AB <- $' + str(self.addr)
 
-    def execute(self, processor):
-        dst = processor.registers[self.dst]
-        addr = self.addr.evaluate(processor)
-        dst.contents = processor.memory.read(addr)
+    def execute(self, cpu):
+        addr = self.addr.evaluate(cpu)
+        cpu.buses['AB'].put(addr)
 
 
-class WriteMicroinstruction(Microinstruction):
-    def __init__(self, addr, src):
-        self.addr = addr
-        self.src = src
-
+class Read(Microinstruction):
     def __repr__(self):
-        return '$' + str(self.addr) + ' <- ' + self.src
+        return 'R/W <- 1'
 
-    def execute(self, processor):
-        src = processor.registers[self.src]
-        addr = self.addr.evaluate(processor)
-        processor.memory.write(addr, src.contents)
+    def execute(self, cpu):
+        cpu.buses['R/W'].put(1)
 
 
-class BranchMicroinstruction(Microinstruction):
+class Write(Microinstruction):
+    def __repr__(self):
+        return 'R/W <- 0'
+
+    def execute(self, cpu):
+        cpu.buses['R/W'].put(0)
+
+
+class Branch(Microinstruction):
     def __init__(self, flag, is_set):
         self.flag = flag
         self.is_set = is_set

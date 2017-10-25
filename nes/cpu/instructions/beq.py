@@ -1,20 +1,20 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import BranchMicroinstruction
-from .relative_instruction import RelativeInstruction
+from nes.cpu.microinstructions import Branch
+from ..addressing_modes import RelativeAddressing
+from .instruction import Instruction
 
 
-class Beq(RelativeInstruction):
+class Beq(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([BranchMicroinstruction('Z', True)]))
+        self.cycles.append(Cycle([Branch('Z', True)]))
+        self.addressing_modes = {
+            0xF0: RelativeAddressing
+        }
 
     @property
     def name(self):
         return 'BEQ'
-
-    @property
-    def opcode(self):
-        return 0xF0
 
     @property
     def description(self):

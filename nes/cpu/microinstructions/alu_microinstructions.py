@@ -13,7 +13,7 @@ class AluMicroinstruction(Microinstruction):
         raise NotImplementedError
 
 
-class AddMicroinstruction(AluMicroinstruction):
+class Add(AluMicroinstruction):
     def __repr__(self):
         return '{dst} <- {a} + {b} + C'.format(dst=self.dst, a=self.a, b=self.b)
 
@@ -33,7 +33,7 @@ class AddMicroinstruction(AluMicroinstruction):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class IncrementMicroinstruction(AddMicroinstruction):
+class Increment(Add):
     def __init__(self, a):
         super().__init__(dst=a, a=a, b='1')
 
@@ -41,7 +41,7 @@ class IncrementMicroinstruction(AddMicroinstruction):
         return '{dst} <- {a} + 1'.format(dst=self.dst, a=self.a)
 
 
-class ArithmeticShiftLeftMicroinstruction(AddMicroinstruction):
+class ArithmeticShiftLeft(Add):
     def __init__(self, dst, a):
         super().__init__(dst=dst, a=a, b=a)
 
@@ -49,7 +49,7 @@ class ArithmeticShiftLeftMicroinstruction(AddMicroinstruction):
         return '{dst} <- shl {a}'.format(dst=self.dst, a=self.a)
 
 
-class RotateLeftMicroinstruction(AluMicroinstruction):
+class RotateLeft(AluMicroinstruction):
     def __repr__(self):
         return '{dst} <- rol {a}'.format(dst=self.dst, a=self.a)
 
@@ -57,7 +57,7 @@ class RotateLeftMicroinstruction(AluMicroinstruction):
         pass
 
 
-class SubtractMicroinstruction(AluMicroinstruction):
+class Subtract(AluMicroinstruction):
     def __repr__(self):
         return '{dst} <- {a} - {b}'.format(dst=self.dst, a=self.a, b=self.b)
 
@@ -79,7 +79,7 @@ class SubtractMicroinstruction(AluMicroinstruction):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class DecrementMicroinstruction(SubtractMicroinstruction):
+class Decrement(Subtract):
     def __init__(self, a):
         super().__init__(dst=a, a=a, b='1')
 
@@ -87,7 +87,7 @@ class DecrementMicroinstruction(SubtractMicroinstruction):
         return '{dst} <- {a} - 1'.format(dst=self.dst, a=self.a)
 
 
-class CompareMicroinstruction(SubtractMicroinstruction):
+class Compare(Subtract):
     def __init__(self, a, b):
         super().__init__(dst=None, a=a, b=b)
 
@@ -95,7 +95,7 @@ class CompareMicroinstruction(SubtractMicroinstruction):
         return 'cmp {a} - {b}'.format(a=self.a, b=self.b)
 
 
-class BitwiseAndMicroinstruction(AluMicroinstruction):
+class BitwiseAnd(AluMicroinstruction):
     def __repr__(self):
         return '{dst} <- {a} & {b}'.format(dst=self.dst, a=self.a, b=self.b)
 
@@ -112,7 +112,7 @@ class BitwiseAndMicroinstruction(AluMicroinstruction):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class BitTestMicroinstruction(BitwiseAndMicroinstruction):
+class BitTest(BitwiseAnd):
     def __init__(self, a, b):
         super().__init__(dst=None, a=a, b=b)
 
@@ -120,7 +120,7 @@ class BitTestMicroinstruction(BitwiseAndMicroinstruction):
         return 'test {a} & {b}'.format(dst=self.dst, a=self.a, b=self.b)
 
 
-class BitwiseOrMicroinstruction(AluMicroinstruction):
+class BitwiseOr(AluMicroinstruction):
     def __repr__(self):
         return '{dst} <- {a} | {b}'.format(dst=self.dst, a=self.a, b=self.b)
 
@@ -135,7 +135,7 @@ class BitwiseOrMicroinstruction(AluMicroinstruction):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class BitwiseXorMicroinstruction(AluMicroinstruction):
+class BitwiseXor(AluMicroinstruction):
     def __repr__(self):
         return '{dst} <- {a} ^ {b}'.format(dst=self.dst, a=self.a, b=self.b)
 
@@ -150,7 +150,7 @@ class BitwiseXorMicroinstruction(AluMicroinstruction):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class LogicalShiftRightMicroinstruction(AluMicroinstruction):
+class LogicalShiftRight(AluMicroinstruction):
     def __repr__(self):
         return '{dst} <- shr {a}'.format(dst=self.dst, a=self.a)
 
@@ -167,7 +167,7 @@ class LogicalShiftRightMicroinstruction(AluMicroinstruction):
         cpu.registers['P'].set_flag_value('N', output & 0x80)
 
 
-class RotateRightMicroinstruction(AluMicroinstruction):
+class RotateRight(AluMicroinstruction):
     def __repr__(self):
         return '{dst} <- ror {a}'.format(dst=self.dst, a=self.a)
 

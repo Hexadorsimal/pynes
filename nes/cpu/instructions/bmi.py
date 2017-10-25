@@ -1,20 +1,20 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import BranchMicroinstruction
-from .relative_instruction import RelativeInstruction
+from nes.cpu.microinstructions import Branch
+from ..addressing_modes import RelativeAddressing
+from .instruction import Instruction
 
 
-class Bmi(RelativeInstruction):
+class Bmi(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([BranchMicroinstruction('N', True)]))
+        self.cycles.append(Cycle([Branch('N', True)]))
+        self.addressing_modes = {
+            0x30: RelativeAddressing
+        }
 
     @property
     def name(self):
         return 'BMI'
-
-    @property
-    def opcode(self):
-        return 0x30
 
     @property
     def description(self):

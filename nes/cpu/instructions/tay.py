@@ -1,20 +1,20 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import MoveMicroinstruction
-from .implied_instruction import ImpliedInstruction
+from nes.cpu.microinstructions import Move
+from ..addressing_modes import ImpliedAddressing
+from .instruction import Instruction
 
 
-class Tay(ImpliedInstruction):
+class Tay(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([MoveMicroinstruction('A', 'Y')]))
+        self.cycles.append(Cycle([Move('A', 'Y')]))
+        self.addressing_modes = {
+            0xAB: ImpliedAddressing
+        }
 
     @property
     def name(self):
         return 'TAY'
-
-    @property
-    def opcode(self):
-        return 0xAB
 
     @property
     def description(self):

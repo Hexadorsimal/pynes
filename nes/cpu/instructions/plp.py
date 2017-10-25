@@ -1,24 +1,24 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import ReadMicroinstruction, WriteMicroinstruction, IncrementMicroinstruction
+from nes.cpu.microinstructions import Read, Write, Increment
 from nes.memory import AbsoluteAddress, StackAddress
-from .implied_instruction import ImpliedInstruction
+from ..addressing_modes import ImpliedAddressing
+from .instruction import Instruction
 
 
-class Plp(ImpliedInstruction):
+class Plp(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'IR')]))
-        self.cycles.append(Cycle([WriteMicroinstruction(StackAddress('S'), 'DL'), IncrementMicroinstruction('S')]))
-        self.cycles.append(Cycle([WriteMicroinstruction(StackAddress('S'), 'P')]))
-        self.cycles.append(Cycle([ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'IR'), IncrementMicroinstruction('PCL')]))
+        self.cycles.append(Cycle([Read(), (AbsoluteAddress('PCH', 'PCL'), 'IR')]))
+        self.cycles.append(Cycle([Write(), (StackAddress('S'), 'DL'), Increment('S')]))
+        self.cycles.append(Cycle([Write(), (StackAddress('S'), 'P')]))
+        self.cycles.append(Cycle([Read(), (AbsoluteAddress('PCH', 'PCL'), 'IR'), Increment('PCL')]))
+        self.addressing_modes = {
+            0x28: ImpliedAddressing
+        }
 
     @property
     def name(self):
         return 'PLP'
-
-    @property
-    def opcode(self):
-        return 0x28
 
     @property
     def description(self):

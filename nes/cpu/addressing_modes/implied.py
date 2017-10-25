@@ -1,7 +1,7 @@
-from .instruction import Instruction
+from .addressing_mode import AddressingMode
 
 
-class ImpliedInstruction(Instruction):
+class ImpliedAddressing(AddressingMode):
     def __init__(self):
         super().__init__()
 

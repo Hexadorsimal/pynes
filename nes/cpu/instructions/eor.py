@@ -1,153 +1,27 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import BitwiseXorMicroinstruction
-from .immediate_instruction import ImmediateInstruction
-from .zeropage_instruction import ZeroPageInstruction
-from .zeropagex_instruction import ZeroPageXInstruction
-from .absolute_instruction import AbsoluteInstruction
-from .absolutex_instruction import AbsoluteXInstruction
-from .absolutey_instruction import AbsoluteYInstruction
-from .indexed_indirect_instruction import IndexedIndirectInstruction
-from .indirect_indexed_instruction import IndirectIndexedInstruction
+from nes.cpu.microinstructions import BitwiseXor
+from ..addressing_modes import *
+from .instruction import Instruction
 
 
-class EorImmediate(ImmediateInstruction):
+class Eor(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([BitwiseXorMicroinstruction('A', 'A', 'DL')]))
+        self.cycles.append(Cycle([BitwiseXor('A', 'A', 'DL')]))
+        self.addressing_modes = {
+            0x49: ImmediateAddressing,
+            0x45: ZeroPageAddressing,
+            0x55: ZeroPageXAddressing,
+            0x4D: AbsoluteAddressing,
+            0x5D: AbsoluteXAddressing,
+            0x59: AbsoluteYAddressing,
+            0x41: IndexedIndirectAddressing,
+            0x51: IndirectIndexedAddressing,
+        }
 
     @property
     def name(self):
         return 'EOR'
-
-    @property
-    def opcode(self):
-        return 0x49
-
-    @property
-    def description(self):
-        return 'Exclusive OR Memory with Accumulator'
-
-
-class EorZeroPage(ZeroPageInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([BitwiseXorMicroinstruction('A', 'A', 'DL')]))
-
-    @property
-    def name(self):
-        return 'EOR'
-
-    @property
-    def opcode(self):
-        return 0x45
-
-    @property
-    def description(self):
-        return 'Exclusive OR Memory with Accumulator'
-
-
-class EorZeroPageX(ZeroPageXInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([BitwiseXorMicroinstruction('A', 'A', 'DL')]))
-
-    @property
-    def name(self):
-        return 'EOR'
-
-    @property
-    def opcode(self):
-        return 0x55
-
-    @property
-    def description(self):
-        return 'Exclusive OR Memory with Accumulator'
-
-
-class EorAbsolute(AbsoluteInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([BitwiseXorMicroinstruction('A', 'A', 'DL')]))
-
-    @property
-    def name(self):
-        return 'EOR'
-
-    @property
-    def opcode(self):
-        return 0x4D
-
-    @property
-    def description(self):
-        return 'Exclusive OR Memory with Accumulator'
-
-
-class EorAbsoluteX(AbsoluteXInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([BitwiseXorMicroinstruction('A', 'A', 'DL')]))
-
-    @property
-    def name(self):
-        return 'EOR'
-
-    @property
-    def opcode(self):
-        return 0x5D
-
-    @property
-    def description(self):
-        return 'Exclusive OR Memory with Accumulator'
-
-
-class EorAbsoluteY(AbsoluteYInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([BitwiseXorMicroinstruction('A', 'A', 'DL')]))
-
-    @property
-    def name(self):
-        return 'EOR'
-
-    @property
-    def opcode(self):
-        return 0x59
-
-    @property
-    def description(self):
-        return 'Exclusive OR Memory with Accumulator'
-
-
-class EorIndexedIndirect(IndexedIndirectInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([BitwiseXorMicroinstruction('A', 'A', 'DL')]))
-
-    @property
-    def name(self):
-        return 'EOR'
-
-    @property
-    def opcode(self):
-        return 0x41
-
-    @property
-    def description(self):
-        return 'Exclusive OR Memory with Accumulator'
-
-
-class EorIndirectIndexed(IndirectIndexedInstruction):
-    def __init__(self):
-        super().__init__()
-        self.cycles.append(Cycle([BitwiseXorMicroinstruction('A', 'A', 'DL')]))
-
-    @property
-    def name(self):
-        return 'EOR'
-
-    @property
-    def opcode(self):
-        return 0x51
 
     @property
     def description(self):

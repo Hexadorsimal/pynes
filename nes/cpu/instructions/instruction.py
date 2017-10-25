@@ -1,20 +1,13 @@
 class Instruction:
     def __init__(self):
         self.cycles = []
+        self.addressing_modes = {}
 
     def __repr__(self):
-        return '{opcode}: {name}'.format(opcode=hex(self.opcode), name=self.name)
+        return self.name
 
     @property
     def name(self):
-        raise NotImplementedError
-
-    @property
-    def opcode(self):
-        raise NotImplementedError
-
-    @property
-    def size(self):
         raise NotImplementedError
 
     @property
