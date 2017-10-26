@@ -2,10 +2,10 @@ import yaml
 
 from nes.alu import Alu
 from nes.clock import ClockListener
-from nes.memory import AbsoluteAddress, VectorAddress
+from .cycle import Cycle
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
-from .microinstructions import Read, Increment
+from .microinstructions import Read, Increment, Move
 from .registers import RegisterFactory
 
 
@@ -29,6 +29,7 @@ class Cpu(ClockListener):
         self.alu = Alu()
         self.decoder = InstructionDecoder()
         self.pipeline = []
+        self.timing = 0
 
     @classmethod
     def create(cls, filename, nes):
@@ -41,8 +42,10 @@ class Cpu(ClockListener):
         self.registers['PCH'].contents = 0xC0
 
     def reset(self):
-        Read(VectorAddress('RESET', 0), 'PCL').execute(self)
-        Read(VectorAddress('RESET', 1), 'PCH').execute(self)
+        self.pipeline = []
+        self.pipeline.append(Cycle([Move('VECTOR', 'ADH'), Move('RESET', 'ADL'), Read()]))
+        self.pipeline.append(Cycle([Move('DL', 'PCL'), Increment('ADL'), Read()]))
+        self.pipeline.append(Cycle([Move('DL', 'PCH')]))
 
     def irq(self):
         pass
@@ -50,34 +53,42 @@ class Cpu(ClockListener):
     def nmi(self):
         pass
 
-    def clock_tick(self, event_name):
-        if event_name == 'phase 1':
+    def clock_event(self, event_name):
+        if event_name == 'cycle-start':
+            self.timing += 1
+
             if not self.pipeline:
+                self.timing = 0
                 self.fetch()
-                self.decode()
 
             cycle = self.pipeline.pop(0)
+
+            cycle.execute(cpu=self)
 
             addr_lo = self.registers['ADL'].contents
             addr_hi = self.registers['ADH'].contents
             addr = (addr_hi << 8) | addr_lo
             self.buses['AB'].put(addr)
-            self.buses['R/W'].put(cycle.read_write)
 
-            cycle.execute(cpu=self)
-
-        elif event_name == 'phase 2':
-            if self.buses['R/W'].get() == 'write':
+            if self.buses['R/W'].get() == 0:
+                # Write
                 self.buses['DB'].put(self.registers['DL'].contents)
 
-        elif event_name == 'cycle complete':
-            if self.buses['R/W'].get() == 'read':
+        elif event_name == 'db-ready':
+            if self.buses['R/W'].get() == 1:
+                # Read
                 self.registers['DL'].contents = self.buses['DB'].get()
 
+                if self.timing == 0:
+                    self.registers['IR'].contents = self.buses['DB'].get()
+                    self.decode()
+
     def fetch(self):
-        Read(AbsoluteAddress('PCH', 'PCL'), 'IR').execute(self)
-        Increment('PCL').execute(self)
+        self.pipeline.append(Cycle([Move('PCL', 'ADL'), Move('PCH', 'ADH'), Read(), Increment('PCL')]))
 
     def decode(self):
-        instruction = self.decoder.get_instruction(self.registers['IR'].contents)
+        opcode = self.registers['IR'].contents
+        instruction = self.decoder.get_instruction(opcode)
+        addressing_mode = self.decoder.get_addressing_mode(opcode)
+        self.pipeline.extend(addressing_mode.cycles)
         self.pipeline.extend(instruction.cycles)

@@ -93,6 +93,22 @@ registers:
     description: Constant 1
     value: 0x01
 
+  - name: VECTOR
+    description: High byte of all interrupt vector addresses
+    value: 0xFF
+
+  - name: NMI
+    description: Low byte of the NMI vector
+    value: 0xFA
+
+  - name: RESET
+    description: Low byte of the RESET vector
+    value: 0xFC
+
+  - name: IRQ/BRK
+    description: Low byte of the IRQ/BRK vector
+    value: 0xFE
+
 interrupt_vectors:
   - name: NMI
     address: 0xFFFA
@@ -107,6 +123,10 @@ buses:
   - name: AB
   - name: DB
   - name: R/W
+
+events:
+  - cycle-start
+  - da
 
 connections:
   - name: DB-X

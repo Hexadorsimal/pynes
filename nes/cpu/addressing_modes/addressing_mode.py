@@ -1,6 +1,6 @@
 class AddressingMode:
     def __init__(self):
-        self.cycles = None
+        self.cycles = []
 
     @property
     def size(self):

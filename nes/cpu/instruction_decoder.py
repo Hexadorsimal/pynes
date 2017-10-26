@@ -12,3 +12,7 @@ class InstructionDecoder:
 
     def get_instruction(self, opcode):
         return self.map[opcode]
+
+    def get_addressing_mode(self, opcode):
+        instruction = self.get_instruction(opcode)
+        return instruction.addressing_modes[opcode]()

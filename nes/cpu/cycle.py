@@ -10,11 +10,5 @@ class Cycle:
         self.microinstructions.append(microinstruction)
 
     def execute(self, cpu):
-        if self.read_write == 'read':
-            cpu.read_data()
-
         for microinstruction in self.microinstructions:
             microinstruction.execute(cpu)
-
-        if self.read_write == 'write':
-            cpu.write_data()

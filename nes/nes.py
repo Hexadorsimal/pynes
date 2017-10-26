@@ -17,10 +17,11 @@ class Nes:
             self.buses[bus.name] = bus
 
         self.cpu = Cpu.create(yaml_data['cpu']['filename'], self)
-        self.cpu_mem = MemoryControlUnit()
+        self.cpu_mem = MemoryControlUnit(self)
 
-        self.clock.add_listener(self.cpu)
-        self.clock.add_listener(self.cpu_mem)
+        self.clock.subscribe('cycle-start', self.cpu)
+        self.clock.subscribe('ab-ready', self.cpu_mem)
+        self.clock.subscribe('db-ready', self.cpu)
 
         ppu_mem = MemoryMap(0x4000)
         ppu_mem.add_memory(AddressRange(0x0000, 0x1000), Ram(0x1000))  # Pattern Table 0

@@ -1,9 +1,9 @@
 ---
 clock:
   events:
-    - phase 1
-    - phase 2
-    - cycle complete
+    - cycle-start
+    - ab-ready
+    - db-ready
 
 cpu:
   filename: 6502.yaml
