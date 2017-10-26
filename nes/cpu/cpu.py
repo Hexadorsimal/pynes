@@ -5,7 +5,7 @@ from nes.clock import ClockListener
 from nes.memory import AbsoluteAddress, VectorAddress
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
-from .microinstructions import ReadMicroinstruction, IncrementMicroinstruction
+from .microinstructions import Read, Increment
 from .registers import RegisterFactory
 
 
@@ -41,8 +41,8 @@ class Cpu(ClockListener):
         self.registers['PCH'].contents = 0xC0
 
     def reset(self):
-        ReadMicroinstruction(VectorAddress('RESET', 0), 'PCL').execute(self)
-        ReadMicroinstruction(VectorAddress('RESET', 1), 'PCH').execute(self)
+        Read(VectorAddress('RESET', 0), 'PCL').execute(self)
+        Read(VectorAddress('RESET', 1), 'PCH').execute(self)
 
     def irq(self):
         pass
@@ -75,8 +75,8 @@ class Cpu(ClockListener):
                 self.registers['DL'].contents = self.buses['DB'].get()
 
     def fetch(self):
-        ReadMicroinstruction(AbsoluteAddress('PCH', 'PCL'), 'IR').execute(self)
-        IncrementMicroinstruction('PCL').execute(self)
+        Read(AbsoluteAddress('PCH', 'PCL'), 'IR').execute(self)
+        Increment('PCL').execute(self)
 
     def decode(self):
         instruction = self.decoder.get_instruction(self.registers['IR'].contents)

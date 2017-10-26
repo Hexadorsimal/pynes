@@ -9,7 +9,7 @@ class Jmp(Instruction):
         super().__init__()
 
         # JMP is the only Absolute Addressing mode instruction that skips the last step of that mode
-        self.cycles.pop()
+        # self.cycles.pop()
 
         self.cycles.append(Cycle([Move('ADL', 'PCL')]))
         self.cycles.append(Cycle([Move('ADH', 'PCH')]))

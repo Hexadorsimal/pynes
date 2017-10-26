@@ -7,7 +7,8 @@ class InstructionDecoder:
 
         for inst_type in all_instructions:
             instruction = inst_type()
-            self.map[instruction.opcode] = instruction
+            for opcode, addressing_mode in instruction.addressing_modes.items():
+                self.map[opcode] = instruction
 
     def get_instruction(self, opcode):
         return self.map[opcode]
