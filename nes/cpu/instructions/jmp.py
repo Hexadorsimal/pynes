@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import Move
+from nes.cpu.microinstructions import Move, Read, AddressBusSelect
 from ..addressing_modes import *
 from .instruction import Instruction
 
@@ -7,15 +7,10 @@ from .instruction import Instruction
 class Jmp(Instruction):
     def __init__(self):
         super().__init__()
-
-        # JMP is the only Absolute Addressing mode instruction that skips the last step of that mode
-        # self.cycles.pop()
-
-        self.cycles.append(Cycle([Move('ADL', 'PCL')]))
-        self.cycles.append(Cycle([Move('ADH', 'PCH')]))
+        self.cycles.append(Cycle([Move('ADL', 'PCL'), Move('DL', 'PCH'), AddressBusSelect('PCX'), Read()]))
 
         self.addressing_modes = {
-            0x4C: AbsoluteAddressing,
+            0x4C: JumpAbsoluteAddressing,
             0x6C: IndirectAbsoluteAddressing,
         }
 

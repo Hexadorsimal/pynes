@@ -13,3 +13,11 @@ class AbsoluteAddressing(AddressingMode):
     @property
     def size(self):
         return 3
+
+
+class JumpAbsoluteAddressing(AbsoluteAddressing):
+    def __init__(self):
+        super().__init__()
+
+        # JMP is the only Absolute Addressing mode instruction that skips the last step of that mode
+        self.cycles.pop()

@@ -47,7 +47,46 @@ class AddressBusSelect(Microinstruction):
         return 'AB_SEL <- ' + str(self.selection)
 
     def execute(self, cpu):
-        cpu.address_bus_selector = self.selection
+        if self.selection == 'PCX':
+            addr_lo = cpu.registers['PCL'].contents
+            addr_hi = cpu.registers['PCH'].contents
+            addr = (addr_hi << 8) | addr_lo
+        elif self.selection == 'ADX':
+            addr_lo = cpu.registers['ADL'].contents
+            addr_hi = cpu.registers['ADH'].contents
+            addr = (addr_hi << 8) | addr_lo
+        elif self.selection == 'BAX':
+            addr_lo = cpu.registers['BAL'].contents
+            addr_hi = cpu.registers['BAH'].contents
+            addr = (addr_hi << 8) | addr_lo
+        elif self.selection == 'AD_ZERO':
+            addr_lo = cpu.registers['ADL'].contents
+            addr_hi = 0x00
+            addr = (addr_hi << 8) | addr_lo
+        elif self.selection == 'BA_ZERO':
+            addr_lo = cpu.registers['BAL'].contents
+            addr_hi = 0x00
+            addr = (addr_hi << 8) | addr_lo
+        elif self.selection == 'STACK':
+            addr_lo = cpu.registers['S'].contents
+            addr_hi = 0x01
+            addr = (addr_hi << 8) | addr_lo
+        elif self.selection == 'NMI_LO':
+            addr = cpu.vectors['NMI'].lo
+        elif self.selection == 'NMI_HI':
+            addr = cpu.vectors['NMI'].hi
+        elif self.selection == 'RES_LO':
+            addr = cpu.vectors['RESET'].lo
+        elif self.selection == 'RES_HI':
+            addr = cpu.vectors['RESET'].hi
+        elif self.selection == 'IRQ_LO':
+            addr = cpu.vectors['IRQ/BRK'].lo
+        elif self.selection == 'IRQ_HI':
+            addr = cpu.vectors['IRQ/BRK'].hi
+        else:
+            raise ValueError('Invalid Address Bus Selector: ' + self.selection)
+
+        cpu.buses['AB'].put(addr)
 
 
 class Read(Microinstruction):
@@ -64,6 +103,7 @@ class Write(Microinstruction):
 
     def execute(self, cpu):
         cpu.buses['R/W'].put(0)
+        cpu.buses['DB'].put(cpu.registers['DL'].contents)
 
 
 class Branch(Microinstruction):

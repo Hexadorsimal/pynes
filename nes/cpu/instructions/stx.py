@@ -7,7 +7,7 @@ from .instruction import Instruction
 class Stx(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([Move('X', 'DL')], 'write'))
+        self.cycles.append(Cycle([Move('X', 'DL')]))
         self.addressing_modes = {
             0x86: ZeroPageAddressing,
             0x96: ZeroPageYAddressing,

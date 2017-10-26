@@ -1,10 +1,9 @@
 class Cycle:
-    def __init__(self, microinstructions, read_write='read'):
-        self.read_write = read_write
+    def __init__(self, microinstructions):
         self.microinstructions = microinstructions
 
     def __repr__(self):
-        return str(self.microinstructions) + ' ' + self.read_write
+        return str(self.microinstructions)
 
     def add_microinstruction(self, microinstruction):
         self.microinstructions.append(microinstruction)

@@ -1,4 +1,4 @@
-from .absolute import AbsoluteAddressing
+from .absolute import AbsoluteAddressing, JumpAbsoluteAddressing
 from .absolutex import AbsoluteXAddressing
 from .absolutey import AbsoluteYAddressing
 from .accumulator import AccumulatorAddressing

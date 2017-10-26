@@ -66,12 +66,6 @@ class Cpu(ClockListener):
 
             cycle.execute(cpu=self)
 
-            self.set_address_bus(self.address_bus_selector)
-
-            if self.buses['R/W'].get() == 0:
-                # Write
-                self.buses['DB'].put(self.registers['DL'].contents)
-
         elif event_name == 'db-ready':
             if self.buses['R/W'].get() == 1:
                 # Read
@@ -90,45 +84,3 @@ class Cpu(ClockListener):
         addressing_mode = self.decoder.get_addressing_mode(opcode)
         self.pipeline.extend(addressing_mode.cycles)
         self.pipeline.extend(instruction.cycles)
-
-    def set_address_bus(self, selector):
-        if selector == 'PCX':
-            addr_lo = self.registers['PCL'].contents
-            addr_hi = self.registers['PCH'].contents
-            addr = (addr_hi << 8) | addr_lo
-        elif selector == 'ADX':
-            addr_lo = self.registers['ADL'].contents
-            addr_hi = self.registers['ADH'].contents
-            addr = (addr_hi << 8) | addr_lo
-        elif selector == 'BAX':
-            addr_lo = self.registers['BAL'].contents
-            addr_hi = self.registers['BAH'].contents
-            addr = (addr_hi << 8) | addr_lo
-        elif selector == 'AD_ZERO':
-            addr_lo = self.registers['ADL'].contents
-            addr_hi = 0x00
-            addr = (addr_hi << 8) | addr_lo
-        elif selector == 'BA_ZERO':
-            addr_lo = self.registers['BAL'].contents
-            addr_hi = 0x00
-            addr = (addr_hi << 8) | addr_lo
-        elif selector == 'STACK':
-            addr_lo = self.registers['S'].contents
-            addr_hi = 0x01
-            addr = (addr_hi << 8) | addr_lo
-        elif selector == 'NMI_LO':
-            addr = self.vectors['NMI'].lo
-        elif selector == 'NMI_HI':
-            addr = self.vectors['NMI'].hi
-        elif selector == 'RES_LO':
-            addr = self.vectors['RESET'].lo
-        elif selector == 'RES_HI':
-            addr = self.vectors['RESET'].hi
-        elif selector == 'IRQ_LO':
-            addr = self.vectors['IRQ/BRK'].lo
-        elif selector == 'IRQ_HI':
-            addr = self.vectors['IRQ/BRK'].hi
-        else:
-            raise ValueError('Invalid Address Bus Selector: ' + self.address_bus_selector)
-
-        self.buses['AB'].put(addr)
