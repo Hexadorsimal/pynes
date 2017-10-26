@@ -39,16 +39,15 @@ class Move(Microinstruction):
         dst_register.contents = src_register.contents
 
 
-class AddressBus(Microinstruction):
-    def __init__(self, addr):
-        self.addr = addr
+class AddressBusSelect(Microinstruction):
+    def __init__(self, selection):
+        self.selection = selection
 
     def __repr__(self):
-        return 'AB <- $' + str(self.addr)
+        return 'AB_SEL <- ' + str(self.selection)
 
     def execute(self, cpu):
-        addr = self.addr.evaluate(cpu)
-        cpu.buses['AB'].put(addr)
+        cpu.address_bus_selector = self.selection
 
 
 class Read(Microinstruction):

@@ -93,31 +93,18 @@ registers:
     description: Constant 1
     value: 0x01
 
-  - name: VECTOR
-    description: High byte of all interrupt vector addresses
-    value: 0xFF
-
-  - name: NMI
-    description: Low byte of the NMI vector
-    value: 0xFA
-
-  - name: RESET
-    description: Low byte of the RESET vector
-    value: 0xFC
-
-  - name: IRQ/BRK
-    description: Low byte of the IRQ/BRK vector
-    value: 0xFE
-
 interrupt_vectors:
   - name: NMI
-    address: 0xFFFA
+    lo: 0xFFFA
+    hi: 0xFFFB
 
   - name: RESET
-    address: 0xFFFC
+    lo: 0xFFFC
+    hi: 0xFFFD
 
   - name: IRQ/BRK
-    address: 0xFFFE
+    lo: 0xFFFE
+    hi: 0xFFFF
 
 buses:
   - name: AB

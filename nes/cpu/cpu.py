@@ -5,7 +5,7 @@ from nes.clock import ClockListener
 from .cycle import Cycle
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
-from .microinstructions import Read, Increment, Move
+from .microinstructions import Read, Increment, Move, AddressBusSelect
 from .registers import RegisterFactory
 
 
@@ -30,6 +30,7 @@ class Cpu(ClockListener):
         self.decoder = InstructionDecoder()
         self.pipeline = []
         self.timing = 0
+        self.address_bus_selector = None
 
     @classmethod
     def create(cls, filename, nes):
@@ -43,8 +44,8 @@ class Cpu(ClockListener):
 
     def reset(self):
         self.pipeline = []
-        self.pipeline.append(Cycle([Move('VECTOR', 'ADH'), Move('RESET', 'ADL'), Read()]))
-        self.pipeline.append(Cycle([Move('DL', 'PCL'), Increment('ADL'), Read()]))
+        self.pipeline.append(Cycle([AddressBusSelect('RES_LO'), Read()]))
+        self.pipeline.append(Cycle([Move('DL', 'PCL'), AddressBusSelect('RES_HI'), Read()]))
         self.pipeline.append(Cycle([Move('DL', 'PCH')]))
 
     def irq(self):
@@ -65,10 +66,7 @@ class Cpu(ClockListener):
 
             cycle.execute(cpu=self)
 
-            addr_lo = self.registers['ADL'].contents
-            addr_hi = self.registers['ADH'].contents
-            addr = (addr_hi << 8) | addr_lo
-            self.buses['AB'].put(addr)
+            self.set_address_bus(self.address_bus_selector)
 
             if self.buses['R/W'].get() == 0:
                 # Write
@@ -84,7 +82,7 @@ class Cpu(ClockListener):
                     self.decode()
 
     def fetch(self):
-        self.pipeline.append(Cycle([Move('PCL', 'ADL'), Move('PCH', 'ADH'), Read(), Increment('PCL')]))
+        self.pipeline.append(Cycle([AddressBusSelect('PCX'), Read(), Increment('PCL')]))
 
     def decode(self):
         opcode = self.registers['IR'].contents
@@ -92,3 +90,45 @@ class Cpu(ClockListener):
         addressing_mode = self.decoder.get_addressing_mode(opcode)
         self.pipeline.extend(addressing_mode.cycles)
         self.pipeline.extend(instruction.cycles)
+
+    def set_address_bus(self, selector):
+        if selector == 'PCX':
+            addr_lo = self.registers['PCL'].contents
+            addr_hi = self.registers['PCH'].contents
+            addr = (addr_hi << 8) | addr_lo
+        elif selector == 'ADX':
+            addr_lo = self.registers['ADL'].contents
+            addr_hi = self.registers['ADH'].contents
+            addr = (addr_hi << 8) | addr_lo
+        elif selector == 'BAX':
+            addr_lo = self.registers['BAL'].contents
+            addr_hi = self.registers['BAH'].contents
+            addr = (addr_hi << 8) | addr_lo
+        elif selector == 'AD_ZERO':
+            addr_lo = self.registers['ADL'].contents
+            addr_hi = 0x00
+            addr = (addr_hi << 8) | addr_lo
+        elif selector == 'BA_ZERO':
+            addr_lo = self.registers['BAL'].contents
+            addr_hi = 0x00
+            addr = (addr_hi << 8) | addr_lo
+        elif selector == 'STACK':
+            addr_lo = self.registers['S'].contents
+            addr_hi = 0x01
+            addr = (addr_hi << 8) | addr_lo
+        elif selector == 'NMI_LO':
+            addr = self.vectors['NMI'].lo
+        elif selector == 'NMI_HI':
+            addr = self.vectors['NMI'].hi
+        elif selector == 'RES_LO':
+            addr = self.vectors['RESET'].lo
+        elif selector == 'RES_HI':
+            addr = self.vectors['RESET'].hi
+        elif selector == 'IRQ_LO':
+            addr = self.vectors['IRQ/BRK'].lo
+        elif selector == 'IRQ_HI':
+            addr = self.vectors['IRQ/BRK'].hi
+        else:
+            raise ValueError('Invalid Address Bus Selector: ' + self.address_bus_selector)
+
+        self.buses['AB'].put(addr)

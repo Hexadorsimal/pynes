@@ -1,7 +1,8 @@
 class InterruptVector:
-    def __init__(self, name, address):
+    def __init__(self, name, lo, hi):
         self.name = name
-        self.address = address
+        self.lo = lo
+        self.hi = hi
 
     def __repr__(self):
-        return hex(self.address)
+        return '({lo},{hi})'.format(lo=hex(self.lo), hi=hex(self.hi))
