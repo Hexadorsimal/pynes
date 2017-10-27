@@ -2,6 +2,7 @@ import yaml
 
 from nes.alu import Alu
 from nes.clock import ClockListener
+from nes.timing_control import TimingControl
 from .cycle import Cycle
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
@@ -29,7 +30,7 @@ class Cpu(ClockListener):
         self.alu = Alu()
         self.decoder = InstructionDecoder()
         self.pipeline = []
-        self.timing = 0
+        self.timing_control = TimingControl()
         self.address_bus_selector = None
 
     @classmethod
@@ -56,10 +57,10 @@ class Cpu(ClockListener):
 
     def clock_event(self, event_name):
         if event_name == 'cycle-start':
-            self.timing += 1
+            self.timing_control.inc()
 
             if not self.pipeline:
-                self.timing = 0
+                self.timing_control.reset()
                 self.fetch()
 
             cycle = self.pipeline.pop(0)
@@ -71,7 +72,7 @@ class Cpu(ClockListener):
                 # Read
                 self.registers['DL'].contents = self.buses['DB'].get()
 
-                if self.timing == 0:
+                if self.timing_control.get() == 0:
                     self.registers['IR'].contents = self.buses['DB'].get()
                     self.decode()
 
