@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import Move
+from nes.cpu.microinstructions import Move, Write
 from ..addressing_modes import *
 from .instruction import Instruction
 
@@ -7,7 +7,7 @@ from .instruction import Instruction
 class Stx(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([Move('X', 'DL')]))
+        self.cycles.append(Cycle([Move('X', 'DL'), Write()]))
         self.addressing_modes = {
             0x86: ZeroPageAddressing,
             0x96: ZeroPageYAddressing,
@@ -16,8 +16,8 @@ class Stx(Instruction):
 
     @property
     def name(self):
-        return 'STX zpg'
+        return 'STX'
 
     @property
     def description(self):
-        return 'Store Index X in Memory (ZeroPage)'
+        return 'Store Index X in Memory'

@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import Move
+from nes.cpu.microinstructions import Move, Write
 from ..addressing_modes import *
 from .instruction import Instruction
 
@@ -7,7 +7,7 @@ from .instruction import Instruction
 class Sty(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([Move('Y', 'DL')]))
+        self.cycles.append(Cycle([Move('Y', 'DL'), Write()]))
         self.addressing_modes = {
             0x84: ZeroPageAddressing,
             0x94: ZeroPageXAddressing,
