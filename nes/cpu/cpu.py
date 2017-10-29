@@ -42,6 +42,8 @@ class Cpu(ClockListener):
     def power_on(self):
         self.registers['PCL'].contents = 0x00
         self.registers['PCH'].contents = 0xC0
+        self.registers['S'].contents = 0xFD
+        self.registers['P'].contents = 0x24
         self.fetch()
 
     def reset(self):

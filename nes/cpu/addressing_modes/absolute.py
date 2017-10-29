@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import Increment, Read, AddressBus, Move, RW
+from nes.cpu.microinstructions import Increment, Read, AddressBus, RW
 from .addressing_mode import AddressingMode
 
 
@@ -15,9 +15,16 @@ class AbsoluteAddressing(AddressingMode):
         return 3
 
 
-class JumpAbsoluteAddressing(AbsoluteAddressing):
+class JmpAbsoluteAddressing(AbsoluteAddressing):
     def __init__(self):
         super().__init__()
 
         # JMP is the only Absolute Addressing mode instruction that skips the last step of that mode
+        self.cycles.pop()
+
+
+class JsrAbsoluteAddressing(JmpAbsoluteAddressing):
+    def __init__(self):
+        super().__init__()
+
         self.cycles.pop()

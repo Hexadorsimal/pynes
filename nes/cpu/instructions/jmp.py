@@ -10,7 +10,7 @@ class Jmp(Instruction):
         self.cycles.append(Cycle([Move('ADL', 'PCL'), Read('ADH'), Read('PCH'), AddressBus('PCX'), RW(1), Increment('PCL')]))
 
         self.addressing_modes = {
-            0x4C: JumpAbsoluteAddressing,
+            0x4C: JmpAbsoluteAddressing,
             0x6C: IndirectAbsoluteAddressing,
         }
 
