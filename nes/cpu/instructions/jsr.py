@@ -11,7 +11,7 @@ class Jsr(Instruction):
         self.cycles.append(Cycle([Write('PCH'), AddressBus('STACK'), RW(0), Decrement('S')]))
         self.cycles.append(Cycle([Write('PCL'), AddressBus('STACK'), RW(0), Decrement('S')]))
         self.cycles.append(Cycle([AddressBus('PCX'), RW(1), Increment('PCL')]))
-        self.cycles.append(Cycle([Read('ADH'), AddressBus('ADX'), RW(1), Move('ADL', 'PCL'), Move('ADH', 'PCH'), Increment('PCL')]))
+        self.cycles.append(Cycle([Read('ADH'), AddressBus('ADX'), RW(1), Move('ADL', 'PCL'), Move('ADH', 'PCH')]))
 
         self.addressing_modes = {
             0x20: JsrAbsoluteAddressing
