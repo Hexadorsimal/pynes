@@ -64,6 +64,9 @@ registers:
   - name: DL
     description: Input Data Latch
 
+  - name: DOR
+    description: Data Output Register
+
   - name: IR
     description: Instruction Register
 

@@ -7,7 +7,7 @@ from .addressing_mode import AddressingMode
 class RelativeAddressing(AddressingMode):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([Read(), (AbsoluteAddress('PCH', 'PCL'), 'DL'), Increment('PCL')]))
+        self.cycles.append(Cycle([RW(1), (AbsoluteAddress('PCH', 'PCL'), 'DL'), Increment('PCL')]))
 
     @property
     def size(self):

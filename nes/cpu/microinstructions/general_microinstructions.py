@@ -39,7 +39,7 @@ class Move(Microinstruction):
         dst_register.contents = src_register.contents
 
 
-class AddressBusSelect(Microinstruction):
+class AddressBus(Microinstruction):
     def __init__(self, selection):
         self.selection = selection
 
@@ -89,21 +89,25 @@ class AddressBusSelect(Microinstruction):
         cpu.buses['AB'].put(addr)
 
 
-class Read(Microinstruction):
+class RW(Microinstruction):
+    def __init__(self, rw):
+        self.rw = rw
+
     def __repr__(self):
-        return 'R/W <- 1'
+        return 'R/W <- ' + str(self.rw)
 
     def execute(self, cpu):
-        cpu.buses['R/W'].put(1)
+        cpu.buses['R/W'].put(self.rw)
 
 
-class Write(Microinstruction):
-    def __repr__(self):
-        return 'R/W <- 0'
+class Read(Move):
+    def __init__(self, dst):
+        super().__init__('DL', dst)
 
-    def execute(self, cpu):
-        cpu.buses['R/W'].put(0)
-        cpu.buses['DB'].put(cpu.registers['DL'].contents)
+
+class Write(Move):
+    def __init__(self, src):
+        super().__init__(src, 'DOR')
 
 
 class Branch(Microinstruction):

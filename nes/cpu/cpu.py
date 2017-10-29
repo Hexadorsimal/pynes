@@ -6,7 +6,7 @@ from nes.timing_control import TimingControl
 from .cycle import Cycle
 from .instruction_decoder import InstructionDecoder
 from .interrupt_vector import InterruptVector
-from .microinstructions import Read, Increment, Move, AddressBusSelect
+from .microinstructions import Read, Increment, Move, AddressBus, RW
 from .registers import RegisterFactory
 
 
@@ -42,11 +42,12 @@ class Cpu(ClockListener):
     def power_on(self):
         self.registers['PCL'].contents = 0x00
         self.registers['PCH'].contents = 0xC0
+        self.fetch()
 
     def reset(self):
         self.pipeline = []
-        self.pipeline.append(Cycle([AddressBusSelect('RES_LO'), Read()]))
-        self.pipeline.append(Cycle([Move('DL', 'PCL'), AddressBusSelect('RES_HI'), Read()]))
+        self.pipeline.append(Cycle([AddressBus('RES_LO'), RW(1)]))
+        self.pipeline.append(Cycle([Move('DL', 'PCL'), AddressBus('RES_HI'), RW(1)]))
         self.pipeline.append(Cycle([Move('DL', 'PCH')]))
 
     def irq(self):
@@ -57,31 +58,31 @@ class Cpu(ClockListener):
 
     def clock_event(self, event_name):
         if event_name == 'cycle-start':
-            self.timing_control.inc()
-
-            if not self.pipeline:
-                self.timing_control.reset()
-                self.fetch()
-
-            cycle = self.pipeline.pop(0)
+            cycle = self.pipeline[self.timing_control.get()]
 
             cycle.execute(cpu=self)
+
+            self.timing_control.inc()
 
         elif event_name == 'db-ready':
             if self.buses['R/W'].get() == 1:
                 # Read
                 self.registers['DL'].contents = self.buses['DB'].get()
 
-                if self.timing_control.get() == 0:
+                if self.timing_control.get() >= len(self.pipeline):
+                    # Every instruction should perform the fetch for the next instruction in their final cycle
                     self.registers['IR'].contents = self.buses['DB'].get()
                     self.decode()
 
     def fetch(self):
-        self.pipeline.append(Cycle([AddressBusSelect('PCX'), Read(), Increment('PCL')]))
+        self.pipeline = [Cycle([AddressBus('PCX'), RW(1), Increment('PCL')])]
 
     def decode(self):
         opcode = self.registers['IR'].contents
         instruction = self.decoder.get_instruction(opcode)
         addressing_mode = self.decoder.get_addressing_mode(opcode)
-        self.pipeline.extend(addressing_mode.cycles)
+
+        self.pipeline = addressing_mode.cycles
         self.pipeline.extend(instruction.cycles)
+
+        self.timing_control.reset()
