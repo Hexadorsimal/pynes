@@ -19,7 +19,7 @@ class FlagRegister(Register):
             else:
                 flag_string += '-'
 
-        return '{name}:{flags}'.format(name=self.name, flags=flag_string)
+        return '{name}:{hex}:{flags}'.format(name=self.name, hex=hex(self.contents), flags=flag_string)
 
     def is_flag_set(self, name):
         flag = self.flags[name]

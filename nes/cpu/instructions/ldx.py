@@ -1,5 +1,5 @@
 from nes.cpu.cycle import Cycle
-from nes.cpu.microinstructions import Move, AddressBus, Read, RW, Increment
+from nes.cpu.microinstructions import AddressBus, Read, RW, Increment, AluPassthrough
 from ..addressing_modes import *
 from .instruction import Instruction
 
@@ -7,8 +7,7 @@ from .instruction import Instruction
 class Ldx(Instruction):
     def __init__(self):
         super().__init__()
-        self.cycles.append(Cycle([Read('X'), AddressBus('PCX'), RW(1), Increment('PCL')]))
-
+        self.cycles.append(Cycle([Read('X'), AluPassthrough('X'), AddressBus('PCX'), RW(1), Increment('PCL')]))
         self.addressing_modes = {
             0xA2: ImmediateAddressing,
             0xA6: ZeroPageAddressing,

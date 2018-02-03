@@ -12,6 +12,23 @@ class AluMicroinstruction(Microinstruction):
     def execute(self, cpu):
         raise NotImplementedError
 
+    @staticmethod
+    def process_flags(p, x):
+        p.set_flag_value('Z', x == 0)
+        p.set_flag_value('N', x & 0x80)
+
+
+class AluPassthrough(AluMicroinstruction):
+    def __init__(self, a):
+        super().__init__(dst=a, a=a)
+
+    def __repr__(self):
+        return 'ALU_PASS(' + self.a + ')'
+
+    def execute(self, cpu):
+        x = cpu.registers[self.a].contents
+        self.process_flags(cpu.registers['P'], x)
+
 
 class Add(AluMicroinstruction):
     def __repr__(self):
@@ -29,8 +46,8 @@ class Add(AluMicroinstruction):
 
         cpu.registers['P'].set_flag_value('C', carry_out)
         cpu.registers['P'].set_flag_value('V', overflow)
-        cpu.registers['P'].set_flag_value('Z', output == 0)
-        cpu.registers['P'].set_flag_value('N', output & 0x80)
+
+        self.process_flags(cpu.registers['P'], output)
 
 
 class Increment(Add):
@@ -75,8 +92,8 @@ class Subtract(AluMicroinstruction):
 
         cpu.registers['P'].set_flag_value('C', carry_out)
         cpu.registers['P'].set_flag_value('V', overflow)
-        cpu.registers['P'].set_flag_value('Z', output == 0)
-        cpu.registers['P'].set_flag_value('N', output & 0x80)
+
+        self.process_flags(cpu.registers['P'], output)
 
 
 class Decrement(Subtract):
@@ -108,8 +125,7 @@ class BitwiseAnd(AluMicroinstruction):
         if self.dst:
             cpu.registers[self.dst].contents = output
 
-        cpu.registers['P'].set_flag_value('Z', output == 0)
-        cpu.registers['P'].set_flag_value('N', output & 0x80)
+        self.process_flags(cpu.registers['P'], output)
 
 
 class BitTest(BitwiseAnd):
@@ -131,8 +147,8 @@ class BitwiseOr(AluMicroinstruction):
         output = Alu.bitwise_or(a_input, b_input)
 
         cpu.registers[self.dst].contents = output
-        cpu.registers['P'].set_flag_value('Z', output == 0)
-        cpu.registers['P'].set_flag_value('N', output & 0x80)
+
+        self.process_flags(cpu.registers['P'], output)
 
 
 class BitwiseXor(AluMicroinstruction):
@@ -146,8 +162,8 @@ class BitwiseXor(AluMicroinstruction):
         output = Alu.bitwise_xor(a_input, b_input)
 
         cpu.registers[self.dst].contents = output
-        cpu.registers['P'].set_flag_value('Z', output == 0)
-        cpu.registers['P'].set_flag_value('N', output & 0x80)
+
+        self.process_flags(cpu.registers['P'], output)
 
 
 class LogicalShiftRight(AluMicroinstruction):
@@ -163,8 +179,8 @@ class LogicalShiftRight(AluMicroinstruction):
             cpu.registers[self.dst].contents = output
 
         cpu.registers['P'].set_flag_value('C', carry_out)
-        cpu.registers['P'].set_flag_value('Z', output == 0)
-        cpu.registers['P'].set_flag_value('N', output & 0x80)
+
+        self.process_flags(cpu.registers['P'], output)
 
 
 class RotateRight(AluMicroinstruction):
@@ -181,5 +197,5 @@ class RotateRight(AluMicroinstruction):
             cpu.registers[self.dst].contents = output
 
         cpu.registers['P'].set_flag_value('C', carry_out)
-        cpu.registers['P'].set_flag_value('Z', output == 0)
-        cpu.registers['P'].set_flag_value('N', output & 0x80)
+
+        self.process_flags(cpu.registers['P'], output)
