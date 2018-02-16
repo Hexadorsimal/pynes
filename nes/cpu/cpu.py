@@ -1,56 +1,103 @@
-import yaml
-
-from nes.alu import Alu
-from nes.clock import ClockListener
-from nes.timing_control import TimingControl
-from .cycle import Cycle
-from .instruction_decoder import InstructionDecoder
-from .interrupt_vector import InterruptVector
-from .microinstructions import Read, Increment, Move, AddressBus, RW
-from .registers import RegisterFactory
+from enum import Enum
 
 
-class Cpu(ClockListener):
-    def __init__(self, yaml_data, nes):
-        self.registers = {}
-        for register_data in yaml_data['registers']:
-            register = RegisterFactory.create_register(register_data)
-            self.registers[register.name] = register
+class Cpu:
+    class Flags(Enum):
+        negative_result = 0x80
+        overflow = 0x40
+        expansion = 0x20
+        break_command = 0x10
+        decimal_mode = 0x08
+        interrupt_disable = 0x04
+        zero_result = 0x02
+        carry = 0x01
 
-        self.vectors = {}
-        for vector_data in yaml_data['interrupt_vectors']:
-            vector = InterruptVector(**vector_data)
-            self.vectors[vector.name] = vector
+    def __init__(self, nes):
+        self.pc = 0
+        self.a = 0
+        self.x = 0
+        self.y = 0
+        self.p = 0
+        self.s = 0
 
-        self.buses = {}
-        for bus_data in yaml_data['buses']:
-            name = bus_data['name']
-            self.buses[name] = nes.buses[name]
+    def get_flag(self, flag):
+        if self.p & flag:
+            return 1
+        else:
+            return 0
 
-        self.alu = Alu()
-        self.decoder = InstructionDecoder()
-        self.pipeline = []
-        self.timing_control = TimingControl()
-        self.address_bus_selector = None
+    def set_flag(self, flag, value):
+        if value:
+            self.p |= flag
+        else:
+            self.p &= ~flag
 
-    @classmethod
-    def create(cls, filename, nes):
-        with open(filename, 'rt') as stream:
-            yaml_data = yaml.load(stream)
-            return Cpu(yaml_data, nes)
+    @property
+    def b(self):
+        return self.get_flag(self.Flags.break_command.value)
+
+    @b.setter
+    def b(self, value):
+        self.set_flag(self.Flags.break_command.value, value)
+
+    @property
+    def c(self):
+        return self.set_flag(self.Flags.carry.value)
+
+    @c.setter
+    def c(self, value):
+        self.set_flag(self.Flags.carry.value, value)
+
+    @property
+    def d(self):
+        return self.get_flag(self.Flags.decimal_mode.value)
+
+    @d.setter
+    def d(self, value):
+        self.set_flag(self.Flags.decimal_mode.value, value)
+
+    @property
+    def i(self):
+        return self.get_flag(self.Flags.interrupt_disable.value)
+
+    @i.setter
+    def i(self, value):
+        self.set_flag(self.Flags.interrupt_disable.value, value)
+
+    @property
+    def n(self):
+        return self.get_flag(self.Flags.negative_result.value)
+
+    @n.setter
+    def n(self, value):
+        self.set_flag(self.Flags.negative_result.value, value)
+
+    @property
+    def v(self):
+        self.get_flag(self.Flags.overflow.value)
+
+    @v.setter
+    def v(self, value):
+        self.set_flag(self.Flags.overflow.value, value)
+
+    @property
+    def z(self):
+        return self.get_flag(self.Flags.zero_result.value)
+
+    @z.setter
+    def z(self, value):
+        self.set_flag(self.Flags.zero_result.value, value)
 
     def power_on(self):
-        self.registers['PCL'].contents = 0x00
-        self.registers['PCH'].contents = 0xC0
-        self.registers['S'].contents = 0xFD
-        self.registers['P'].contents = 0x24
+        self.pc = 0xC000
+        self.s = 0xFD
+        self.p = 0x24
         self.fetch()
 
     def reset(self):
-        self.pipeline = []
-        self.pipeline.append(Cycle([AddressBus('RES_LO'), RW(1)]))
-        self.pipeline.append(Cycle([Move('DL', 'PCL'), AddressBus('RES_HI'), RW(1)]))
-        self.pipeline.append(Cycle([Move('DL', 'PCH')]))
+        # read mem from RESET_LO, put in PCL
+        # read mem from RESET_HI, put in PCH
+        pass
 
     def irq(self):
         pass
@@ -58,33 +105,10 @@ class Cpu(ClockListener):
     def nmi(self):
         pass
 
-    def clock_event(self, event_name):
-        if event_name == 'cycle-start':
-            cycle = self.pipeline[self.timing_control.get()]
-
-            cycle.execute(cpu=self)
-
-            self.timing_control.inc()
-
-        elif event_name == 'db-ready':
-            if self.buses['R/W'].get() == 1:
-                # Read
-                self.registers['DL'].contents = self.buses['DB'].get()
-
-                if self.timing_control.get() >= len(self.pipeline):
-                    # Every instruction should perform the fetch for the next instruction in their final cycle
-                    self.registers['IR'].contents = self.buses['DB'].get()
-                    self.decode()
-
     def fetch(self):
-        self.pipeline = [Cycle([AddressBus('PCX'), RW(1), Increment('PCL')])]
+        pass
 
     def decode(self):
-        opcode = self.registers['IR'].contents
+        opcode = self.readmem(self.pc)
         instruction = self.decoder.get_instruction(opcode)
         addressing_mode = self.decoder.get_addressing_mode(opcode)
-
-        self.pipeline = addressing_mode.cycles
-        self.pipeline.extend(instruction.cycles)
-
-        self.timing_control.reset()
