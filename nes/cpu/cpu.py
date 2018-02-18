@@ -152,7 +152,7 @@ class Cpu:
             address = self.read16(self.pc + 1) + self.y
             page_crossed = self.pages_differ(address - self.y, address)
         elif mode == 'Accumulator':
-            address = 0
+            address = mode
         elif mode == 'Immediate':
             address = self.pc + 1
         elif mode == 'Implied':
@@ -169,6 +169,8 @@ class Cpu:
                 address = self.pc + 2 + offset
             else:
                 address = self.pc + 2 + offset - 0x100
+
+            page_crossed = self.pages_differ(self.pc, address)
         elif mode == 'ZeroPage':
             address = self.memory.read(self.pc + 1)
         elif mode == 'ZeroPageX':
@@ -178,15 +180,18 @@ class Cpu:
 
         self.pc += instruction['size']
 
+        instr = instruction['name'].lower()
+        branch_taken = getattr(self, instr)(address)
+
         cycles = instruction['cycles']
-        if page_crossed:
+        if mode == 'Relative' and branch_taken:
+            cycles += 1
+            if page_crossed:
+                cycles += instruction['page_cycles']
+        elif page_crossed:
             cycles += instruction['page_cycles']
 
         self.cycles += cycles
-
-        instr = instruction['name'].lower()
-        getattr(self, instr)(address)
-
         return cycles
 
     def read16(self, addr):
@@ -201,16 +206,271 @@ class Cpu:
         hi = self.memory.read(b)
         return (hi << 8) | lo
 
+    def push(self, value):
+        self.memory.write(0x0100 | self.s, value)
+        self.s = (self.s - 1) & 0x00ff
+
+    def pull(self):
+        self.s = (self.s + 1) & 0x00ff
+        return self.memory.read(0x0100 | self.s)
+
+    def push16(self, value):
+        hi = value >> 8
+        lo = value & 0x00ff
+        self.push(hi)
+        self.push(lo)
+
+    def pull16(self):
+        lo = self.pull()
+        hi = self.pull()
+        return hi << 8 | lo
+
     @staticmethod
     def pages_differ(a, b):
         return a & 0xFF00 != b & 0xFF00
 
+    def adc(self, address):
+        a = self.a
+        b = self.memory.read(address)
+        c = self.c
+        self.a = a + b + c
+        self.update_zn(self.a)
+
+        if self.a > 0xff:
+            self.a &= 0xff
+            self.c = 1
+        else:
+            self.c = 0
+
+        if (a ^ b) & 0x80 == 0 and (a ^ self.a) & 0x80 != 0:
+            self.v = 1
+        else:
+            self.v = 0
+
+    def and_(self, address):
+        self.a = self.a & self.memory.read(address)
+        self.update_zn(self.a)
+
+    def asl(self, address):
+        if address == 'Accumulator':
+            self.c = (self.a >> 7) & 0x01
+            self.a = self.a << 1
+            self.update_zn(self.a)
+        else:
+            value = self.memory.read(address)
+            self.c = (value >> 7) & 0x01
+            value = value << 1
+            self.memory.write(address, value)
+            self.update_zn(value)
+
+    def bcc(self, address):
+        if self.c == 0:
+            self.pc = address
+            return True
+        else:
+            return False
+
+    def bcs(self, address):
+        if self.c != 0:
+            self.pc = address
+            return True
+        else:
+            return False
+
+    def beq(self, address):
+        if self.z != 0:
+            self.pc = address
+            return True
+        else:
+            return False
+
+    def bit(self, address):
+        value = self.memory.read(address)
+        self.v = (value >> 6) & 0x01
+        self.update_z(value & self.a)
+        self.update_n(value)
+
+    def bmi(self, address):
+        if self.n != 0:
+            self.pc = address
+            return True
+        else:
+            return False
+
+    def bne(self, address):
+        if self.z == 0:
+            self.pc = address
+            return True
+        else:
+            return False
+
+    def bpl(self, address):
+        if self.n == 0:
+            self.pc = address
+            return True
+        else:
+            return False
+
+    def brk(self, address):
+        pass
+
+    def bvc(self, address):
+        if self.v == 0:
+            self.pc = address
+            return True
+        else:
+            return False
+
+    def bvs(self, address):
+        if self.v != 0:
+            self.pc = address
+            return True
+        else:
+            return False
+
+    def clc(self, address):
+        self.c = 0
+
+    def cld(self, address):
+        self.d = 0
+
+    def cli(self, address):
+        self.i = 0
+
+    def clv(self, address):
+        self.v = 0
+
+    def cmp(self, address):
+        pass
+
+    def cpx(self, address):
+        pass
+
+    def cpy(self, address):
+        pass
+
+    def dec(self, address):
+        value = self.memory.read(address) - 1
+        self.memory.write(address, value)
+        self.update_zn(value)
+
+    def dex(self, address):
+        self.x -= 1
+        self.update_zn(self.x)
+
+    def dey(self, address):
+        self.y -= 1
+        self.update_zn(self.y)
+
+    def eor(self, address):
+        self.a = self.a ^ self.memory.read(address)
+        self.update_zn(self.a)
+
+    def inc(self, address):
+        value = self.memory.read(address) + 1
+        self.memory.write(address, value)
+        self.update_zn(value)
+
+    def inx(self, address):
+        self.x += 1
+        self.update_zn(self.x)
+
+    def iny(self, address):
+        self.y += 1
+        self.update_zn(self.y)
+
     def jmp(self, address):
         self.pc = address
+
+    def jsr(self, address):
+        self.push16(self.pc - 1)
+        self.pc = address
+
+    def lda(self, address):
+        self.a = self.memory.read(address)
+        self.update_zn(self.a)
 
     def ldx(self, address):
         self.x = self.memory.read(address)
         self.update_zn(self.x)
 
+    def ldy(self, address):
+        self.y = self.memory.read(address)
+        self.update_zn(self.y)
+
+    def lsr(self, address):
+        pass
+
+    def nop(self, address):
+        pass
+
+    def ora(self, address):
+        pass
+
+    def pha(self, address):
+        pass
+
+    def php(self, address):
+        pass
+
+    def pla(self, address):
+        pass
+
+    def plp(self, address):
+        pass
+
+    def rol(self, address):
+        pass
+
+    def ror(self, address):
+        pass
+
+    def rti(self, address):
+        pass
+
+    def rts(self, address):
+        pass
+
+    def sbc(self, address):
+        pass
+
+    def sec(self, address):
+        self.c = 1
+
+    def sed(self, address):
+        self.d = 1
+
+    def sei(self, address):
+        self.i = 1
+
+    def sta(self, address):
+        self.memory.write(address, self.a)
+
     def stx(self, address):
         self.memory.write(address, self.x)
+
+    def sty(self, address):
+        self.memory.write(address, self.y)
+
+    def tax(self, address):
+        self.x = self.a
+        self.update_zn(self.x)
+
+    def tay(self, address):
+        self.y = self.a
+        self.update_zn(self.y)
+
+    def tsx(self, address):
+        self.x = self.s
+        self.update_zn(self.x)
+
+    def txa(self, address):
+        self.a = self.x
+        self.update_zn(self.a)
+
+    def txs(self, address):
+        self.s = self.x
+
+    def tya(self, address):
+        self.a = self.y
+        self.update_zn(self.a)
