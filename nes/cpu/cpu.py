@@ -36,6 +36,22 @@ class Cpu:
         else:
             self.p &= ~flag
 
+    def update_zn(self, value):
+        self.update_z(value)
+        self.update_n(value)
+
+    def update_z(self, value):
+        if value == 0:
+            self.z = 1
+        else:
+            self.z = 0
+
+    def update_n(self, value):
+        if value & 0x80:
+            self.n = 1
+        else:
+            self.n = 0
+
     @property
     def b(self):
         return self.get_flag(Cpu.Flags.break_command.value)
@@ -191,3 +207,10 @@ class Cpu:
 
     def jmp(self, address):
         self.pc = address
+
+    def ldx(self, address):
+        self.x = self.memory.read(address)
+        self.update_zn(self.x)
+
+    def stx(self, address):
+        self.memory.write(address, self.x)
