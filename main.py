@@ -2,7 +2,7 @@ from nes import Nes, Cartridge
 
 
 if __name__ == '__main__':
-    nes = Nes.create('nes.yaml')
+    nes = Nes()
     cart = Cartridge.create('nestest.nes')
 
     nes.insert_cartridge(cart)

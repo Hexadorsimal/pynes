@@ -1,4 +1,5 @@
 from enum import Enum
+from .decoder import Decoder
 
 
 class Cpu:
@@ -20,6 +21,8 @@ class Cpu:
         self.p = 0
         self.s = 0
         self.memory = memory
+        self.decoder = Decoder()
+        self.cycles = 0
 
     def get_flag(self, flag):
         if self.p & flag:
@@ -93,7 +96,9 @@ class Cpu:
         self.pc = 0xC000
         self.s = 0xFD
         self.p = 0x24
-        self.fetch()
+
+        while True:
+            self.step()
 
     def reset(self):
         # read mem from RESET_LO, put in PCL
@@ -115,11 +120,74 @@ class Cpu:
         return self.memory.read(self.pc)
 
     def decode(self, opcode):
-        return {
-            'opcode': opcode,
-            'size': 1,
-            'addressing_mode': 0,
-        }
+        return self.decoder.decode(opcode)
 
     def execute(self, instruction):
-        pass
+        mode = instruction['addressing_mode']
+        address = 0
+        page_crossed = False
+
+        if mode == 'Absolute':
+            address = self.read16(self.pc + 1)
+        elif mode == 'AbsoluteX':
+            address = self.read16(self.pc + 1) + self.x
+            page_crossed = self.pages_differ(address - self.x, address)
+        elif mode == 'AbsoluteY':
+            address = self.read16(self.pc + 1) + self.y
+            page_crossed = self.pages_differ(address - self.y, address)
+        elif mode == 'Accumulator':
+            address = 0
+        elif mode == 'Immediate':
+            address = self.pc + 1
+        elif mode == 'Implied':
+            address = 0
+        elif mode == 'IndexedIndirect':
+            address = self.read16_bug(self.memory.read(self.pc + 1) + self.x)
+        elif mode == 'Indirect':
+            address = self.read16_bug(self.read16(self.pc + 1))
+        elif mode == 'IndirectIndexed':
+            address = self.read16_bug(self.memory.read(self.pc + 1)) + self.y
+        elif mode == 'Relative':
+            offset = self.memory.read(self.pc + 1)
+            if offset < 0x80:
+                address = self.pc + 2 + offset
+            else:
+                address = self.pc + 2 + offset - 0x100
+        elif mode == 'ZeroPage':
+            address = self.memory.read(self.pc + 1)
+        elif mode == 'ZeroPageX':
+            address = (self.memory.read(self.pc + 1) + self.x) & 0xff
+        elif mode == 'ZeroPageY':
+            address = (self.memory.read(self.pc + 1) + self.y) & 0xff
+
+        self.pc += instruction['size']
+
+        cycles = instruction['cycles']
+        if page_crossed:
+            cycles += instruction['page_cycles']
+
+        self.cycles += cycles
+
+        instr = instruction['name'].lower()
+        getattr(self, instr)(address)
+
+        return cycles
+
+    def read16(self, addr):
+        lo = self.memory.read(addr)
+        hi = self.memory.read(addr + 1)
+        return (hi << 8) | lo
+
+    def read16_bug(self, addr):
+        a = addr
+        b = (a & 0xff00) | ((a & 0x00ff) + 1)
+        lo = self.memory.read(a)
+        hi = self.memory.read(b)
+        return (hi << 8) | lo
+
+    @staticmethod
+    def pages_differ(a, b):
+        return a & 0xFF00 != b & 0xFF00
+
+    def jmp(self, address):
+        self.pc = address

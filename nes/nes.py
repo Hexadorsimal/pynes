@@ -1,4 +1,5 @@
 from .cpu import Cpu
+from .ppu import Ppu
 from .memory import AddressRange, MemoryMap, Ram
 from .ppu.ppu_register_set import PpuRegisterSet
 
@@ -7,9 +8,11 @@ class Nes:
     def __init__(self):
         self.cartridge = None
 
+        self.ppu = Ppu()
+
         self.cpu_mem = MemoryMap(0x10000)
         self.cpu_mem.add_memory(AddressRange(0x0000, 0x2000), Ram(0x0800))  # RAM
-        self.cpu_mem.add_memory(AddressRange(0x2000, 0x2000), PpuRegisterSet())  # PPU Registers
+        self.cpu_mem.add_memory(AddressRange(0x2000, 0x2000), PpuRegisterSet(self.ppu))  # PPU Registers
         self.cpu_mem.add_memory(AddressRange(0x4000, 0x0018), Ram(0x0018))  # APU and IO Registers
         self.cpu_mem.add_memory(AddressRange(0x4018, 0x0008), Ram(0x0008))  # Disabled APU and IO functionality
 
