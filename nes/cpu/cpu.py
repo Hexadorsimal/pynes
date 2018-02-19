@@ -225,6 +225,13 @@ class Cpu:
         hi = self.pull()
         return hi << 8 | lo
 
+    def compare(self, a, b):
+        self.update_zn(a - b)
+        if a >= b:
+            self.c = 1
+        else:
+            self.c = 0
+
     @staticmethod
     def pages_differ(a, b):
         return a & 0xFF00 != b & 0xFF00
@@ -312,7 +319,10 @@ class Cpu:
             return False
 
     def brk(self, address):
-        pass
+        self.push16(self.pc)
+        self.php(address)
+        self.sei(address)
+        self.pc = self.memory.read16(0xfffe)
 
     def bvc(self, address):
         if self.v == 0:
@@ -341,13 +351,16 @@ class Cpu:
         self.v = 0
 
     def cmp(self, address):
-        pass
+        value = self.memory.read(address)
+        self.compare(self.a, value)
 
     def cpx(self, address):
-        pass
+        value = self.memory.read(address)
+        self.compare(self.x, value)
 
     def cpy(self, address):
-        pass
+        value = self.memory.read(address)
+        self.compare(self.y, value)
 
     def dec(self, address):
         value = self.memory.read(address) - 1
@@ -399,40 +412,87 @@ class Cpu:
         self.update_zn(self.y)
 
     def lsr(self, address):
-        pass
+        if address == 'Accumulator':
+            self.c = self.a & 0x01
+            self.a >>= 1
+            self.update_zn(self.a)
+        else:
+            value = self.memory.read(address)
+            self.c = value & 0x01
+            value >>= 1
+            self.memory.write(address, value)
+            self.update_zn(value)
 
     def nop(self, address):
         pass
 
     def ora(self, address):
-        pass
+        self.a |= self.memory.read(address)
+        self.update_zn(self.a)
 
     def pha(self, address):
-        pass
+        self.push(self.a)
 
     def php(self, address):
-        pass
+        self.push(self.p)
 
     def pla(self, address):
-        pass
+        self.a = self.pull()
+        self.update_zn(self.a)
 
     def plp(self, address):
-        pass
+        self.p = self.pull()
 
     def rol(self, address):
-        pass
+        if address == 'Accumulator':
+            c = self.c
+            self.c = (self.a >> 7) & 0x01
+            self.a = (self.a << 1) | c
+            self.update_zn(self.a)
+        else:
+            c = self.c
+            value = self.memory.read(address)
+            self.c = (value >> 7) & 0x01
+            value = (value << 1) | c
+            self.memory.write(address, value)
+            self.update_zn(value)
 
     def ror(self, address):
-        pass
+        if address == 'Accumulator':
+            c = self.c
+            self.c = self.a & 0x01
+            self.a = (self.a >> 1) | (c << 7)
+            self.update_zn(self.a)
+        else:
+            c = self.c
+            value = self.memory.read(address)
+            self.c = value & 0x01
+            value = (value >> 1) | (c << 7)
+            self.memory.write(address, value)
+            self.update_zn(value)
 
     def rti(self, address):
-        pass
+        self.p = self.pull()
+        self.pc = self.pull16()
 
     def rts(self, address):
-        pass
+        self.pc = self.pull16() + 1
 
     def sbc(self, address):
-        pass
+        a = self.a
+        b = self.memory.read(address)
+        c = self.c
+        self.a = a - b - (1 - c)
+        self.update_zn(self.a)
+        if a - b - (1 - c) > 0:
+            self.c = 1
+        else:
+            self.c = 0
+
+        if (a ^ b) & 0x80 != 0 and (a ^ self.a) & 0x80 != 0:
+            self.v = 1
+        else:
+            self.v = 0
 
     def sec(self, address):
         self.c = 1
