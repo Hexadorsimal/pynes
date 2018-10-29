@@ -13,4 +13,7 @@ class Decoder:
         c = self.conn.cursor()
         c.execute('select * from instruction where opcode=?', [opcode])
         row = c.fetchone()
-        return dict(zip(row.keys(), row))
+        if row:
+            return dict(zip(row.keys(), row))
+        else:
+            raise NotImplementedError('Undocumented Opcode: ' + str(opcode))
