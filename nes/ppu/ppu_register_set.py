@@ -1,30 +1,43 @@
-import yaml
-from nes.memory import MemoryMap, AddressRange
-from nes.cpu.registers import Register
+from nes.memory import MemoryMap
 
 
 class PpuRegisterSet(MemoryMap):
-    @classmethod
-    def create(cls, filename):
-        base_address = 0x2000
-        ppu_register_set = PpuRegisterSet(8)
+    def __init__(self, ppu):
+        super().__init__(8)
+        self.ppu = ppu
 
-        with open(filename, 'rt') as stream:
-            yaml_data = yaml.load(stream)
-            registers = cls.load_registers(yaml_data['registers'])
+    def read(self, logical_addr):
+        if logical_addr == 0:
+            return self.ppu.ppu_controller
+        elif logical_addr == 1:
+            return self.ppu.ppu_mask
+        elif logical_addr == 2:
+            return self.ppu.ppu_status
+        elif logical_addr == 3:
+            return self.ppu.oam_address
+        elif logical_addr == 4:
+            return self.ppu.oam_data
+        elif logical_addr == 5:
+            return self.ppu.ppu_scroll
+        elif logical_addr == 6:
+            return self.ppu.ppu_address
+        elif logical_addr == 7:
+            return  self.ppu.ppu_data
 
-            for address, register in registers.items():
-                reg_local_addr = address - base_address
-                ppu_register_set.add_memory(AddressRange(reg_local_addr, 1), register)
-
-        return ppu_register_set
-
-    @classmethod
-    def load_registers(cls, registers_dict):
-        registers = {}
-        for register_dict in registers_dict:
-            register = Register(name=register_dict.get('name'),
-                                description=register_dict.get('description'))
-            address = register_dict.get('address')
-            registers[address] = register
-        return registers
+    def write(self, logical_addr, value):
+        if logical_addr == 0:
+            self.ppu.ppu_controller = value
+        elif logical_addr == 1:
+            self.ppu.ppu_mask = value
+        elif logical_addr == 2:
+            self.ppu.ppu_status = value
+        elif logical_addr == 3:
+            self.ppu.oam_address = value
+        elif logical_addr == 4:
+            self.ppu.oam_data = value
+        elif logical_addr == 5:
+            self.ppu.ppu_scroll = value
+        elif logical_addr == 6:
+            self.ppu.ppu_address = value
+        elif logical_addr == 7:
+            self.ppu.ppu_data = value
