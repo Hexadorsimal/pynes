@@ -62,7 +62,7 @@ class Cpu:
 
     @property
     def c(self):
-        return self.set_flag(Cpu.Flags.carry.value)
+        return self.get_flag(Cpu.Flags.carry.value)
 
     @c.setter
     def c(self, value):
@@ -94,7 +94,7 @@ class Cpu:
 
     @property
     def v(self):
-        self.get_flag(Cpu.Flags.overflow.value)
+        return self.get_flag(Cpu.Flags.overflow.value)
 
     @v.setter
     def v(self, value):
