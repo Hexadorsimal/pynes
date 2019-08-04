@@ -1,0 +1,1 @@
+PaletteIndex = int

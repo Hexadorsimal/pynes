@@ -5,10 +5,10 @@ from .ppu.ppu_register_set import PpuRegisterSet
 
 
 class Nes:
-    def __init__(self):
+    def __init__(self, config):
         self.cartridge = None
 
-        self.ppu = Ppu()
+        self.ppu = Ppu(config['ppu'])
 
         self.cpu_mem = MemoryMap(0x10000)
         self.cpu_mem.add_memory(AddressRange(0x0000, 0x2000), Ram(0x0800))  # RAM

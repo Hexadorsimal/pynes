@@ -1,10 +1,9 @@
+from .color import ColorPalette
+
+
 class Ppu:
-    def __init__(self):
-        self.ppu_controller = 0
-        self.ppu_mask = 0
-        self.ppu_status = 0
-        self.oam_address = 0
-        self.oam_data = 0
-        self.ppu_scroll = 0
-        self.ppu_address = 0
-        self.ppu_data = 0
+    def __init__(self, config):
+        self.color_palette = ColorPalette.from_file(config['palette_file'])
+        self.universal_background_color = None
+        self.background_color_sets = []
+        self.sprite_color_sets = []
