@@ -7,3 +7,8 @@ class Ppu:
         self.universal_background_color = None
         self.background_color_sets = []
         self.sprite_color_sets = []
+
+        self.pattern_tables = []
+        self.name_tables = []
+        
+        self.sprites = []
