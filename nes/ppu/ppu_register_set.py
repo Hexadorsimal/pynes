@@ -1,7 +1,7 @@
-from nes.memory import MemoryMap
+from nes.bus import BusDevice
 
 
-class PpuRegisterSet(MemoryMap):
+class PpuRegisterSet(BusDevice):
     def __init__(self, ppu):
         super().__init__(8)
         self.ppu = ppu

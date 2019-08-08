@@ -1,10 +1,6 @@
 class Memory:
     def __init__(self, size):
-        self._size = size
-
-    @property
-    def size(self):
-        return self._size
+        self.size = size
 
     def read(self, addr):
         raise NotImplementedError
