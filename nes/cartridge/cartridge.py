@@ -7,14 +7,14 @@ class Cartridge(BusDevice):
 
     def handle_request(self, request):
         if isinstance(request, ReadRequest):
-            if request.bus_name == 'cpu':
+            if request.bus.name == 'cpu':
                 return self.handle_cpu_read_request(request)
-            elif request.bus_name == 'ppu':
+            elif request.bus.name == 'ppu':
                 return self.handle_ppu_read_request(request)
         elif isinstance(request, WriteRequest):
-            if request.bus_name == 'cpu':
+            if request.bus.name == 'cpu':
                 return self.handle_cpu_write_request(request)
-            elif request.bus_name == 'ppu':
+            elif request.bus.name == 'ppu':
                 return self.handle_ppu_write_request(request)
 
     def handle_cpu_read_request(self, request):
