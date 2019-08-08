@@ -1,3 +1,2 @@
-from .color_palette import ColorPalette
-from .color_set import ColorSet
-from .palette_index import PaletteIndex
+from .system_palette import SystemPalette
+from .palette import Palette

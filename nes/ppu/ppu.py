@@ -1,14 +1,16 @@
-from .color import ColorPalette
+from .color import SystemPalette
 
 
 class Ppu:
-    def __init__(self, config):
-        self.color_palette = ColorPalette.from_file(config['palette_file'])
-        self.universal_background_color = None
-        self.background_color_sets = []
-        self.sprite_color_sets = []
+    def __init__(self, bus, config):
+        self.bus = bus
+
+        self.system_palette = SystemPalette.from_file(config['palette_file'])
+        self.background_color = None
+        self.background_palettes = []
+        self.sprite_palettes = []
 
         self.pattern_tables = []
         self.name_tables = []
-        
+
         self.sprites = []

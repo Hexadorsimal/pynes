@@ -1,4 +1,4 @@
-class ColorPalette:
+class SystemPalette:
     def __init__(self, colors):
         self.colors = colors
 
@@ -14,4 +14,4 @@ class ColorPalette:
                 color = (int(r, 16), int(g, 16), int(b, 16))
                 colors.append(color)
 
-        return ColorPalette(colors)
+        return SystemPalette(colors)

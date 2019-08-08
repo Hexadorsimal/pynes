@@ -1,14 +1,30 @@
-from .rom_file import RomFile
-from .mmc_factory import MmcFactory
+from nes.bus import BusDevice, ReadRequest, WriteRequest, ReadResponse, WriteResponse
 
 
-class Cartridge:
-    def __init__(self, mmc):
-        self.mmc = mmc
+class Cartridge(BusDevice):
+    def __init__(self, rom_file):
+        self.rom_file = rom_file
 
-    @staticmethod
-    def create(filename):
-        rom_file = RomFile.load(filename)
-        factory = MmcFactory()
-        mmc = factory.create_mmc(rom_file)
-        return Cartridge(mmc)
+    def handle_request(self, request):
+        if isinstance(request, ReadRequest):
+            if request.bus_name == 'cpu':
+                return self.handle_cpu_read_request(request)
+            elif request.bus_name == 'ppu':
+                return self.handle_ppu_read_request(request)
+        elif isinstance(request, WriteRequest):
+            if request.bus_name == 'cpu':
+                return self.handle_cpu_write_request(request)
+            elif request.bus_name == 'ppu':
+                return self.handle_ppu_write_request(request)
+
+    def handle_cpu_read_request(self, request):
+        pass
+
+    def handle_cpu_write_request(self, request):
+        pass
+
+    def handle_ppu_read_request(self, request):
+        pass
+
+    def handle_ppu_write_request(self, request):
+        pass
