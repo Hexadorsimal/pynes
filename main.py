@@ -11,6 +11,7 @@ if __name__ == '__main__':
     nes = Nes(config)
     nes.insert_cartridge(cart)
     # nes.power_up()
+    nes.bus.read(0x8000)
 
     pygame.init()
     pygame.display.set_caption('NES Palette')
