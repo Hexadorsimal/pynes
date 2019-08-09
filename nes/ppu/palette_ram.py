@@ -3,7 +3,7 @@ from nes.bus import BusDevice
 
 class PaletteRam(BusDevice):
     def __init__(self):
-        self.palette = bytearray(16)
+        self.palette = bytearray(32)
 
     def handle_read_request(self, request):
         if 0x3F00 <= request.addr <= 0x3FFF:
