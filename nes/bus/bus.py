@@ -17,7 +17,7 @@ class Bus:
 
     def send_request(self, request):
         for device in self.devices:
-            response = device.handle_request(request)
+            response = device.handle_bus_request(request)
             if response:
                 return response
 

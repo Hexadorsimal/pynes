@@ -1,16 +1,23 @@
-from .color import SystemPalette
+from nes.bus import BusDevice, ReadRequest, WriteRequest
+from .system_palette import SystemPalette
+from .palette_ram import PaletteRam
+from .name_table_ram import NameTableCiram
 
 
-class Ppu:
+class Ppu(BusDevice):
     def __init__(self, bus, config):
         self.bus = bus
 
         self.system_palette = SystemPalette.from_file(config['palette_file'])
-        self.background_color = None
-        self.background_palettes = []
-        self.sprite_palettes = []
+        self.bus.add_device(PaletteRam())
+        self.bus.add_device(NameTableCiram())
 
         self.pattern_tables = []
-        self.name_tables = []
 
         self.sprites = []
+
+    def handle_read_request(self, request):
+        pass
+
+    def handle_write_request(self, request):
+        pass
