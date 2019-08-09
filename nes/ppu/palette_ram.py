@@ -1,4 +1,4 @@
-from nes.bus import BusDevice
+from nes.bus import BusDevice, ReadResponse, WriteResponse
 
 
 class PaletteRam(BusDevice):
@@ -9,11 +9,12 @@ class PaletteRam(BusDevice):
         if 0x3F00 <= request.addr <= 0x3FFF:
             addr = request.addr & 0x001F
             if addr & 0x03:
-                return self.palette[addr]
+                return ReadResponse(request, self, self.palette[addr])
             else:
-                return self.palette[0]
+                return ReadResponse(request, self, self.palette[0])
 
     def handle_write_request(self, request):
         if 0x3F00 <= request.addr <= 0x3FFF:
             addr = request.addr & 0x001F
             self.palette[addr] = request.data
+            return WriteResponse(request, self)
