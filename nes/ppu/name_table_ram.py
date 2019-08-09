@@ -2,7 +2,7 @@ from nes.bus import BusDevice
 from nes.cartridge.ines import VramMirroringMode
 
 
-class NameTableCiram(BusDevice):
+class NameTableRam(BusDevice):
     def __init__(self):
         self.data = bytearray(0x0800)
 

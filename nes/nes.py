@@ -1,5 +1,5 @@
 from .cpu import Cpu
-from .ppu import Ppu
+from .ppu import Ppu, NameTableRam, PaletteRam
 from .bus import Bus
 
 
@@ -7,6 +7,9 @@ class Nes:
     def __init__(self, config):
         self.cartridge = None
         self.ppu = Ppu(Bus('ppu'), config['ppu'])
+        self.ppu.bus.add_device(PaletteRam())
+        self.ppu.bus.add_device(NameTableRam())
+
         self.cpu = Cpu(Bus('cpu'))
 
     def insert_cartridge(self, cartridge):

@@ -1,6 +1,6 @@
 import pygame
 import yaml
-from nes import Nes, CartridgeFactory, Ppu
+from nes import Nes, CartridgeFactory
 
 
 if __name__ == '__main__':
