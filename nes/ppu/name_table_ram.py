@@ -4,7 +4,7 @@ from nes.cartridge.ines import VramMirroringMode
 
 class NameTableCiram(BusDevice):
     def __init__(self):
-        self.data = bytearray(2048)
+        self.data = bytearray(0x0800)
 
     @staticmethod
     def translate_address(logical_addr, vram_mirroring_mode):
@@ -12,14 +12,14 @@ class NameTableCiram(BusDevice):
 
         if vram_mirroring_mode == VramMirroringMode.horizontal:
             addr = addr & ~0x0400
-            if addr >= 2048:
-                addr -= 1024
+            if addr >= 0x0800:
+                addr -= 0x0400
         elif vram_mirroring_mode == VramMirroringMode.vertical:
             addr = addr & ~0x0800
         elif vram_mirroring_mode == VramMirroringMode.single_screen:
             addr = addr & ~0x0C00
         elif vram_mirroring_mode == VramMirroringMode.four_screen:
-            if addr >= 2048:
+            if addr >= 0x0800:
                 return None  # let another ram chip on the bus handle this
 
         return addr
