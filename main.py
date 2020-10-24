@@ -9,10 +9,8 @@ if __name__ == '__main__':
 
     nes = Nes(config)
     nes.insert_cartridge(cart)
-    # nes.power_up()
 
     for i in range(32):
         nes.ppu.bus.write(0x3F00 + i, i)
 
-    while True:
-        nes.ppu.tick()
+    nes.power_up()

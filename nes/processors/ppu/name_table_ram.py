@@ -3,8 +3,10 @@ from nes.cartridge.ines import VramMirroringMode
 
 
 class NameTableRam(BusDevice):
-    def __init__(self):
+    def __init__(self, vram_mirroring_mode=VramMirroringMode.single_screen):
+        super().__init__('name table ram')
         self.data = bytearray(0x0800)
+        self.vram_mirroring_mode = vram_mirroring_mode
 
     @staticmethod
     def translate_address(logical_addr, vram_mirroring_mode):
@@ -24,14 +26,14 @@ class NameTableRam(BusDevice):
 
         return addr
 
-    def handle_read_request(self, request):
-        if 0x2000 <= request.addr <= 0x2FFF:
-            addr = self.translate_address(request.addr, request.vram_mirroring_mode)
+    def read(self, addr):
+        if 0x2000 <= addr <= 0x2FFF:
+            addr = self.translate_address(addr, self.vram_mirroring_mode)
             if addr:
                 return self.data[addr]
 
-    def handle_write_request(self, request):
-        if 0x2000 <= request.addr <= 0x2FFF:
-            addr = self.translate_address(request.addr, request.vram_mirroring_mode)
+    def write(self, addr, value):
+        if 0x2000 <= addr <= 0x2FFF:
+            addr = self.translate_address(addr, self.vram_mirroring_mode)
             if addr:
-                self.data[addr] = request.data
+                self.data[addr] = value

@@ -9,5 +9,5 @@ class Rom(Memory):
     def read(self, addr):
         return self.data[addr]
 
-    def write(self, addr, data):
+    def write(self, addr, value):
         raise RuntimeError('You cannot write to ROM')

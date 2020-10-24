@@ -1,5 +1,5 @@
 import unittest
-from nes.cpu import Cpu
+from nes.processors.cpu import Cpu
 from nes.memory import Ram
 
 

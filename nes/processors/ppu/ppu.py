@@ -1,13 +1,13 @@
 import sys
 import pygame
 
-from nes.bus import BusDevice, ReadRequest, WriteRequest
-from .system_palette import SystemPalette
+from .palettes.system_palette import SystemPalette
+from ..processor import Processor
 
 
-class Ppu(BusDevice):
+class Ppu(Processor):
     def __init__(self, bus, config):
-        self.bus = bus
+        super().__init__(bus)
         self.system_palette = SystemPalette.from_file(config['palette_file'])
         self.pattern_tables = []
         self.sprites = []
@@ -15,12 +15,6 @@ class Ppu(BusDevice):
         pygame.init()
         pygame.display.set_caption('NES Palette')
         self.screen = pygame.display.set_mode((256, 240))
-
-    def handle_read_request(self, request):
-        pass
-
-    def handle_write_request(self, request):
-        pass
 
     def draw_pixel(self, x, y, color, size=1):
         rgb = self.system_palette.colors[color]
@@ -39,7 +33,10 @@ class Ppu(BusDevice):
                 color = self.bus.read(0x3F00 + offset)
                 self.draw_pixel(left + x * size, top + y * size, color, size)
 
-    def tick(self):
+    def power_on(self):
+        pass
+
+    def step(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()

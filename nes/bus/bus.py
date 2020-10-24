@@ -1,34 +1,37 @@
 import logging
-from .bus_request import ReadRequest, WriteRequest
-from .bus_response import ReadResponse, WriteResponse
+from .address_range import AddressRange
 
 
 class Bus:
     def __init__(self, name):
         self.name = name
         self.logger = logging.getLogger(__name__)
-        self.devices = []
+        self.devices = {}
 
-    def add_device(self, device):
-        self.devices.append(device)
+    def attach_device(self, device, addr, size):
+        self.devices[device.name] = {
+            'device': device,
+            'addr_range': AddressRange(addr, size),
+        }
 
     def remove_device(self, device):
-        self.devices.remove(device)
+        self.devices.pop(device.name)
 
-    def send_request(self, request):
-        for device in self.devices:
-            response = device.handle_bus_request(request)
-            if response:
-                return response
+    def find_device(self, addr):
+        for entry in self.devices.values():
+            if addr in entry['addr_range']:
+                return entry['device']
 
     def read(self, addr):
-        response = self.send_request(ReadRequest(self, addr))
-        if response:
-            return response.data
+        device = self.find_device(addr)
+        if device:
+            return device.read(addr)
         else:
             raise RuntimeError('Unhandled memory read request')
 
-    def write(self, addr, data):
-        response = self.send_request(WriteRequest(self, addr, data))
-        if not response:
+    def write(self, addr, value):
+        device = self.find_device(addr)
+        if device:
+            device.write(addr, value)
+        else:
             raise RuntimeError('Unhandled memory write request')

@@ -1,15 +1,9 @@
-from .bus_request import ReadRequest, WriteRequest
-
-
 class BusDevice:
-    def handle_bus_request(self, request):
-        if isinstance(request, ReadRequest):
-            return self.handle_read_request(request)
-        elif isinstance(request, WriteRequest):
-            return self.handle_write_request(request)
+    def __init__(self, name):
+        self.name = name
 
-    def handle_read_request(self, request):
+    def read(self, addr):
         raise NotImplementedError
 
-    def handle_write_request(self, request):
+    def write(self, addr, value):
         raise NotImplementedError

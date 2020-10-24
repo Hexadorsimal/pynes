@@ -1,4 +1,4 @@
-from .register import Register
+from nes.processors.register import Register
 
 
 class PpuAddr(Register):

@@ -1,8 +1,9 @@
 from enum import Enum
 from .decoder import Decoder
+from ..processor import Processor
 
 
-class Cpu:
+class Cpu(Processor):
     class Flags(Enum):
         negative_result = 0x80
         overflow = 0x40
@@ -14,13 +15,13 @@ class Cpu:
         carry = 0x01
 
     def __init__(self, bus):
+        super().__init__(bus)
         self.pc = 0
         self.a = 0
         self.x = 0
         self.y = 0
         self.p = 0
         self.s = 0
-        self.bus = bus
         self.decoder = Decoder()
         self.cycles = 0
 
@@ -112,9 +113,6 @@ class Cpu:
         self.pc = 0xC000
         self.s = 0xFD
         self.p = 0x24
-
-        while True:
-            self.step()
 
     def reset(self):
         # read mem from RESET_LO, put in PCL
