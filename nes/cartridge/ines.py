@@ -1,27 +1,29 @@
-from enum import Enum
+from enum import Enum, IntFlag
 
 
-class Flags6(Enum):
-    mirroring = 0x01
+class Flags6(IntFlag):
+    vertical_mirroring = 0x01
     contains_sram = 0x02
     contains_trainer = 0x04
     four_screen_vram = 0x08
     mapper_lower = 0xf0
 
 
-class VramMirroringModes(Enum):
+class VramMirroringMode(Enum):
     horizontal = 0
     vertical = 1
+    single_screen = 2
+    four_screen = 3
 
 
-class Flags7(Enum):
+class Flags7(IntFlag):
     versus = 0x01
     playchoice10 = 0x02
     contains_nes2 = 0x0c
     mapper_upper = 0xf0
 
 
-class Flags9(Enum):
+class Flags9(IntFlag):
     tv_system = 0x01
     reserved = 0xfe
 
@@ -36,10 +38,18 @@ class iNesHeader:
 
     @property
     def vram_mirroring_mode(self):
-        bit = self.header[6] & Flags6.mirroring.value
-        for mode in VramMirroringModes:
-            if mode.value == bit:
-                return mode.name
+        h6 = self.header[6]
+
+        if h6 & Flags6.four_screen_vram:
+            if h6 & Flags6.vertical_mirroring:
+                return VramMirroringMode.four_screen
+            else:
+                return VramMirroringMode.single_screen
+        else:
+            if h6 & Flags6.vertical_mirroring:
+                return VramMirroringMode.vertical
+            else:
+                return VramMirroringMode.horizontal
 
     @property
     def prg_rom_page_count(self):
