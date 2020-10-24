@@ -11,6 +11,6 @@ if __name__ == '__main__':
     nes.insert_cartridge(cart)
 
     for i in range(32):
-        nes.ppu.bus.write(0x3F00 + i, i)
+        nes.buses['ppu'].write(0x3F00 + i, i)
 
     nes.power_up()

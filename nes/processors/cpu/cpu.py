@@ -125,10 +125,11 @@ class Cpu(Processor):
     def nmi(self):
         pass
 
-    def step(self):
+    def tick(self):
         opcode = self.fetch()
         instruction = self.decode(opcode)
         self.execute(instruction)
+        super().tick()
 
     def fetch(self):
         return self.bus.read(self.pc)

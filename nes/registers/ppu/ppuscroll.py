@@ -1,4 +1,4 @@
-from nes.processors.register import Register
+from nes.registers.register import Register
 
 
 class PpuScroll(Register):

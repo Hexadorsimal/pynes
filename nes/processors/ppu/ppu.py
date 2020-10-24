@@ -36,7 +36,7 @@ class Ppu(Processor):
     def power_on(self):
         pass
 
-    def step(self):
+    def tick(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -45,3 +45,5 @@ class Ppu(Processor):
         self.draw_palettes(0, 40, 8)
 
         pygame.display.flip()
+
+        super().tick()

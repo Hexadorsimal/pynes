@@ -1,2 +1,4 @@
+---
+television_standard: ntsc
 ppu:
   palette_file: nes-palette.txt
