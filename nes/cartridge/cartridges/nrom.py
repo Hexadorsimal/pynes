@@ -14,6 +14,12 @@ class NromCartridge(Cartridge):
         for chr_rom_page in rom_file.chr_rom_pages:
             self.chr_rom_pages.append(ChrRom(chr_rom_page))
 
+    def connect(self, buses):
+        pass
+
+    def disconnect(self, buses):
+        pass
+
     def cpu_read(self, addr):
         if 0x8000 <= addr <= 0xBFFF:
             return self.prg_rom_pages[0].read(addr - 0x8000)

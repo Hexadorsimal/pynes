@@ -1,17 +1,10 @@
 from nes.bus import BusDevice
-from nes.processors.ppu.registers.ppuctrl import PpuCtrl
-from nes.processors.ppu.registers.ppumask import PpuMask
-from nes.processors.ppu.registers.ppustatus import PpuStatus
-from nes.processors.ppu.registers.ppuscroll import PpuScroll
-from nes.processors.ppu.registers.ppuaddr import PpuAddr
-from nes.processors.ppu.registers.ppudata import PpuData
-from nes.processors.ppu.registers.oamaddr import OamAddr
-from nes.processors.ppu.registers.oamdata import OamData
+from nes.registers.ppu import PpuCtrl, PpuMask, PpuStatus, PpuScroll, PpuAddr, PpuData
+from nes.registers.oam import OamAddr, OamData
 
 
 class PpuRegisterSet(BusDevice):
     def __init__(self, ppu):
-        super().__init__('ppu register set')
         self.ppu = ppu
         self.registers = [
             PpuCtrl(),
@@ -23,6 +16,10 @@ class PpuRegisterSet(BusDevice):
             PpuAddr(),
             PpuData(),
         ]
+
+    @property
+    def name(self):
+        return 'ppu register set'
 
     def read(self, addr):
         logical_addr = addr % len(self.registers)
