@@ -1,5 +1,5 @@
 from nes.bus import BusDevice
-from nes.registers.unused_register import UnusedRegister
+from nes.registers.general_register import GeneralRegister
 from nes.registers.apu import Sq1Hi, Sq1Lo, Sq1Sweep, Sq1Vol, Sq2Hi, Sq2Lo, Sq2Sweep, Sq2Vol, TriLinear, TriHi, TriLo, NoiseHi, NoiseLo, NoiseVol, DmcRaw, DmcFreq, DmcStart, DmcLen, SndChn
 from nes.registers.oam import OamDma
 from nes.registers.joy import Joy1, Joy2
@@ -17,11 +17,11 @@ class ApuIoRegisterSet(BusDevice):
             Sq2Lo(),
             Sq2Hi(),
             TriLinear(),
-            UnusedRegister(),
+            GeneralRegister(),
             TriLo(),
             TriHi(),
             NoiseVol(),
-            UnusedRegister(),
+            GeneralRegister(),
             NoiseLo(),
             NoiseHi(),
             DmcFreq(),
@@ -32,14 +32,14 @@ class ApuIoRegisterSet(BusDevice):
             SndChn(),
             Joy1(),
             Joy2(),
-            UnusedRegister(),
-            UnusedRegister(),
-            UnusedRegister(),
-            UnusedRegister(),
-            UnusedRegister(),
-            UnusedRegister(),
-            UnusedRegister(),
-            UnusedRegister(),
+            GeneralRegister(),
+            GeneralRegister(),
+            GeneralRegister(),
+            GeneralRegister(),
+            GeneralRegister(),
+            GeneralRegister(),
+            GeneralRegister(),
+            GeneralRegister(),
         ]
 
     @property

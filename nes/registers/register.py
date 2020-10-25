@@ -1,6 +1,6 @@
 class Register:
-    def read(self):
+    def get(self):
         raise NotImplementedError
 
-    def write(self, data):
+    def set(self, value):
         raise NotImplementedError

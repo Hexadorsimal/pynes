@@ -1,6 +1,9 @@
 from enum import Enum
 from .decoder import Decoder
 from ..processor import Processor
+from nes.registers import Register
+from nes.flags import Flag, NFlag, ZFlag
+from nes.processors.cpu.instructions.factory import InstructionFactory
 
 
 class Cpu(Processor):
@@ -16,103 +19,33 @@ class Cpu(Processor):
 
     def __init__(self, bus):
         super().__init__(bus)
-        self.pc = 0
-        self.a = 0
-        self.x = 0
-        self.y = 0
-        self.p = 0
-        self.s = 0
+        self.registers = {
+            'pc': Register(),
+            'a': Register(),
+            'x': Register(),
+            'y': Register(),
+            'p': Register(),
+            's': Register(),
+        }
+
+        self.flags = {
+            'n': NFlag(),
+            'v': Flag(),
+            'x': Flag(),
+            'b': Flag(),
+            'd': Flag(),
+            'i': Flag(),
+            'z': ZFlag(),
+            'c': Flag(),
+        }
+
         self.decoder = Decoder()
         self.cycles = 0
 
-    def get_flag(self, flag):
-        if self.p & flag:
-            return 1
-        else:
-            return 0
-
-    def set_flag(self, flag, value):
-        if value:
-            self.p |= flag
-        else:
-            self.p &= ~flag
-
-    def update_zn(self, value):
-        self.update_z(value)
-        self.update_n(value)
-
-    def update_z(self, value):
-        if value == 0:
-            self.z = 1
-        else:
-            self.z = 0
-
-    def update_n(self, value):
-        if value & 0x80:
-            self.n = 1
-        else:
-            self.n = 0
-
-    @property
-    def b(self):
-        return self.get_flag(Cpu.Flags.break_command.value)
-
-    @b.setter
-    def b(self, value):
-        self.set_flag(Cpu.Flags.break_command.value, value)
-
-    @property
-    def c(self):
-        return self.get_flag(Cpu.Flags.carry.value)
-
-    @c.setter
-    def c(self, value):
-        self.set_flag(Cpu.Flags.carry.value, value)
-
-    @property
-    def d(self):
-        return self.get_flag(Cpu.Flags.decimal_mode.value)
-
-    @d.setter
-    def d(self, value):
-        self.set_flag(Cpu.Flags.decimal_mode.value, value)
-
-    @property
-    def i(self):
-        return self.get_flag(Cpu.Flags.interrupt_disable.value)
-
-    @i.setter
-    def i(self, value):
-        self.set_flag(Cpu.Flags.interrupt_disable.value, value)
-
-    @property
-    def n(self):
-        return self.get_flag(Cpu.Flags.negative_result.value)
-
-    @n.setter
-    def n(self, value):
-        self.set_flag(Cpu.Flags.negative_result.value, value)
-
-    @property
-    def v(self):
-        return self.get_flag(Cpu.Flags.overflow.value)
-
-    @v.setter
-    def v(self, value):
-        self.set_flag(Cpu.Flags.overflow.value, value)
-
-    @property
-    def z(self):
-        return self.get_flag(Cpu.Flags.zero_result.value)
-
-    @z.setter
-    def z(self, value):
-        self.set_flag(Cpu.Flags.zero_result.value, value)
-
     def power_on(self):
-        self.pc = 0xC000
-        self.s = 0xFD
-        self.p = 0x24
+        self.registers['pc'].set(0xC000)
+        self.registers['s'].set(0xFD)
+        self.registers['p'].set(0x24)
 
     def reset(self):
         # read mem from RESET_LO, put in PCL
@@ -135,63 +68,15 @@ class Cpu(Processor):
         return self.bus.read(self.pc)
 
     def decode(self, opcode):
-        return self.decoder.decode(opcode)
+        info = self.decoder.decode(opcode)
+        return InstructionFactory.create(self, info)
 
     def execute(self, instruction):
-        mode = instruction['addressing_mode']
-        address = 0
-        page_crossed = False
+        self.pc += instruction.size
 
-        if mode == 'Absolute':
-            address = self.read16(self.pc + 1)
-        elif mode == 'AbsoluteX':
-            address = self.read16(self.pc + 1) + self.x
-            page_crossed = self.pages_differ(address - self.x, address)
-        elif mode == 'AbsoluteY':
-            address = self.read16(self.pc + 1) + self.y
-            page_crossed = self.pages_differ(address - self.y, address)
-        elif mode == 'Accumulator':
-            address = mode
-        elif mode == 'Immediate':
-            address = self.pc + 1
-        elif mode == 'Implied':
-            address = 0
-        elif mode == 'IndexedIndirect':
-            address = self.read16_bug(self.bus.read(self.pc + 1) + self.x)
-        elif mode == 'Indirect':
-            address = self.read16_bug(self.read16(self.pc + 1))
-        elif mode == 'IndirectIndexed':
-            address = self.read16_bug(self.bus.read(self.pc + 1)) + self.y
-        elif mode == 'Relative':
-            offset = self.bus.read(self.pc + 1)
-            if offset < 0x80:
-                address = self.pc + 2 + offset
-            else:
-                address = self.pc + 2 + offset - 0x100
+        instruction.execute()
 
-            page_crossed = self.pages_differ(self.pc, address)
-        elif mode == 'ZeroPage':
-            address = self.bus.read(self.pc + 1)
-        elif mode == 'ZeroPageX':
-            address = (self.bus.read(self.pc + 1) + self.x) & 0xff
-        elif mode == 'ZeroPageY':
-            address = (self.bus.read(self.pc + 1) + self.y) & 0xff
-
-        self.pc += instruction['size']
-
-        instr = instruction['name'].lower()
-        branch_taken = getattr(self, instr)(address)
-
-        cycles = instruction['cycles']
-        if mode == 'Relative' and branch_taken:
-            cycles += 1
-            if page_crossed:
-                cycles += instruction['page_cycles']
-        elif page_crossed:
-            cycles += instruction['page_cycles']
-
-        self.cycles += cycles
-        return cycles
+        self.cycles += instruction.cycles
 
     def read16(self, addr):
         lo = self.bus.read(addr)
@@ -234,40 +119,6 @@ class Cpu(Processor):
     @staticmethod
     def pages_differ(a, b):
         return a & 0xFF00 != b & 0xFF00
-
-    def adc(self, address):
-        a = self.a
-        b = self.bus.read(address)
-        c = self.c
-        self.a = a + b + c
-        self.update_zn(self.a)
-
-        if self.a > 0xff:
-            self.a &= 0xff
-            self.c = 1
-        else:
-            self.c = 0
-
-        if (a ^ b) & 0x80 == 0 and (a ^ self.a) & 0x80 != 0:
-            self.v = 1
-        else:
-            self.v = 0
-
-    def and_(self, address):
-        self.a = self.a & self.bus.read(address)
-        self.update_zn(self.a)
-
-    def asl(self, address):
-        if address == 'Accumulator':
-            self.c = (self.a >> 7) & 0x01
-            self.a = self.a << 1
-            self.update_zn(self.a)
-        else:
-            value = self.bus.read(address)
-            self.c = (value >> 7) & 0x01
-            value = value << 1
-            self.bus.write(address, value)
-            self.update_zn(value)
 
     def bcc(self, address):
         if self.c == 0:
