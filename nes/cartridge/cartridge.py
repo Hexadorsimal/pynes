@@ -1,12 +1,17 @@
+from nes.bus import Bus
+
+
 class Cartridge:
     def __init__(self, rom_file):
         self.rom_file = rom_file
+        self.buses = {
+            'cpu': Bus('cartridge cpu bus'),
+            'ppu': Bus('cartridge ppu bus'),
+        }
 
-    def connect(self, buses):
-        raise NotImplementedError
-
-    def disconnect(self, buses):
-        raise NotImplementedError
+    @property
+    def name(self):
+        return 'cartridge'
 
     @property
     def vram_mirroring_mode(self):

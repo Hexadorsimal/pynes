@@ -8,25 +8,17 @@ class NromCartridge(Cartridge):
         self.prg_rom_pages = []
         self.chr_rom_pages = []
 
-        for prg_rom_page in rom_file.prg_rom_pages:
-            self.prg_rom_pages.append(PrgRom(prg_rom_page))
+        for index, prg_rom_page in enumerate(rom_file.prg_rom_pages):
+            self.prg_rom_pages.append(PrgRom(f'PRG{index}', prg_rom_page))
 
-        for chr_rom_page in rom_file.chr_rom_pages:
-            self.chr_rom_pages.append(ChrRom(chr_rom_page))
+        for index, chr_rom_page in enumerate(rom_file.chr_rom_pages):
+            self.chr_rom_pages.append(ChrRom(f'CHR{index}', chr_rom_page))
 
-    def connect(self, buses):
-        pass
+        if len(self.prg_rom_pages) == 1:
+            self.buses['cpu'].attach_device(self.prg_rom_pages[0], addr=0x8000, size=0x8000)
+        else:
+            self.buses['cpu'].attach_device(self.prg_rom_pages[0], addr=0x8000, size=0x4000)
+            self.buses['cpu'].attach_device(self.prg_rom_pages[1], addr=0xC000, size=0x4000)
 
-    def disconnect(self, buses):
-        pass
-
-    def cpu_read(self, addr):
-        if 0x8000 <= addr <= 0xBFFF:
-            return self.prg_rom_pages[0].read(addr - 0x8000)
-        elif 0xC000 <= addr <= 0xCFFF:
-            page = 1 if len(self.prg_rom_pages) > 1 else 0
-            return self.prg_rom_pages[page].read(addr - 0xC000)
-
-    def ppu_read(self, addr):
-        if 0x0000 <= addr <= 0x1FFF:
-            return self.chr_rom_pages[0].read(addr)
+        if self.chr_rom_pages:
+            self.buses['ppu'].attach_device(self.chr_rom_pages[0], addr=0x0000, size=0x2000)

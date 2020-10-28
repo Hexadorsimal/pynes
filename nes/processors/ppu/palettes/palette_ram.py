@@ -2,13 +2,9 @@ from nes.memory import Memory
 
 
 class PaletteRam(Memory):
-    def __init__(self):
+    def __init__(self, name):
         self.palette = bytearray(32)
-        super().__init__(len(self.palette))
-
-    @property
-    def name(self):
-        return 'palette ram'
+        super().__init__(name, len(self.palette))
 
     def read(self, addr):
         addr = addr & 0x001F

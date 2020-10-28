@@ -1,6 +1,8 @@
 class Register:
-    def read(self):
+    @property
+    def value(self):
         raise NotImplementedError
 
-    def write(self, data):
+    @value.setter
+    def value(self, value):
         raise NotImplementedError
