@@ -1,7 +1,7 @@
 from nes.instructions import Instruction
 
 
-class Sta(Instruction):
+class Stx(Instruction):
     def execute(self):
         x = self.get('x')
 
