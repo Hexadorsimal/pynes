@@ -1,10 +1,11 @@
 import logging
 from .address_range import AddressRange
+from .bus_device import BusDevice
 
 
-class Bus:
+class Bus(BusDevice):
     def __init__(self, name):
-        self.name = name
+        super().__init__(name)
         self.logger = logging.getLogger(__name__)
         self.devices = {}
 
@@ -14,7 +15,7 @@ class Bus:
             'addr_range': AddressRange(addr, size),
         }
 
-    def remove_device(self, device):
+    def detach_device(self, device):
         self.devices.pop(device.name)
 
     def find_device(self, addr):
@@ -25,6 +26,7 @@ class Bus:
     def read(self, addr):
         device = self.find_device(addr)
         if device:
+            # TODO: shift the address based on the bus offset
             return device.read(addr)
         else:
             raise RuntimeError('Unhandled memory read request')
