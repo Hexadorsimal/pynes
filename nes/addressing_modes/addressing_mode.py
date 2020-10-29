@@ -1,5 +1,5 @@
 class AddressingMode:
-    def calculate_address(self, processor):
+    def read_parameter(self, processor):
         raise NotImplementedError
 
     @staticmethod

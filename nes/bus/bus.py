@@ -18,22 +18,21 @@ class Bus(BusDevice):
     def detach_device(self, device):
         self.devices.pop(device.name)
 
-    def find_device(self, addr):
+    def find_device_entry(self, addr):
         for entry in self.devices.values():
             if addr in entry['addr_range']:
-                return entry['device']
+                return entry
 
     def read(self, addr):
-        device = self.find_device(addr)
-        if device:
-            # TODO: shift the address based on the bus offset
-            return device.read(addr)
+        entry = self.find_device_entry(addr)
+        if entry:
+            return entry['device'].read(addr - entry['addr_range'].start)
         else:
             raise RuntimeError('Unhandled memory read request')
 
     def write(self, addr, value):
-        device = self.find_device(addr)
-        if device:
-            device.write(addr, value)
+        entry = self.find_device_entry(addr)
+        if entry:
+            entry['device'].write(addr - entry['addr_range'].start, value)
         else:
             raise RuntimeError('Unhandled memory write request')

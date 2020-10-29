@@ -2,5 +2,5 @@ from .addressing_mode import AddressingMode
 
 
 class AccumulatorAddressingMode(AddressingMode):
-    def calculate_address(self, processor):
-        return processor.registers['a']
+    def read_parameters(self, processor):
+        return processor.a.value

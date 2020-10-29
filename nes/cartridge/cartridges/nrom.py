@@ -15,10 +15,14 @@ class NromCartridge(Cartridge):
             self.chr_rom_pages.append(ChrRom(f'CHR{index}', chr_rom_page))
 
         if len(self.prg_rom_pages) == 1:
-            self.buses['cpu'].attach_device(self.prg_rom_pages[0], addr=0x8000, size=0x8000)
+            self.buses['cpu'].attach_device(self.prg_rom_pages[0], addr=self.PRG0_START, size=self.PRG_SIZE * 2)
         else:
-            self.buses['cpu'].attach_device(self.prg_rom_pages[0], addr=0x8000, size=0x4000)
-            self.buses['cpu'].attach_device(self.prg_rom_pages[1], addr=0xC000, size=0x4000)
+            self.buses['cpu'].attach_device(self.prg_rom_pages[0], addr=self.PRG0_START, size=self.PRG_SIZE)
+            self.buses['cpu'].attach_device(self.prg_rom_pages[1], addr=self.PRG1_START, size=self.PRG_SIZE)
 
         if self.chr_rom_pages:
-            self.buses['ppu'].attach_device(self.chr_rom_pages[0], addr=0x0000, size=0x2000)
+            self.buses['ppu'].attach_device(self.chr_rom_pages[0], addr=self.CHR0_START, size=self.CHR_SIZE)
+
+    @property
+    def name(self):
+        return 'NROM Cartridge'

@@ -28,16 +28,10 @@ class Cpu(Processor):
         self.decoder = Decoder()
         self.cycles = 0
 
-    def __getattr__(self, item):
-        if item in self.registers:
-            return self.registers[item]
-        elif item in self.p:
-            return self.p[item]
-
     def power_on(self):
-        self.pc.value = 0xC000
-        self.s.value = 0xFD
-        self.p.value = 0x24
+        self.registers['pc'].value = 0xC000
+        self.registers['s'].value = 0xFD
+        self.registers['p'].value = 0x24
 
     def reset(self):
         # read mem from RESET_LO, put in PCL
@@ -57,17 +51,16 @@ class Cpu(Processor):
         super().tick()
 
     def fetch(self):
-        return self.bus.read(self.pc.value)
+        return self.bus.read(self.registers['pc'].value)
 
     def decode(self, opcode):
         info = self.decoder.decode(opcode)
-        return InstructionFactory.create(self, info)
+        instruction = InstructionFactory.create(self, info)
+        self.registers['pc'] += instruction.size
+        return instruction
 
     def execute(self, instruction):
-        self.pc += instruction.size
-
-        instruction.execute()
-
+        instruction.execute(self)
         self.cycles += instruction.cycles
 
     def read8(self, addr):
@@ -86,12 +79,12 @@ class Cpu(Processor):
         return (hi << 8) | lo
 
     def push(self, value):
-        self.bus.write(self.s.addr, value)
-        self.s -= 1
+        self.bus.write(self.registers['s'].addr, value)
+        self.registers['s'] -= 1
 
     def pull(self):
-        self.s += 1
-        return self.bus.read(self.s.addr)
+        self.registers['s'] += 1
+        return self.bus.read(self.registers['s'].addr)
 
     def push16(self, value):
         hi = (value & 0xff00) >> 8

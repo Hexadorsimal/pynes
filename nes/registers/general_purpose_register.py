@@ -15,9 +15,17 @@ class GeneralPurposeRegister(Register):
         self._value = value
 
     def __add__(self, other):
-        self._value += other
-        self._value &= self.mask
+        return (self._value + other) & self.mask
 
     def __sub__(self, other):
+        return (self._value - other) & self.mask
+
+    def __iadd__(self, other):
+        self._value += other
+        self._value &= self.mask
+        return self
+
+    def __isub__(self, other):
         self._value -= other
         self._value &= self.mask
+        return self
