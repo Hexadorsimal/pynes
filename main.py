@@ -5,7 +5,7 @@ from nes import Nes, CartridgeFactory
 if __name__ == '__main__':
     config = yaml.load(open('config.yaml', 'rt'), Loader=yaml.FullLoader)
 
-    cart = CartridgeFactory.create('donkey-kong.nes')
+    cart = CartridgeFactory.create('nestest.nes')
 
     nes = Nes(config)
     nes.insert_cartridge(cart)

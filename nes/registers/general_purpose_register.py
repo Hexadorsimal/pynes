@@ -2,9 +2,19 @@ from .register import Register
 
 
 class GeneralPurposeRegister(Register):
-    def __init__(self, value=0, mask=0xff):
+    bits = 8
+    mask = 0xff
+
+    def __init__(self, value=0):
         self._value = value
-        self.mask = mask
+
+    @property
+    def hi(self):
+        raise IndexError('This register does not have an upper byte')
+
+    @property
+    def lo(self):
+        return self._value & 0xff
 
     @property
     def value(self):

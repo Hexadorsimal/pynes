@@ -8,7 +8,7 @@ class Cpu(Processor):
     def __init__(self, bus):
         super().__init__(bus)
         self.registers = {
-            'pc': ProgramCounter(mask=0xffff),
+            'pc': ProgramCounter(),
             'a': GeneralPurposeRegister(),
             'x': GeneralPurposeRegister(),
             'y': GeneralPurposeRegister(),
@@ -22,7 +22,7 @@ class Cpu(Processor):
                 'z': Flag(mask=0x02),
                 'c': Flag(mask=0x01),
             }),
-            's': StackPointer(page=0x0100),
+            's': StackPointer(),
         }
 
         self.decoder = Decoder()
@@ -63,8 +63,11 @@ class Cpu(Processor):
         instruction.execute(self)
         self.cycles += instruction.cycles
 
-    def read8(self, addr):
+    def read(self, addr):
         return self.bus.read(addr)
+
+    def write(self, addr, value):
+        return self.bus.write(addr, value)
 
     def read16(self, addr):
         lo = self.bus.read(addr)
@@ -79,20 +82,11 @@ class Cpu(Processor):
         return (hi << 8) | lo
 
     def push(self, value):
-        self.bus.write(self.registers['s'].addr, value)
-        self.registers['s'] -= 1
+        s = self.registers['s']
+        self.bus.write(s.pointer, value)
+        s -= 1
 
     def pull(self):
-        self.registers['s'] += 1
-        return self.bus.read(self.registers['s'].addr)
-
-    def push16(self, value):
-        hi = (value & 0xff00) >> 8
-        lo = value & 0x00ff
-        self.push(hi)
-        self.push(lo)
-
-    def pull16(self):
-        lo = self.pull()
-        hi = self.pull()
-        return hi << 8 | lo
+        s = self.registers['s']
+        s += 1
+        return self.bus.read(s.pointer)

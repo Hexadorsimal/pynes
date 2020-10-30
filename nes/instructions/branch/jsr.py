@@ -6,5 +6,7 @@ class Jsr(Instruction):
         addr = self.parameter
         pc = processor.registers['pc']
 
-        processor.push16(pc - 1)
+        pc -= 1
+        processor.push(pc.hi)
+        processor.push(pc.lo)
         pc.value = addr

@@ -2,10 +2,13 @@ from .general_purpose_register import GeneralPurposeRegister
 
 
 class StackPointer(GeneralPurposeRegister):
-    def __init__(self, value=0, mask=0xff, page=0x0100):
-        super().__init__(value, mask)
-        self.page = page
+    def __init__(self, value=0):
+        super().__init__(value)
 
     @property
-    def addr(self):
-        return self.page | self.value
+    def hi(self):
+        return 0x01
+
+    @property
+    def pointer(self):
+        return (self.hi << 8) | self.lo
