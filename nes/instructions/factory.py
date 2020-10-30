@@ -1,27 +1,23 @@
 from nes.addressing_modes import AddressingModeFactory
-from .arithmetic import Adc, And, Asl, Bit, Cmp, Cpx, Cpy, Eor, Lsr, Nop, Ora, Rol, Ror, Sbc
+from .arithmetic import Adc, And, Asl, Eor, Lsr, Ora, Rol, Ror, Sbc
 from .branch import Bcc, Bcs, Beq, Bmi, Bne, Bpl, Brk, Bvc, Bvs, Jmp, Jsr, Rti, Rts
-from .clear import Clc, Cld, Cli, Clv
-from .decrement import Dec, Dex, Dey
-from .increment import Inc, Inx, Iny
-from .load import Lda, Ldx, Ldy
-from .set import Sec, Sed, Sei
-from .stack import Pha, Php, Pla, Plp
-from .store import Sta, Stx, Sty
+from .compare import Bit, Cmp, Cpx, Cpy, Nop
+from .inc_dec import Inc, Inx, Iny, Dec, Dex, Dey
+from .load_store import Lda, Ldx, Ldy, Sta, Stx, Sty
+from .set_clear import Sec, Sed, Sei, Clc, Cld, Cli, Clv
+from .push_pull import Pha, Php, Pla, Plp
 from .transfer import Tax, Tay, Tsx, Txa, Txs, Tya
 
 
 class InstructionFactory:
     classes = [
-        Adc, And, Asl, Bit, Cmp, Cpx, Cpy, Eor, Lsr, Nop, Ora, Rol, Ror, Sbc,
+        Adc, And, Asl, Eor, Lsr, Ora, Rol, Ror, Sbc,
         Bcc, Bcs, Beq, Bmi, Bne, Bpl, Brk, Bvc, Bvs, Jmp, Jsr, Rti, Rts,
-        Clc, Cld, Cli, Clv,
-        Dec, Dex, Dey,
-        Inc, Inx, Iny,
-        Lda, Ldx, Ldy,
-        Sec, Sed, Sei,
+        Bit, Cmp, Cpx, Cpy, Nop,
+        Inc, Inx, Iny, Dec, Dex, Dey,
+        Lda, Ldx, Ldy, Sta, Stx, Sty,
+        Sec, Sed, Sei, Clc, Cld, Cli, Clv,
         Pha, Php, Pla, Plp,
-        Sta, Stx, Sty,
         Tax, Tay, Tsx, Txa, Txs, Tya,
     ]
 
