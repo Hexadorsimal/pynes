@@ -5,6 +5,9 @@ class StackPointer(GeneralPurposeRegister):
     def __init__(self, value=0):
         super().__init__(value)
 
+    def __repr__(self):
+        return f'{self.pointer:#X}'
+
     @property
     def hi(self):
         return 0x01

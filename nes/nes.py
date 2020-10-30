@@ -25,16 +25,16 @@ class Nes:
         elif config['television_standard'] == 'pal':
             self.clock_dividers = {'cpu': 16, 'ppu': 5, 'apu': 1}
 
-        self.buses['ppu'].attach_device(PaletteRam('pallete ram'), addr=0x3F00, size=0x100)
+        self.buses['ppu'].attach_device('Palette Ram', PaletteRam('palette ram'), addr=0x3F00, size=0x100)
 
-        self.buses['cpu'].attach_device(Ram('ram', 0x0800), addr=0x0000, size=0x2000)
-        self.buses['cpu'].attach_device(PpuRegisterSet(self.processors['ppu']), addr=0x2000, size=0x2000)
-        self.buses['cpu'].attach_device(ApuIoRegisterSet(), addr=0x4000, size=0x0020)
+        self.buses['cpu'].attach_device('RAM', Ram('ram', 0x0800), addr=0x0000, size=0x2000)
+        self.buses['cpu'].attach_device('PPU Registers', PpuRegisterSet(self.processors['ppu']), addr=0x2000, size=0x2000)
+        self.buses['cpu'].attach_device('APU/IO Registers', ApuIoRegisterSet(), addr=0x4000, size=0x0020)
 
     def insert_cartridge(self, cartridge):
         self.cartridge = cartridge
-        self.buses['cpu'].attach_device(cartridge.buses['cpu'], addr=0x6000, size=0xA000)
-        self.buses['ppu'].attach_device(cartridge.buses['ppu'], addr=0x0000, size=0x2000)
+        self.buses['cpu'].attach_device('Cart Bus (CPU)', cartridge.buses['cpu'], addr=0x6000, size=0xA000)
+        self.buses['ppu'].attach_device('Cart Bus (PPU)', cartridge.buses['ppu'], addr=0x0000, size=0x2000)
 
     def remove_cartridge(self):
         for bus in ['cpu', 'ppu']:

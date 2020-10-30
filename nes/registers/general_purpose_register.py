@@ -8,6 +8,9 @@ class GeneralPurposeRegister(Register):
     def __init__(self, value=0):
         self._value = value
 
+    def __repr__(self):
+        return f'{self._value:#X}'
+
     @property
     def hi(self):
         raise IndexError('This register does not have an upper byte')

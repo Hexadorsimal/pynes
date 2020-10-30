@@ -2,7 +2,5 @@ from nes.instructions import Instruction
 
 
 class Sec(Instruction):
-    def execute(self):
-        return {
-            'c': True,
-        }
+    def execute(self, processor):
+        processor.p.c.set()

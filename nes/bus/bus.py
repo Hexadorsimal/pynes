@@ -9,8 +9,8 @@ class Bus(BusDevice):
         self.logger = logging.getLogger(__name__)
         self.devices = {}
 
-    def attach_device(self, device, addr, size):
-        self.devices[device.name] = {
+    def attach_device(self, name, device, addr, size):
+        self.devices[name] = {
             'device': device,
             'addr_range': AddressRange(addr, size),
         }

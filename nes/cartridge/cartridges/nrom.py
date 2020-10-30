@@ -15,13 +15,17 @@ class NromCartridge(Cartridge):
             self.chr_rom_pages.append(ChrRom(f'CHR{index}', chr_rom_page))
 
         if len(self.prg_rom_pages) == 1:
-            self.buses['cpu'].attach_device(self.prg_rom_pages[0], addr=self.PRG0_START, size=self.PRG_SIZE * 2)
+            self.buses['cpu'].attach_device('PRG0', self.prg_rom_pages[0], addr=self.PRG0_START, size=self.PRG_SIZE)
+            self.buses['cpu'].attach_device('PRG0 Mirror', self.prg_rom_pages[0], addr=self.PRG1_START, size=self.PRG_SIZE)
         else:
-            self.buses['cpu'].attach_device(self.prg_rom_pages[0], addr=self.PRG0_START, size=self.PRG_SIZE)
-            self.buses['cpu'].attach_device(self.prg_rom_pages[1], addr=self.PRG1_START, size=self.PRG_SIZE)
+            self.buses['cpu'].attach_device('PRG0', self.prg_rom_pages[0], addr=self.PRG0_START, size=self.PRG_SIZE)
+            self.buses['cpu'].attach_device('PRG1', self.prg_rom_pages[1], addr=self.PRG1_START, size=self.PRG_SIZE)
 
         if self.chr_rom_pages:
-            self.buses['ppu'].attach_device(self.chr_rom_pages[0], addr=self.CHR0_START, size=self.CHR_SIZE)
+            self.buses['ppu'].attach_device('CHR0', self.chr_rom_pages[0], addr=self.CHR0_START, size=self.CHR_SIZE)
+
+    def __repr__(self):
+        return self.name
 
     @property
     def name(self):

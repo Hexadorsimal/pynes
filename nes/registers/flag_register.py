@@ -5,6 +5,10 @@ class FlagRegister(Register):
     def __init__(self, flags):
         self.flags = flags
 
+    def __repr__(self):
+        letters = [name if flag else '-' for name, flag in self.flags.items()]
+        return f'{self.value:#X} (' + ''.join(letters) + ')'
+
     def __getattr__(self, item):
         if item in self.flags:
             return self.flags[item]

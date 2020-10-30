@@ -28,10 +28,37 @@ class Cpu(Processor):
         self.decoder = Decoder()
         self.cycles = 0
 
+    def __repr__(self):
+        return 'RICOH 2A03'
+
+    @property
+    def pc(self):
+        return self.registers['pc']
+
+    @property
+    def a(self):
+        return self.registers['a']
+
+    @property
+    def x(self):
+        return self.registers['x']
+
+    @property
+    def y(self):
+        return self.registers['y']
+
+    @property
+    def p(self):
+        return self.registers['p']
+
+    @property
+    def s(self):
+        return self.registers['s']
+
     def power_on(self):
-        self.registers['pc'].value = 0xC000
-        self.registers['s'].value = 0xFD
-        self.registers['p'].value = 0x24
+        self.pc.value = 0xC000
+        self.s.value = 0xFD
+        self.p.value = 0x24
 
     def reset(self):
         # read mem from RESET_LO, put in PCL
@@ -51,12 +78,12 @@ class Cpu(Processor):
         super().tick()
 
     def fetch(self):
-        return self.bus.read(self.registers['pc'].value)
+        return self.bus.read(self.pc.value)
 
     def decode(self, opcode):
         info = self.decoder.decode(opcode)
         instruction = InstructionFactory.create(self, info)
-        self.registers['pc'] += instruction.size
+        self.pc.value += instruction.size
         return instruction
 
     def execute(self, instruction):
@@ -82,11 +109,9 @@ class Cpu(Processor):
         return (hi << 8) | lo
 
     def push(self, value):
-        s = self.registers['s']
-        self.bus.write(s.pointer, value)
-        s -= 1
+        self.bus.write(self.s.pointer, value)
+        self.s.value -= 1
 
     def pull(self):
-        s = self.registers['s']
-        s += 1
-        return self.bus.read(s.pointer)
+        self.s.value += 1
+        return self.bus.read(self.s.pointer)

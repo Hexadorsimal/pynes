@@ -2,9 +2,8 @@ from nes.instructions import Instruction
 
 
 class Sta(Instruction):
-    def execute(self):
-        a = self.get('a')
+    def execute(self, processor):
+        a = processor.a
+        addr = self.parameter
 
-        return {
-            'write': a,
-        }
+        processor.write(addr, a.value)

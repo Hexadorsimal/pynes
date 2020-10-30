@@ -1,4 +1,7 @@
 class AddressingMode:
+    def __repr__(self):
+        return self.__class__.__name__.replace('AddressingMode', '')
+
     def read_parameter(self, processor):
         raise NotImplementedError
 

@@ -2,12 +2,11 @@ from nes.instructions import Instruction
 
 
 class Ldy(Instruction):
-    def execute(self):
-        addr = self.addressing_mode.calculate_address()
-        y = self.read(addr)
+    def execute(self, processor):
+        y = processor.y
+        z = processor.p.z
+        n = processor.p.n
 
-        return {
-            'y': y,
-            'z': y == 0,
-            'n': y & 0x80 != 0,
-        }
+        y.value = self.parameter
+        z.update(y.value)
+        n.update(y.value)
