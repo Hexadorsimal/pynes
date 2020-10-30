@@ -2,9 +2,9 @@ from nes.instructions import Instruction
 
 
 class Rts(Instruction):
-    def execute(self):
-        addr = self.processor.pull16()
+    def execute(self, processor):
+        lo = processor.pull()
+        hi = processor.pull()
 
-        return {
-            'pc': addr + 1,
-        }
+        processor.pc.value = (hi << 8) | lo
+        processor.pc.value += 1
