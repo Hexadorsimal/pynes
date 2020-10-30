@@ -1,5 +1,6 @@
 from .flag import Flag
 from .negative_flag import NegativeFlag
+from .overflow_flag import OverflowFlag
 from .zero_flag import ZeroFlag
 
 from .flag_register import FlagRegister

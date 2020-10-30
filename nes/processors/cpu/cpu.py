@@ -1,6 +1,6 @@
 from .decoder import Decoder
 from ..processor import Processor
-from nes.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, FlagRegister, Flag, NegativeFlag, ZeroFlag
+from nes.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, FlagRegister, Flag, NegativeFlag, ZeroFlag, OverflowFlag
 from nes.instructions import InstructionFactory
 
 
@@ -14,7 +14,7 @@ class Cpu(Processor):
             'y': GeneralPurposeRegister(),
             'p': FlagRegister({
                 'n': NegativeFlag(mask=0x80),
-                'v': Flag(mask=0x40),
+                'v': OverflowFlag(mask=0x40),
                 'x': Flag(mask=0x20),
                 'b': Flag(mask=0x10),
                 'd': Flag(mask=0x08),
@@ -74,6 +74,7 @@ class Cpu(Processor):
     def tick(self):
         opcode = self.fetch()
         instruction = self.decode(opcode)
+        self.pc.value += instruction.size
         self.execute(instruction)
         super().tick()
 
@@ -83,7 +84,6 @@ class Cpu(Processor):
     def decode(self, opcode):
         info = self.decoder.decode(opcode)
         instruction = InstructionFactory.create(self, info)
-        self.pc.value += instruction.size
         return instruction
 
     def execute(self, instruction):
