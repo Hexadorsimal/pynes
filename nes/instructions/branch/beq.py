@@ -2,15 +2,17 @@ from nes.instructions import Instruction
 
 
 class Beq(Instruction):
-    def execute(self):
-        z = self.get('z')
+    def execute(self, processor):
+        z = processor.p.z
+        offset = self.parameter
 
         if z:
-            return {
-                'pc': self.addressing_mode.calculate_address(),
-                'branch_taken': True,
-            }
+            page_before = processor.pc.hi
+
+            processor.pc.value += offset
+            self.branch_taken = True
+
+            page_after = processor.pc.hi
+            self.page_crossed = page_before != page_after
         else:
-            return {
-                'branch_taken': False
-            }
+            self.branch_taken = False

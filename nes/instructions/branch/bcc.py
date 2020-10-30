@@ -2,15 +2,17 @@ from nes.instructions import Instruction
 
 
 class Bcc(Instruction):
-    def execute(self):
-        c = self.get('c')
+    def execute(self, processor):
+        c = processor.p.c
+        offset = self.parameter
 
         if not c:
-            return {
-                'pc': self.addressing_mode.calculate_address(),
-                'branch_taken': True,
-            }
+            page_before = processor.pc.hi
+
+            processor.pc.value += offset
+            self.branch_taken = True
+
+            page_after = processor.pc.hi
+            self.page_crossed = page_before != page_after
         else:
-            return {
-                'branch_taken': False
-            }
+            self.branch_taken = False

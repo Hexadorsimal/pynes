@@ -1,6 +1,6 @@
 from .decoder import Decoder
 from ..processor import Processor
-from nes.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, FlagRegister, Flag
+from nes.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, FlagRegister, Flag, NegativeFlag, ZeroFlag
 from nes.instructions import InstructionFactory
 
 
@@ -13,13 +13,13 @@ class Cpu(Processor):
             'x': GeneralPurposeRegister(),
             'y': GeneralPurposeRegister(),
             'p': FlagRegister({
-                'n': Flag(mask=0x80),
+                'n': NegativeFlag(mask=0x80),
                 'v': Flag(mask=0x40),
                 'x': Flag(mask=0x20),
                 'b': Flag(mask=0x10),
                 'd': Flag(mask=0x08),
                 'i': Flag(mask=0x04),
-                'z': Flag(mask=0x02),
+                'z': ZeroFlag(mask=0x02),
                 'c': Flag(mask=0x01),
             }),
             's': StackPointer(),
