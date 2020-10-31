@@ -7,7 +7,7 @@ class Brk(Instruction):
         processor.push(processor.pc.lo)
 
         processor.p.b.set()
-        processor.push(processor.p)
+        processor.push(processor.p.value)
 
         processor.p.i.set()
 

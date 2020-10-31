@@ -6,12 +6,10 @@ class BranchInstruction(Instruction):
         raise NotImplementedError
 
     def execute(self, processor):
-        offset = self.read_source(processor)
-
         if self.meets_branch_condition(processor):
             page_before = processor.pc.hi
 
-            processor.pc.value += offset
+            processor.pc.value = self.read_source(processor)
             self.branch_taken = True
 
             page_after = processor.pc.hi
