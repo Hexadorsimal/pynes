@@ -1,5 +1,5 @@
 from .compare import CompareInstruction
 
 
-class Cpx(CompareInstruction):
+class Cmp(CompareInstruction):
     register = 'a'
