@@ -6,7 +6,7 @@ from .inc_dec import Inc, Inx, Iny, Dec, Dex, Dey
 from .jump_subroutine import Brk, Jmp, Jsr, Rti, Rts
 from .load_store import Lda, Ldx, Ldy, Sta, Stx, Sty
 from .set_clear import Sec, Sed, Sei, Clc, Cld, Cli, Clv
-from .push_pull import Pha, Php, Pla, Plp
+from .stack import Pha, Php, Pla, Plp
 from .transfer import Tax, Tay, Tsx, Txa, Txs, Tya
 
 
