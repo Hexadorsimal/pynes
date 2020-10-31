@@ -1,10 +1,7 @@
-from nes.instructions import Instruction
+from .transfer import TransferInstruction
 
 
-class Txa(Instruction):
-    def execute(self, processor):
-        value = processor.x.value
-
-        processor.a.value = value
-        processor.p.n.update(value)
-        processor.p.z.update(value)
+class Txa(TransferInstruction):
+    src = 'x'
+    dst = 'a'
+    update_flags = True

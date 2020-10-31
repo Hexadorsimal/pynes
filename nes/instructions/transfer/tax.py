@@ -1,10 +1,7 @@
-from nes.instructions import Instruction
+from .transfer import TransferInstruction
 
 
-class Tax(Instruction):
-    def execute(self, processor):
-        value = processor.a.value
-
-        processor.x.value = value
-        processor.p.n.update(value)
-        processor.p.z.update(value)
+class Tax(TransferInstruction):
+    src = 'a'
+    dst = 'x'
+    update_flags = True

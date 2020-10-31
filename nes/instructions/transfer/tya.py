@@ -1,10 +1,7 @@
-from nes.instructions import Instruction
+from .transfer import TransferInstruction
 
 
-class Tya(Instruction):
-    def execute(self, processor):
-        value = processor.y.value
-
-        processor.a.value = value
-        processor.p.n.update(value)
-        processor.p.z.update(value)
+class Tya(TransferInstruction):
+    src = 'y'
+    dst = 'a'
+    update_flags = True

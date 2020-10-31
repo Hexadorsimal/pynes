@@ -1,6 +1,7 @@
-from nes.instructions import Instruction
+from .transfer import TransferInstruction
 
 
-class Tsx(Instruction):
-    def execute(self, processor):
-        processor.x.value = processor.s.value
+class Tsx(TransferInstruction):
+    src = 's'
+    dst = 'x'
+    update_flags = False
