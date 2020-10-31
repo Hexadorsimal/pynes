@@ -1,6 +1,5 @@
-from nes.instructions import Instruction
+from .store import StoreInstruction
 
 
-class Sta(Instruction):
-    def execute(self, processor):
-        self.write_result(processor, processor.a.value)
+class Sta(StoreInstruction):
+    register = 'a'
