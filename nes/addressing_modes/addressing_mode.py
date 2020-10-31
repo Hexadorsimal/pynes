@@ -22,11 +22,16 @@ class AddressingMode:
 
         return (hi << 8) | lo
 
-    def read_source(self, processor):
+    def calculate_address(self, processor, parameter):
         raise NotImplementedError
 
-    def write_result(self, processor, value):
-        raise NotImplementedError
+    def read_source(self, processor, parameter):
+        addr = self.calculate_address(processor, parameter)
+        return processor.read(addr)
+
+    def write_result(self, processor, parameter, value):
+        addr = self.calculate_address(processor, parameter)
+        processor.write(addr, value)
 
     @staticmethod
     def pages_differ(a, b):

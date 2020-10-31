@@ -1,5 +1,4 @@
 from .absolute import AbsoluteAddressingMode
-from .absolute_indirect import AbsoluteIndirectAddressingMode
 from .absolute_x import AbsoluteXAddressingMode
 from .absolute_y import AbsoluteYAddressingMode
 from .accumulator import AccumulatorAddressingMode
@@ -17,7 +16,6 @@ from .zero_page_y import ZeroPageYAddressingMode
 class AddressingModeFactory:
     classes = [
         AbsoluteAddressingMode,
-        AbsoluteIndirectAddressingMode,
         AbsoluteXAddressingMode,
         AbsoluteYAddressingMode,
         AccumulatorAddressingMode,

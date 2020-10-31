@@ -20,10 +20,10 @@ class Instruction:
         return s
 
     def read_source(self, processor):
-        return self.addressing_mode.read_source(processor)
+        return self.addressing_mode.read_source(processor, self.parameter)
 
     def write_result(self, processor, value):
-        self.addressing_mode.write_result(processor, value)
+        self.addressing_mode.write_result(processor, self.parameter, value)
 
     @property
     def cycles(self) -> int:

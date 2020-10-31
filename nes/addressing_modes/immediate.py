@@ -5,3 +5,12 @@ class ImmediateAddressingMode(AddressingMode):
     @property
     def instruction_size(self):
         return 2
+
+    def calculate_address(self, processor, parameter):
+        raise RuntimeError('This should never be called')
+
+    def read_source(self, processor, parameter):
+        return parameter
+
+    def write_result(self, processor, parameter, value):
+        raise RuntimeError('This should never be called')
