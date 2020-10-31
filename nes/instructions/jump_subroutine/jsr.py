@@ -3,7 +3,7 @@ from nes.instructions import Instruction
 
 class Jsr(Instruction):
     def execute(self, processor):
-        subroutine_addr = self.read_source(processor)
+        subroutine_addr = self.addressing_mode.calculate_address(processor, self.parameter)
         pc = processor.pc
 
         pc.value -= 1
