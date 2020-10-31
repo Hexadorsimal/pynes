@@ -1,18 +1,6 @@
-from nes.instructions import Instruction
+from .branch import BranchInstruction
 
 
-class Beq(Instruction):
-    def execute(self, processor):
-        z = processor.p.z
-        offset = self.read_source(processor)
-
-        if z:
-            page_before = processor.pc.hi
-
-            processor.pc.value += offset
-            self.branch_taken = True
-
-            page_after = processor.pc.hi
-            self.page_crossed = page_before != page_after
-        else:
-            self.branch_taken = False
+class Beq(BranchInstruction):
+    def meets_branch_condition(self, processor):
+        return processor.p.z
