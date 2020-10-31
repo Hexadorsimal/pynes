@@ -1,16 +1,24 @@
 from ..instruction import Instruction
+from nes.addressing_modes.accumulator import AccumulatorAddressingMode
 
 
 class Lsr(Instruction):
-    def execute(self):
-        addr = self.addressing_mode.calculate_address()
+    def execute(self, processor):
+        if isinstance(self.addressing_mode, AccumulatorAddressingMode):
+            addr = None
+            value = processor.a.value
+        else:
+            addr = self.parameter
+            value = processor.read(addr)
 
-        value = self.read(addr)
-        value >>= 1
+        processor.p.c.update(value & 0x01)
 
-        return {
-            'z': value == 0,
-            'n': value & 0x80 != 0,
-            'c': value & 0x01 != 0,
-            'write': value,
-        }
+        value = (value >> 1) & 0xff
+
+        processor.p.z.update(value)
+        processor.p.n.update(value)
+
+        if isinstance(self.addressing_mode, AccumulatorAddressingMode):
+            processor.a.value = value
+        else:
+            processor.write(addr, value)

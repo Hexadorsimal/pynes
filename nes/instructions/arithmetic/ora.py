@@ -2,15 +2,11 @@ from ..instruction import Instruction
 
 
 class Ora(Instruction):
-    def execute(self):
-        addr = self.addressing_mode.calculate_address()
-        value = self.read(addr)
+    def execute(self, processor):
+        a = processor.a
+        addr = self.parameter
+        mem = processor.read(addr)
 
-        a = self.get('a')
-        a |= value
-
-        return {
-            'a': a,
-            'z': a == 0,
-            'n': a & 0x80 != 0,
-        }
+        a.value |= mem
+        processor.p.z.update(a.value)
+        processor.p.n.update(a.value)

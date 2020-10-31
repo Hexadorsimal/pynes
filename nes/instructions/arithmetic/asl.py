@@ -1,22 +1,24 @@
 from ..instruction import Instruction
+from nes.addressing_modes.accumulator import AccumulatorAddressingMode
 
 
 class Asl(Instruction):
-    def execute(self):
-        addr = self.addressing_mode.calculate_address()
+    def execute(self, processor):
+        if isinstance(self.addressing_mode, AccumulatorAddressingMode):
+            addr = None
+            value = processor.a.value
+        else:
+            addr = self.parameter
+            value = processor.read(addr)
 
-        value = self.read(addr)
-        c = (value >> 7) & 0x01
-        value = value << 1
+        processor.p.c.update(value & 0x80)
 
-        self.write(addr, value)
+        value = (value << 1) & 0xff
 
-        z = value == 0
-        n = value & 0x80
+        processor.p.z.update(value)
+        processor.p.n.update(value)
 
-        return {
-            'z': z,
-            'n': n,
-            'c': c,
-            'write': value,
-        }
+        if isinstance(self.addressing_mode, AccumulatorAddressingMode):
+            processor.a.value = value
+        else:
+            processor.write(addr, value)
