@@ -1,5 +1,4 @@
 from nes.bus import Bus
-from nes.registers import Register
 
 
 class Processor:

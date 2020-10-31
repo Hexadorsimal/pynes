@@ -1,4 +1,4 @@
-from nes.memory import Memory
+from nes.bus.devices.memory import Memory
 
 
 class PaletteRam(Memory):

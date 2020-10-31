@@ -1,5 +1,5 @@
 from nes.bus import BusDevice
-from nes.cartridge.ines import VramMirroringMode
+from nes.bus.devices.cartridge.ines import VramMirroringMode
 
 
 class NameTableRam(BusDevice):

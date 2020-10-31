@@ -1,8 +1,9 @@
-from .processors.cpu import Cpu, PpuRegisterSet, ApuIoRegisterSet
+from .processors.cpu import Cpu
 from .processors.ppu import Ppu, PaletteRam
 from .processors.apu import Apu
 from .bus import Bus
-from .memory import Ram
+from .bus.devices.memory import Ram
+from .bus.devices import ApuIoRegisterSet, PpuRegisterSet
 
 
 class Nes:
