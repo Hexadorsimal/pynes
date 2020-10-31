@@ -2,11 +2,8 @@ from nes.instructions import Instruction
 
 
 class Inx(Instruction):
-    def execute(self):
-        x = self.get('x') + 1
+    def execute(self, processor):
+        processor.x.value += 1
 
-        return {
-            'x': x,
-            'z': x == 0,
-            'n': x & 0x80 != 0,
-        }
+        processor.p.z.update(processor.x.value)
+        processor.p.n.update(processor.x.value)
