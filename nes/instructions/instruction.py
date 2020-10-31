@@ -19,6 +19,12 @@ class Instruction:
             s += f' {self.parameter:#X}'
         return s
 
+    def read_source(self, processor):
+        return self.addressing_mode.read_source(processor)
+
+    def write_result(self, processor, value):
+        self.addressing_mode.write_result(processor, value)
+
     @property
     def cycles(self) -> int:
         total_cycles = self.base_cycles

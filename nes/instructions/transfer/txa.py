@@ -2,11 +2,9 @@ from nes.instructions import Instruction
 
 
 class Txa(Instruction):
-    def execute(self):
-        x = self.get('x')
+    def execute(self, processor):
+        value = processor.x.value
 
-        return {
-            'a': x,
-            'z': x == 0,
-            'n': x & 0x80,
-        }
+        processor.a.value = value
+        processor.p.n.update(value)
+        processor.p.z.update(value)

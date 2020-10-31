@@ -25,8 +25,8 @@ class InstructionFactory:
     def create(cls, processor, info):
         addressing_mode = AddressingModeFactory.create(info['addressing_mode'])
 
-        param = addressing_mode.read_parameter(processor)
+        parameter = addressing_mode.read_parameter(processor)
 
         for instruction_class in cls.classes:
             if instruction_class.__name__.lower() == info['name'].lower():
-                return instruction_class(addressing_mode, info['size'], info['cycles'], info['page_cycles'], param)
+                return instruction_class(addressing_mode, info['size'], info['cycles'], info['page_cycles'], parameter)

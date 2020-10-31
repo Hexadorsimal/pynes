@@ -4,7 +4,7 @@ from nes.instructions import Instruction
 class Beq(Instruction):
     def execute(self, processor):
         z = processor.p.z
-        offset = self.parameter
+        offset = self.read_source(processor)
 
         if z:
             page_before = processor.pc.hi

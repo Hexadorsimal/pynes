@@ -4,8 +4,7 @@ from ..instruction import Instruction
 class Eor(Instruction):
     def execute(self, processor):
         a = processor.a
-        addr = self.parameter
-        mem = processor.read(addr)
+        mem = self.read_source(processor)
 
         a.value ^= mem
         processor.p.z.update(a.value)

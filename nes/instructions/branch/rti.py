@@ -2,11 +2,10 @@ from nes.instructions import Instruction
 
 
 class Rti(Instruction):
-    def execute(self):
-        status = self.processor.pull()
-        addr = self.processor.pull16()
+    def execute(self, processor):
+        processor.p.value = processor.pull()
 
-        return {
-            'p': status,
-            'pc': addr,
-        }
+        lo = processor.pull()
+        hi = processor.pull()
+
+        processor.pc.value = (hi >> 8) | lo

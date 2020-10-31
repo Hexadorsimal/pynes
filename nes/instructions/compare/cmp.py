@@ -2,16 +2,12 @@ from ..instruction import Instruction
 
 
 class Cmp(Instruction):
-    def execute(self):
-        a = self.get('a')
+    def execute(self, processor):
+        a = processor.a.value
+        mem = self.read_source(processor)
 
-        addr = self.addressing_mode.calculate_address()
-        b = self.read(addr)
+        diff = a - mem
 
-        c = a - b
-
-        return {
-            'z': c == 0,
-            'n': c & 0x80 != 0,
-            'c': a >= b,
-        }
+        processor.p.z.update(diff)
+        processor.p.n.update(diff)
+        processor.p.c.update(a >= mem)

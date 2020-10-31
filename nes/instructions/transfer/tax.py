@@ -2,11 +2,9 @@ from nes.instructions import Instruction
 
 
 class Tax(Instruction):
-    def execute(self):
-        a = self.get('a')
+    def execute(self, processor):
+        value = processor.a.value
 
-        return {
-            'x': a,
-            'z': a == 0,
-            'n': a & 0x80,
-        }
+        processor.x.value = value
+        processor.p.n.update(value)
+        processor.p.z.update(value)

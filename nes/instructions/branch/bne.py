@@ -4,7 +4,7 @@ from nes.instructions import Instruction
 class Bne(Instruction):
     def execute(self, processor):
         z = processor.p.z
-        offset = self.parameter
+        offset = self.read_source(processor)
 
         if not z:
             page_before = processor.pc.hi

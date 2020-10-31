@@ -2,16 +2,12 @@ from ..instruction import Instruction
 
 
 class Cpx(Instruction):
-    def execute(self):
-        a = self.get('x')
+    def execute(self, processor):
+        x = processor.x.value
+        mem = self.read_source(processor)
 
-        addr = self.addressing_mode.calculate_address()
-        b = self.read(addr)
+        diff = x - mem
 
-        c = a - b
-
-        return {
-            'z': c == 0,
-            'n': c & 0x80 != 0,
-            'c': a >= b,
-        }
+        processor.p.z.update(diff)
+        processor.p.n.update(diff)
+        processor.p.c.update(x >= mem)

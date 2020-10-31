@@ -3,9 +3,8 @@ from ..instruction import Instruction
 
 class Adc(Instruction):
     def execute(self, processor):
-        addr = self.parameter
-        mem = processor.read(addr)
         acc = processor.a.value
+        mem = self.read_source(processor)
 
         value = mem + acc
         if processor.p.c:

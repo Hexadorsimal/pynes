@@ -2,16 +2,15 @@ from nes.instructions import Instruction
 
 
 class Brk(Instruction):
-    def execute(self):
-        pc = self.get('pc')
-        p = self.get('p')
+    def execute(self, processor):
+        processor.push(processor.pc.hi)
+        processor.push(processor.pc.lo)
 
-        self.processor.push16(pc)
-        self.processor.push(p)
+        processor.p.b.set()
+        processor.push(processor.p)
 
-        pc = self.processor.read16(0xfffe)
+        processor.p.i.set()
 
-        return {
-            'pc': pc,
-            'i': True,
-        }
+        lo = processor.read(0xfffe)
+        hi = processor.read(0xffff)
+        processor.pc.value = (hi << 8) | lo

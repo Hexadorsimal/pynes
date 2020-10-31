@@ -2,7 +2,30 @@ class AddressingMode:
     def __repr__(self):
         return self.__class__.__name__.replace('AddressingMode', '')
 
+    @property
+    def instruction_size(self):
+        raise NotImplementedError
+
+    @property
+    def parameter_size(self):
+        return self.instruction_size - 1
+
     def read_parameter(self, processor):
+        lo = 0
+        hi = 0
+
+        if self.parameter_size > 0:
+            lo = processor.read(processor.pc + 1)
+
+        if self.parameter_size > 1:
+            hi = processor.read(processor.pc + 2)
+
+        return (hi << 8) | lo
+
+    def read_source(self, processor):
+        raise NotImplementedError
+
+    def write_result(self, processor, value):
         raise NotImplementedError
 
     @staticmethod
