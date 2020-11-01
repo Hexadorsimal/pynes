@@ -14,24 +14,23 @@ from .zero_page_y import ZeroPageYAddressingMode
 
 
 class AddressingModeFactory:
-    classes = [
-        AbsoluteAddressingMode,
-        AbsoluteXAddressingMode,
-        AbsoluteYAddressingMode,
-        AccumulatorAddressingMode,
-        ImmediateAddressingMode,
-        ImpliedAddressingMode,
-        IndexedIndirectAddressingMode,
-        IndirectAddressingMode,
-        IndirectIndexedAddressingMode,
-        RelativeAddressingMode,
-        ZeroPageAddressingMode,
-        ZeroPageXAddressingMode,
-        ZeroPageYAddressingMode,
-    ]
+    classes = {
+        'absolute': AbsoluteAddressingMode,
+        'absolutex': AbsoluteXAddressingMode,
+        'absolutey': AbsoluteYAddressingMode,
+        'accumulator': AccumulatorAddressingMode,
+        'immediate': ImmediateAddressingMode,
+        'implied': ImpliedAddressingMode,
+        'indexedindirect': IndexedIndirectAddressingMode,
+        'indirect': IndirectAddressingMode,
+        'indirectindexed': IndirectIndexedAddressingMode,
+        'relative': RelativeAddressingMode,
+        'zeropage': ZeroPageAddressingMode,
+        'zeropagex': ZeroPageXAddressingMode,
+        'zeropagey': ZeroPageYAddressingMode,
+    }
 
     @classmethod
     def create(cls, name):
-        for addressing_mode_class in cls.classes:
-            if addressing_mode_class.__name__.replace('AddressingMode', '').lower() == name.lower():
-                return addressing_mode_class()
+        if name.lower() in cls.classes:
+            return cls.classes[name.lower()]()

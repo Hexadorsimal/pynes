@@ -29,6 +29,10 @@ class Cpu(Processor):
         self.decoder = Decoder()
         self.cycles = 0
 
+        self.nmi_vector = 0xfffa
+        self.reset_vector = 0xfffc
+        self.interrupt_vector = 0xfffe
+
     def __repr__(self):
         return 'RICOH 2A03'
 
@@ -61,16 +65,17 @@ class Cpu(Processor):
         self.s.value = 0xFD
         self.p.value = 0x24
 
+    def nmi(self):
+        jmpi = InstructionFactory.create('jmp', 'indirect', self.nmi_vector)
+        jmpi.execute(self)
+
     def reset(self):
-        # read mem from RESET_LO, put in PCL
-        # read mem from RESET_HI, put in PCH
-        pass
+        jmpi = InstructionFactory.create('jmp', 'indirect', self.reset_vector)
+        jmpi.execute(self)
 
     def irq(self):
-        pass
-
-    def nmi(self):
-        pass
+        jmpi = InstructionFactory.create('jmp', 'indirect', self.interrupt_vector)
+        jmpi.execute(self)
 
     def tick(self):
         opcode = self.fetch()
@@ -84,7 +89,11 @@ class Cpu(Processor):
 
     def decode(self, opcode):
         info = self.decoder.decode(opcode)
-        instruction = InstructionFactory.create(self, info)
+        instruction = InstructionFactory.create(self,
+                                                info['name'],
+                                                info['addressing_mode'],
+                                                info['cycles'],
+                                                info['page_cycles'])
         return instruction
 
     def execute(self, instruction):
@@ -96,18 +105,6 @@ class Cpu(Processor):
 
     def write(self, addr, value):
         return self.bus.write(addr, value)
-
-    def read16(self, addr):
-        lo = self.bus.read(addr)
-        hi = self.bus.read(addr + 1)
-        return (hi << 8) | lo
-
-    def read16_bug(self, addr):
-        a = addr
-        b = (a & 0xff00) | ((a & 0x00ff) + 1)
-        lo = self.bus.read(a)
-        hi = self.bus.read(b)
-        return (hi << 8) | lo
 
     def push(self, value):
         self.bus.write(self.s.pointer, value)

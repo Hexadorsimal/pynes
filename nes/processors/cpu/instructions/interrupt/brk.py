@@ -11,6 +11,6 @@ class Brk(Instruction):
 
         processor.p.i.set()
 
-        lo = processor.read(0xfffe)
-        hi = processor.read(0xffff)
+        lo = processor.read(processor.interrupt_vector)
+        hi = processor.read(processor.interrupt_vector + 1)
         processor.pc.value = (hi << 8) | lo

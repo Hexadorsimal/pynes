@@ -10,18 +10,6 @@ class AddressingMode:
     def parameter_size(self):
         return self.instruction_size - 1
 
-    def read_parameter(self, processor):
-        lo = 0
-        hi = 0
-
-        if self.parameter_size > 0:
-            lo = processor.read(processor.pc + 1)
-
-        if self.parameter_size > 1:
-            hi = processor.read(processor.pc + 2)
-
-        return (hi << 8) | lo
-
     def calculate_address(self, processor, parameter):
         raise NotImplementedError
 

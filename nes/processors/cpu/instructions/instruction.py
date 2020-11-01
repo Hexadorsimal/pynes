@@ -3,9 +3,8 @@ from .addressing_modes.relative import RelativeAddressingMode
 
 
 class Instruction:
-    def __init__(self, addressing_mode: AddressingMode, size: int, cycles: int, page_cycles: int, parameter: int):
+    def __init__(self, addressing_mode: AddressingMode, cycles: int = 0, page_cycles: int = 0, parameter: int = 0):
         self.addressing_mode = addressing_mode
-        self.size = size
         self.base_cycles = cycles
         self.page_cycles = page_cycles
 
@@ -18,6 +17,10 @@ class Instruction:
         if self.parameter is not None:
             s += f' {self.parameter:#X}'
         return s
+
+    @property
+    def size(self):
+        return self.addressing_mode.instruction_size
 
     def read_source(self, processor):
         return self.addressing_mode.read_source(processor, self.parameter)
