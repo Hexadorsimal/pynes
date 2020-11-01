@@ -1,6 +1,5 @@
-from ..instruction import Instruction
+from .clear import ClearInstruction
 
 
-class Cld(Instruction):
-    def execute(self, processor):
-        processor.p.d.clear()
+class Cld(ClearInstruction):
+    flag_name = 'd'

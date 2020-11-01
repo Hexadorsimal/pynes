@@ -1,6 +1,5 @@
-from ..instruction import Instruction
+from .clear import ClearInstruction
 
 
-class Clc(Instruction):
-    def execute(self, processor):
-        processor.p.c.clear()
+class Clc(ClearInstruction):
+    flag_name = 'c'

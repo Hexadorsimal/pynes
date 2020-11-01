@@ -1,6 +1,5 @@
-from ..instruction import Instruction
+from .set import SetInstruction
 
 
-class Sei(Instruction):
-    def execute(self, processor):
-        processor.p.i.set()
+class Sei(SetInstruction):
+    flag_name = 'i'

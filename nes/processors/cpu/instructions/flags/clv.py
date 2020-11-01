@@ -1,6 +1,5 @@
-from ..instruction import Instruction
+from .clear import ClearInstruction
 
 
-class Clv(Instruction):
-    def execute(self, processor):
-        processor.p.v.clear()
+class Clv(ClearInstruction):
+    flag_name = 'v'

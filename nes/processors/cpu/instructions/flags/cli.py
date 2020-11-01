@@ -1,6 +1,5 @@
-from ..instruction import Instruction
+from .clear import ClearInstruction
 
 
-class Cli(Instruction):
-    def execute(self, processor):
-        processor.p.i.clear()
+class Cli(ClearInstruction):
+    flag_name = 'i'

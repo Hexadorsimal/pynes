@@ -1,6 +1,5 @@
-from ..instruction import Instruction
+from .set import SetInstruction
 
 
-class Sec(Instruction):
-    def execute(self, processor):
-        processor.p.c.set()
+class Sec(SetInstruction):
+    flag_name = 'c'
