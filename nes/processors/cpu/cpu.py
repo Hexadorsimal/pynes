@@ -80,6 +80,9 @@ class Cpu(Processor):
     def tick(self):
         opcode = self.fetch()
         instruction = self.decode(opcode)
+
+        print(f'{self.pc.value:X}  {opcode:X} {instruction}')
+
         self.pc.value += instruction.size
         self.execute(instruction)
         super().tick()

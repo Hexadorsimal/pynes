@@ -26,6 +26,11 @@ class InstructionFactory:
         Tax, Tay, Tsx, Txa, Txs, Tya,
     ]
 
+    class_map = {}
+
+    for cls in classes:
+        class_map[cls.__name__.lower()] = cls
+
     @classmethod
     def create(cls, processor, name, addressing_mode, cycles=0, page_cycles=0, parameter=None):
         addressing_mode = AddressingModeFactory.create(addressing_mode)
@@ -33,9 +38,8 @@ class InstructionFactory:
         if not parameter:
             parameter = cls.read_parameter(processor, addressing_mode.parameter_size)
 
-        for instruction_class in cls.classes:
-            if instruction_class.__name__.lower() == name.lower():
-                return instruction_class(addressing_mode, cycles, page_cycles, parameter)
+        if name.lower() in cls.class_map:
+            return cls.class_map[name.lower()](addressing_mode, cycles, page_cycles, parameter)
 
     @staticmethod
     def read_parameter(processor, parameter_size):
