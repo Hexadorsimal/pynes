@@ -1,6 +1,5 @@
-from .branch import BranchInstruction
+from .branch_if_clear import BranchIfClearInstruction
 
 
-class Bvc(BranchInstruction):
-    def meets_branch_condition(self, processor):
-        return not processor.p.v
+class Bvc(BranchIfClearInstruction):
+    flag_name = 'v'

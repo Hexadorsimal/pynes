@@ -1,6 +1,5 @@
-from .branch import BranchInstruction
+from .branch_if_set import BranchIfSetInstruction
 
 
-class Beq(BranchInstruction):
-    def meets_branch_condition(self, processor):
-        return bool(processor.p.z)
+class Beq(BranchIfSetInstruction):
+    flag_name = 'z'

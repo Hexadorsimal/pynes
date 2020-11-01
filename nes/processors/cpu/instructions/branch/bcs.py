@@ -1,6 +1,5 @@
-from .branch import BranchInstruction
+from .branch_if_set import BranchIfSetInstruction
 
 
-class Bcs(BranchInstruction):
-    def meets_branch_condition(self, processor):
-        return bool(processor.p.c)
+class Bcs(BranchIfSetInstruction):
+    flag_name = 'c'

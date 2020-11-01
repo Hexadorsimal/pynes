@@ -1,6 +1,5 @@
-from .branch import BranchInstruction
+from .branch_if_set import BranchIfSetInstruction
 
 
-class Bmi(BranchInstruction):
-    def meets_branch_condition(self, processor):
-        return bool(processor.p.n)
+class Bmi(BranchIfSetInstruction):
+    flag_name = 'n'
