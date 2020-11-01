@@ -1,6 +1,5 @@
-from ..instruction import Instruction
+from .push import PushInstruction
 
 
-class Pha(Instruction):
-    def execute(self, processor):
-        processor.push(processor.a.value)
+class Pha(PushInstruction):
+    src_reg = 'a'

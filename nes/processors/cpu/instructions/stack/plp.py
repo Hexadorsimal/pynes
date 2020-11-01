@@ -1,6 +1,6 @@
-from ..instruction import Instruction
+from .pull import PullInstruction
 
 
-class Plp(Instruction):
-    def execute(self, processor):
-        processor.p.value = processor.pull()
+class Plp(PullInstruction):
+    dst_reg = 'p'
+    update_flags = False

@@ -1,6 +1,5 @@
-from ..instruction import Instruction
+from .push import PushInstruction
 
 
-class Php(Instruction):
-    def execute(self, processor):
-        processor.push(processor.p.value)
+class Php(PushInstruction):
+    src_reg = 'p'

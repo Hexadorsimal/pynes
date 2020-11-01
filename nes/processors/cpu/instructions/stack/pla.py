@@ -1,10 +1,6 @@
-from ..instruction import Instruction
+from .pull import PullInstruction
 
 
-class Pla(Instruction):
-    def execute(self, processor):
-        value = processor.pull()
-
-        processor.a.value = value
-        processor.p.z.update(value)
-        processor.p.n.update(value)
+class Pla(PullInstruction):
+    dst_reg = 'a'
+    update_flags = True
