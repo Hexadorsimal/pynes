@@ -1,46 +1,54 @@
 import unittest
 from nes.processors.cpu import Cpu
-from nes.memory import Ram
+from nes.bus import Bus
+from nes.bus.devices.memory import Ram
 
 
 class CpuTransferInstructionsTestCase(unittest.TestCase):
     def setUp(self):
-        ram = Ram(256)
-        self.cpu = Cpu(ram)
-        self.cpu.x = 1
-        self.cpu.y = 2
-        self.cpu.a = 3
-        self.cpu.s = 4
+        bus = Bus()
+        bus.attach_device('Stack Area', Ram(0x100), 0x100, 0x100)
+        self.cpu = Cpu(bus)
 
     def test_tax(self):
-        self.cpu.tax(None)
-        self.assertEqual(self.cpu.a, self.cpu.x)
-        self.assertEqual(self.cpu.x, 3)
+        self.cpu.a.value = 3
+        instruction = self.cpu.decode(0xAA)
+        self.cpu.execute(instruction)
+        self.assertEqual(self.cpu.a.value, self.cpu.x.value)
+        self.assertEqual(self.cpu.x.value, 3)
 
     def test_tay(self):
-        self.cpu.tay(None)
-        self.assertEqual(self.cpu.a, self.cpu.y)
-        self.assertEqual(self.cpu.y, 3)
-
-    def test_tsx(self):
-        self.cpu.tsx(None)
-        self.assertEqual(self.cpu.s, self.cpu.x)
-        self.assertEqual(self.cpu.x, 4)
+        self.cpu.a.value = 2
+        instruction = self.cpu.decode(0xA8)
+        self.cpu.execute(instruction)
+        self.assertEqual(self.cpu.a.value, self.cpu.y.value)
+        self.assertEqual(self.cpu.y.value, 2)
 
     def test_txa(self):
-        self.cpu.txa(None)
-        self.assertEqual(self.cpu.x, self.cpu.a)
-        self.assertEqual(self.cpu.a, 1)
-
-    def test_txs(self):
-        self.cpu.txs(None)
-        self.assertEqual(self.cpu.x, self.cpu.s)
-        self.assertEqual(self.cpu.s, 1)
+        self.cpu.x.value = 10
+        instruction = self.cpu.decode(0x8A)
+        self.cpu.execute(instruction)
+        self.assertEqual(self.cpu.a.value, self.cpu.x.value)
+        self.assertEqual(self.cpu.a.value, 10)
 
     def test_tya(self):
-        self.cpu.tya(None)
-        self.assertEqual(self.cpu.y, self.cpu.a)
-        self.assertEqual(self.cpu.a, 2)
+        self.cpu.y.value = 0xDD
+        instruction = self.cpu.decode(0x98)
+        self.cpu.execute(instruction)
+        self.assertEqual(self.cpu.a.value, self.cpu.y.value)
+        self.assertEqual(self.cpu.a.value, 0xDD)
+
+    def test_tsx(self):
+        self.cpu.s.value = 0xFD
+        instruction = self.cpu.decode(0xBA)
+        self.cpu.execute(instruction)
+        self.assertEqual(self.cpu.x.value, 0xFD)
+
+    def test_txs(self):
+        self.cpu.x.value = 0xAA
+        instruction = self.cpu.decode(0x9A)
+        self.cpu.execute(instruction)
+        self.assertEqual(self.cpu.s.value, 0xAA)
 
 
 if __name__ == '__main__':

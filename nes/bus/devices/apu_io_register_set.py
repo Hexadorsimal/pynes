@@ -7,7 +7,6 @@ from .joy import Joy1, Joy2
 
 class ApuIoRegisterSet(BusDevice):
     def __init__(self):
-        super().__init__('APU/IO Register Set')
         self.registers = [
             Sq1Vol(),
             Sq1Sweep(),

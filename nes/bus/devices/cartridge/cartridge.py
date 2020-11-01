@@ -14,8 +14,8 @@ class Cartridge:
     def __init__(self, rom_file):
         self.rom_file = rom_file
         self.buses = {
-            'cpu': Bus('cartridge cpu bus'),
-            'ppu': Bus('cartridge ppu bus'),
+            'cpu': Bus(),
+            'ppu': Bus(),
         }
 
     @property

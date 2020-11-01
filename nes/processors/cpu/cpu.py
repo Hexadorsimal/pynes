@@ -6,7 +6,7 @@ from .instructions import InstructionFactory
 
 
 class Cpu(Processor):
-    def __init__(self, bus):
+    def __init__(self, bus=None):
         super().__init__(bus)
         self.registers = {
             'pc': ProgramCounter(),

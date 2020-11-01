@@ -1,24 +1,25 @@
 import unittest
 from nes.processors.cpu import Cpu
-from nes.memory import Ram
 
 
 class CpuSetInstructionsTestCase(unittest.TestCase):
     def setUp(self):
-        ram = Ram(256)
-        self.cpu = Cpu(ram)
+        self.cpu = Cpu()
 
     def test_sec(self):
-        self.cpu.sec(None)
-        self.assertEqual(self.cpu.c, 1)
+        instruction = self.cpu.decode(opcode=0x38)
+        self.cpu.execute(instruction)
+        self.assertTrue(self.cpu.p.c)
 
     def test_sed(self):
-        self.cpu.sed(None)
-        self.assertEqual(self.cpu.d, 1)
+        instruction = self.cpu.decode(opcode=0xF8)
+        self.cpu.execute(instruction)
+        self.assertTrue(self.cpu.p.d)
 
     def test_sei(self):
-        self.cpu.sei(None)
-        self.assertEqual(self.cpu.i, 1)
+        instruction = self.cpu.decode(opcode=0x78)
+        self.cpu.execute(instruction)
+        self.assertTrue(self.cpu.p.i)
 
 
 if __name__ == '__main__':

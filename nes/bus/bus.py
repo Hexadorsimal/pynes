@@ -4,8 +4,7 @@ from .bus_device import BusDevice
 
 
 class Bus(BusDevice):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.devices = {}
 

@@ -5,7 +5,6 @@ from .oam import OamAddr, OamData
 
 class PpuRegisterSet(BusDevice):
     def __init__(self, ppu):
-        super().__init__('PPU Register Set')
         self.ppu = ppu
         self.registers = [
             PpuCtrl(),
