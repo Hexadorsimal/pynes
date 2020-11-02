@@ -5,10 +5,13 @@ class OamData(Register):
     def __init__(self, ppu):
         self.ppu = ppu
 
-    def read(self):
+    @property
+    def value(self):
         addr = self.ppu.oamaddr.addr
         return self.ppu.oam.read(addr)
 
-    def write(self, data):
+    @value.setter
+    def value(self, data):
         addr = self.ppu.oamaddr.addr
         self.ppu.oam.write(addr, data)
+        self.ppu.oamaddr.value += 1
