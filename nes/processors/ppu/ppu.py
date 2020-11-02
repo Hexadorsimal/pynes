@@ -8,10 +8,11 @@ from .pattern_table import PatternTable
 from nes.processors.registers import GeneralPurposeRegister
 from .ppu_register_set import PpuRegisterSet
 from nes.bus.devices.memory import Ram
+from .registers import PpuAddr, PpuCtrl, PpuData, PpuMask, PpuScroll, PpuStatus, OamAddr, OamData, OamDma
 
 
 class Ppu(Processor):
-    def __init__(self, bus, config):
+    def __init__(self, bus, cpu, config):
         super().__init__(bus)
 
         self.registers = {
@@ -27,6 +28,15 @@ class Ppu(Processor):
             's': GeneralPurposeRegister(),
             'par': GeneralPurposeRegister(),
             'ar': GeneralPurposeRegister(),
+            'ppuctrl': PpuCtrl(),
+            'ppumask': PpuMask(),
+            'ppustatus': PpuStatus(),
+            'ppuscroll': PpuScroll(self),
+            'ppuaddr': PpuAddr(),
+            'ppudata': PpuData(self),
+            'oamaddr': OamAddr(),
+            'oamdata': OamData(self),
+            'oamdma': OamDma(self, cpu),
         }
 
         self.register_set = PpuRegisterSet(self)
@@ -50,6 +60,42 @@ class Ppu(Processor):
         pygame.init()
         pygame.display.set_caption('PyNES')
         self.screen = pygame.display.set_mode((256, 240))
+
+    @property
+    def ppuctrl(self):
+        return self.registers['ppuctrl']
+
+    @property
+    def ppumask(self):
+        return self.registers['ppumask']
+
+    @property
+    def ppustatus(self):
+        return self.registers['ppustatus']
+
+    @property
+    def oamaddr(self):
+        return self.registers['oamaddr']
+
+    @property
+    def oamdata(self):
+        return self.registers['oamdata']
+
+    @property
+    def oamdma(self):
+        return self.registers['oamdma']
+
+    @property
+    def ppuscroll(self):
+        return self.registers['ppuscroll']
+
+    @property
+    def ppuaddr(self):
+        return self.registers['ppuaddr']
+
+    @property
+    def ppudata(self):
+        return self.registers['ppudata']
 
     def read(self, addr):
         return self.bus.read(addr)

@@ -9,13 +9,13 @@ class PpuData(Register):
     def value(self):
         # read from vram at the address in PPUADDR
         # increment PPUADDR by amount specified in PPUCTRL
-        data = self.ppu.read(self.ppu.register_set.ppuaddr.value)
-        self.ppu.register_set.ppuaddr.value += self.ppu.register_set.ppuctrl.vram_address_increment
+        data = self.ppu.read(self.ppu.ppuaddr.value)
+        self.ppu.ppuaddr.value += self.ppu.ppuctrl.vram_address_increment
         return data
 
     @value.setter
     def value(self, data):
         # write data to vram at the address in PPUADDR
         # increment PPUADDR by amount specified in PPUCTRL
-        self.ppu.write(self.ppu.register_set.ppuaddr.value, data)
-        self.ppu.register_set.ppuaddr.value += self.ppu.register_set.ppuctrl.vram_address_increment
+        self.ppu.write(self.ppu.ppuaddr.value, data)
+        self.ppu.ppuaddr.value += self.ppu.ppuctrl.vram_address_increment

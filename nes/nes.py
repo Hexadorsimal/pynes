@@ -15,10 +15,12 @@ class Nes:
             'ppu': Bus(),
         }
 
+        cpu = Cpu(self.buses['cpu'])
+        ppu = Ppu(self.buses['ppu'], cpu, config['ppu'])
+
         self.processors = {
-            'ppu': Ppu(self.buses['ppu'], config['ppu']),
-            'cpu': Cpu(self.buses['cpu']),
-            'apu': Apu(None),
+            'ppu': ppu,
+            'cpu': cpu,
         }
 
         if config['television_standard'] == 'ntsc':
@@ -31,7 +33,7 @@ class Nes:
 
         self.buses['cpu'].attach_device('RAM', Ram(0x0800), addr=0x0000, size=0x2000)
         self.buses['cpu'].attach_device('PPU Registers', self.processors['ppu'].register_set, addr=0x2000, size=0x2000)
-        self.buses['cpu'].attach_device('APU/IO Registers', ApuIoRegisterSet(), addr=0x4000, size=0x0020)
+        self.buses['cpu'].attach_device('APU/IO Registers', ApuIoRegisterSet(ppu), addr=0x4000, size=0x0020)
 
     def insert_cartridge(self, cartridge):
         self.cartridge = cartridge

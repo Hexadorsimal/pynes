@@ -1,12 +1,11 @@
 from nes.bus import BusDevice
 from nes.processors.registers import Register
 from .apu import Sq1Hi, Sq1Lo, Sq1Sweep, Sq1Vol, Sq2Hi, Sq2Lo, Sq2Sweep, Sq2Vol, TriLinear, TriHi, TriLo, NoiseHi, NoiseLo, NoiseVol, DmcRaw, DmcFreq, DmcStart, DmcLen, SndChn
-from nes.processors.ppu.registers import OamDma
 from .joy import Joy1, Joy2
 
 
 class ApuIoRegisterSet(BusDevice):
-    def __init__(self):
+    def __init__(self, ppu):
         self.registers = [
             Sq1Vol(),
             Sq1Sweep(),
@@ -28,7 +27,7 @@ class ApuIoRegisterSet(BusDevice):
             DmcRaw(),
             DmcStart(),
             DmcLen(),
-            OamDma(),
+            ppu.oamdma,
             SndChn(),
             Joy1(),
             Joy2(),
