@@ -1,4 +1,4 @@
-from nes.processors.cpu.registers import Register
+from nes.processors.registers import Register
 
 
 class PpuMask(Register):
@@ -19,8 +19,13 @@ class PpuMask(Register):
     def __init__(self, data=0):
         self.data = data
 
-    def write(self, data):
-        self.data = data
+    @property
+    def value(self):
+        return self.data
+
+    @value.setter
+    def value(self, value):
+        self.data = value
 
     @property
     def grayscale(self):
@@ -52,4 +57,4 @@ class PpuMask(Register):
 
     @property
     def emphasize_blue(self):
-        return self.data &  0x80
+        return self.data & 0x80

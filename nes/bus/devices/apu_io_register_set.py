@@ -1,7 +1,7 @@
 from nes.bus import BusDevice
-from nes.processors.cpu.registers import Register
+from nes.processors.registers import Register
 from .apu import Sq1Hi, Sq1Lo, Sq1Sweep, Sq1Vol, Sq2Hi, Sq2Lo, Sq2Sweep, Sq2Vol, TriLinear, TriHi, TriLo, NoiseHi, NoiseLo, NoiseVol, DmcRaw, DmcFreq, DmcStart, DmcLen, SndChn
-from .oam import OamDma
+from nes.processors.ppu.registers import OamDma
 from .joy import Joy1, Joy2
 
 

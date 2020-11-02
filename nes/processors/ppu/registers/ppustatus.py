@@ -1,4 +1,4 @@
-from nes.processors.cpu.registers import Register
+from nes.processors.registers import Register
 
 
 class PpuStatus(Register):
@@ -7,7 +7,8 @@ class PpuStatus(Register):
         self.sprite0_hit = 0
         self.in_vblank = 0
 
-    def read(self):
+    @property
+    def value(self):
         data = 0
         data |= self.in_vblank << 7
         data |= self.sprite0_hit << 6

@@ -1,8 +1,8 @@
 from .decoder import Decoder
 from ..processor import Processor
-from .registers import GeneralPurposeRegister, ProgramCounter, StackPointer, FlagRegister
-from .registers.flags import Flag, NegativeFlag, ZeroFlag, OverflowFlag, CarryFlag
 from .instructions import InstructionFactory
+from nes.processors.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, FlagRegister
+from nes.processors.registers.flags import Flag, NegativeFlag, ZeroFlag, OverflowFlag, CarryFlag
 
 
 class Cpu(Processor):

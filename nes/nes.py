@@ -3,7 +3,7 @@ from .processors.ppu import Ppu, PaletteRam
 from .processors.apu import Apu
 from .bus import Bus
 from .bus.devices.memory import Ram
-from .bus.devices import ApuIoRegisterSet, PpuRegisterSet
+from .bus.devices import ApuIoRegisterSet
 
 
 class Nes:
@@ -26,10 +26,11 @@ class Nes:
         elif config['television_standard'] == 'pal':
             self.clock_dividers = {'cpu': 16, 'ppu': 5, 'apu': 1}
 
+        self.buses['ppu'].attach_device('Nametable Ram', Ram(0x1000), addr=0x2000, size=0x1F00)
         self.buses['ppu'].attach_device('Palette Ram', PaletteRam(), addr=0x3F00, size=0x100)
 
         self.buses['cpu'].attach_device('RAM', Ram(0x0800), addr=0x0000, size=0x2000)
-        self.buses['cpu'].attach_device('PPU Registers', PpuRegisterSet(self.processors['ppu']), addr=0x2000, size=0x2000)
+        self.buses['cpu'].attach_device('PPU Registers', self.processors['ppu'].register_set, addr=0x2000, size=0x2000)
         self.buses['cpu'].attach_device('APU/IO Registers', ApuIoRegisterSet(), addr=0x4000, size=0x0020)
 
     def insert_cartridge(self, cartridge):

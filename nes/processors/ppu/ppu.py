@@ -3,18 +3,59 @@ import pygame
 
 from .palettes.system_palette import SystemPalette
 from ..processor import Processor
+from .name_table import NameTable
+from .pattern_table import PatternTable
+from nes.processors.registers import GeneralPurposeRegister
+from .ppu_register_set import PpuRegisterSet
+from nes.bus.devices.memory import Ram
 
 
 class Ppu(Processor):
     def __init__(self, bus, config):
         super().__init__(bus)
+
+        self.registers = {
+            'nt': GeneralPurposeRegister(),
+            'at': GeneralPurposeRegister(),
+            'pt': GeneralPurposeRegister(),
+            'fv': GeneralPurposeRegister(),
+            'fh': GeneralPurposeRegister(),
+            'vt': GeneralPurposeRegister(),
+            'ht': GeneralPurposeRegister(),
+            'v': GeneralPurposeRegister(),
+            'h': GeneralPurposeRegister(),
+            's': GeneralPurposeRegister(),
+            'par': GeneralPurposeRegister(),
+            'ar': GeneralPurposeRegister(),
+        }
+
+        self.register_set = PpuRegisterSet(self)
+
         self.system_palette = SystemPalette.from_file(config['palette_file'])
-        self.pattern_tables = []
-        self.sprites = []
+
+        self.pattern_tables = [
+            PatternTable(0x0000, 0x1000),
+            PatternTable(0x1000, 0x1000),
+        ]
+
+        self.name_tables = [
+            NameTable(0x2000, 0x0400),
+            NameTable(0x2400, 0x0400),
+            NameTable(0x2800, 0x0400),
+            NameTable(0x2C00, 0x0400),
+        ]
+
+        self.oam = Ram(256)
 
         pygame.init()
-        pygame.display.set_caption('NES Palette')
+        pygame.display.set_caption('PyNES')
         self.screen = pygame.display.set_mode((256, 240))
+
+    def read(self, addr):
+        return self.bus.read(addr)
+
+    def write(self, addr, value):
+        self.bus.write(addr, value)
 
     def draw_pixel(self, x, y, color, size=1):
         rgb = self.system_palette.colors[color]
@@ -33,6 +74,20 @@ class Ppu(Processor):
                 color = self.bus.read(0x3F00 + offset)
                 self.draw_pixel(left + x * size, top + y * size, color, size)
 
+    def draw_background(self):
+        pass
+
+    def draw_scanline(self, number):
+        for tile in range(32):
+            self.draw_tile()
+
+    def draw_tile(self):
+        # read nametable byte
+        # read attribute table byte
+        # read pattern table bitmap #0
+        # read pattern table bitmap #1
+        pass
+
     def power_on(self):
         pass
 
@@ -41,8 +96,11 @@ class Ppu(Processor):
             if event.type == pygame.QUIT:
                 sys.exit()
 
-        self.draw_system_palette(0, 0, 8)
-        self.draw_palettes(0, 40, 8)
+        # self.draw_system_palette(0, 0, 8)
+        # self.draw_palettes(0, 40, 8)
+
+        for scanline in range(262):
+            self.draw_scanline(scanline)
 
         pygame.display.flip()
 

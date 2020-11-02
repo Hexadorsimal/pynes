@@ -1,4 +1,4 @@
-from nes.processors.cpu.registers import Register
+from nes.processors.registers import Register
 
 
 class PpuCtrl(Register):
@@ -11,50 +11,58 @@ class PpuCtrl(Register):
 
     def __init__(self, data=0):
         self.data = data
+
+    @property
+    def value(self):
+        return self.data
+
+    @value.setter
+    def value(self, value):
+        self.data = value
         
     @property
     def base_nametable_address(self):
-        index = self.data & 0b00000011
+        index = self.data & 0x03
         return self.nametable_addresses[index]
 
     @property
     def vram_address_increment(self):
-        if self.data & 0b00000100:
+        if self.data & 0x04:
             return 32
         else:
             return 1
 
     @property
     def sprite_pattern_table_address(self):
-        if self.data & 0b00001000:
+        if self.data & 0x08:
             return 0x1000
         else:
             return 0x0000
 
     @property
     def background_pattern_table_address(self):
-        if self.data & 0b00010000:
+        if self.data & 0x10:
             return 0x1000
         else:
             return 0x0000
 
     @property
     def sprite_size(self):
-        if self.data & 0b00100000:
-            return '8x16'
+        if self.data & 0x20:
+            return 8, 16
         else:
-            return '8x8'
+            return 8, 8
 
     @property
     def master_slave_select(self):
-        if self.data & 0b01000000:
+        if self.data & 0x40:
             return 'master'
         else:
             return 'slave'
 
     @property
     def generate_nmi_on_vblank(self):
-        if self.data & 0b10000000:
+        if self.data & 0x80:
             return True
         else:
             return False
