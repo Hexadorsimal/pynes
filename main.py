@@ -13,4 +13,6 @@ if __name__ == '__main__':
     for i in range(32):
         nes.buses['ppu'].write(0x3F00 + i, i)
 
-    nes.power_up()
+    nes.startup()
+    nes.main_loop()
+    nes.shutdown()

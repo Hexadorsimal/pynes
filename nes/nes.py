@@ -1,6 +1,7 @@
+import pygame
+
 from .processors.cpu import Cpu
 from .processors.ppu import Ppu, PaletteRam
-from .processors.apu import Apu
 from .bus import Bus
 from .bus.devices.memory import Ram
 from .bus.devices import ApuIoRegisterSet
@@ -20,7 +21,7 @@ class Nes:
 
         self.processors = {
             'ppu': ppu,
-            'cpu': cpu,
+            # 'cpu': cpu,
         }
 
         if config['television_standard'] == 'ntsc':
@@ -35,6 +36,16 @@ class Nes:
         self.buses['cpu'].attach_device('PPU Registers', self.processors['ppu'].register_set, addr=0x2000, size=0x2000)
         self.buses['cpu'].attach_device('APU/IO Registers', ApuIoRegisterSet(ppu), addr=0x4000, size=0x0020)
 
+        self.screen = None
+
+    @property
+    def ppu(self):
+        return self.processors['ppu']
+
+    @property
+    def cpu(self):
+        return self.processors['cpu']
+
     def insert_cartridge(self, cartridge):
         self.cartridge = cartridge
         self.buses['cpu'].attach_device('Cart Bus (CPU)', cartridge.buses['cpu'], addr=0x6000, size=0xA000)
@@ -46,14 +57,25 @@ class Nes:
 
         self.cartridge = None
 
-    def power_up(self):
+    def startup(self):
         for processor in self.processors.values():
             processor.power_on()
 
-        while True:
+    def main_loop(self):
+        done = False
+
+        while not done:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
+
             for processor_name, processor in self.processors.items():
                 divider = self.clock_dividers[processor_name]
                 if self.master_clock % divider == 0:
                     processor.tick()
 
             self.master_clock += 1
+
+    def shutdown(self):
+        for processor in self.processors.values():
+            processor.power_off()

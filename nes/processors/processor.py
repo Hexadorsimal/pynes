@@ -10,5 +10,8 @@ class Processor:
     def power_on(self):
         self.clock = 0
 
+    def power_off(self):
+        pass
+
     def tick(self):
         self.clock += 1

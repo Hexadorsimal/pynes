@@ -1,13 +1,11 @@
-import sys
-import pygame
-
+from nes.bus.devices.memory import Ram
+from nes.processors.registers import GeneralPurposeRegister
+from nes.video import Television
 from .palettes.system_palette import SystemPalette
 from ..processor import Processor
 from .name_table import NameTable
 from .pattern_table import PatternTable
-from nes.processors.registers import GeneralPurposeRegister
 from .ppu_register_set import PpuRegisterSet
-from nes.bus.devices.memory import Ram
 from .registers import PpuAddr, PpuCtrl, PpuData, PpuMask, PpuScroll, PpuStatus, OamAddr, OamData, OamDma
 
 
@@ -57,9 +55,7 @@ class Ppu(Processor):
 
         self.oam = Ram(256)
 
-        pygame.init()
-        pygame.display.set_caption('PyNES')
-        self.screen = pygame.display.set_mode((256, 240))
+        self.video = Television()
 
     @property
     def ppuctrl(self):
@@ -103,51 +99,31 @@ class Ppu(Processor):
     def write(self, addr, value):
         self.bus.write(addr, value)
 
-    def draw_pixel(self, x, y, color, size=1):
+    def get_rgb(self, color):
         rgb = self.system_palette.colors[color]
-        pixel = pygame.Rect(x, y, size, size)
-        self.screen.fill(rgb, pixel)
-
-    def draw_system_palette(self, left, top, size):
-        for y in range(4):
-            for x in range(16):
-                self.draw_pixel(left + x * size, top + y * size, y * 16 + x, size)
-
-    def draw_palettes(self, left, top, size):
-        for y in range(2):
-            for x in range(16):
-                offset = y * 16 + x
-                color = self.bus.read(0x3F00 + offset)
-                self.draw_pixel(left + x * size, top + y * size, color, size)
-
-    def draw_background(self):
-        pass
-
-    def draw_scanline(self, number):
-        for tile in range(32):
-            self.draw_tile()
-
-    def draw_tile(self):
-        # read nametable byte
-        # read attribute table byte
-        # read pattern table bitmap #0
-        # read pattern table bitmap #1
-        pass
+        return rgb
 
     def power_on(self):
-        pass
+        self.video.power_up()
+
+    def power_off(self):
+        self.video.power_down()
 
     def tick(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
+        x = self.clock % 256
+        y = (self.clock // 256) % 240
+        color_index = self.clock % 64
+        color = self.get_rgb(color_index)
 
-        # self.draw_system_palette(0, 0, 8)
-        # self.draw_palettes(0, 40, 8)
+        # print(f'pixel ({x},{y})')
+        self.video.pixel(x, y, color)
 
-        for scanline in range(262):
-            self.draw_scanline(scanline)
-
-        pygame.display.flip()
+        if x == 255:
+            if y == 239:
+                print('VSYNC')
+                self.video.vsync()
+            else:
+                print(f'HSYNC y({y})')
+                self.video.hsync()
 
         super().tick()
