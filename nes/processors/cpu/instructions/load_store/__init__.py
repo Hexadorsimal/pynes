@@ -1,6 +1,2 @@
-from .lda import Lda
-from .ldx import Ldx
-from .ldy import Ldy
-from .sta import Sta
-from .stx import Stx
-from .sty import Sty
+from .load import Lda, Ldx, Ldy
+from .store import Sta, Stx, Sty

@@ -1,21 +1,19 @@
 from .decoder import Decoder
 from ..processor import Processor
-from .instructions import InstructionFactory
+from .instructions import InstructionFactory, Instruction
 from nes.processors.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, ProcessorStatusRegister
 from nes.bus import Bus
 
 
 class Cpu(Processor):
-    def __init__(self, bus: Bus = None):
-        super().__init__()
+    def __init__(self, bus: Bus):
+        super().__init__(bus)
         self.pc = ProgramCounter()
         self.a = GeneralPurposeRegister()
         self.x = GeneralPurposeRegister()
         self.y = GeneralPurposeRegister()
         self.p = ProcessorStatusRegister()
         self.s = StackPointer()
-
-        self.bus = bus
 
         self.decoder = Decoder()
         self.cycles = 0
@@ -54,10 +52,10 @@ class Cpu(Processor):
         self.execute(instruction)
         super().tick()
 
-    def fetch(self):
+    def fetch(self) -> int:
         return self.bus.read(self.pc.value)
 
-    def decode(self, opcode):
+    def decode(self, opcode: int) -> Instruction:
         info = self.decoder.decode(opcode)
         instruction = InstructionFactory.create(self,
                                                 info['name'],
@@ -66,17 +64,17 @@ class Cpu(Processor):
                                                 info['page_cycles'])
         return instruction
 
-    def execute(self, instruction):
+    def execute(self, instruction: Instruction) -> None:
         instruction.execute(self)
         self.cycles += instruction.cycles
 
-    def read(self, addr):
+    def read(self, addr: int) -> int:
         return self.bus.read(addr)
 
-    def write(self, addr, value):
-        return self.bus.write(addr, value)
+    def write(self, addr: int, value: int) -> None:
+        self.bus.write(addr, value)
 
-    def push(self, value):
+    def push(self, value: int) -> None:
         self.bus.write(self.s.pointer, value)
         self.s.value -= 1
 

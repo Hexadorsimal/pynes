@@ -1,14 +1,15 @@
 from .addressing_mode import AddressingMode
+from ... import Cpu
 
 
 class IndexedIndirectAddressingMode(AddressingMode):
     @property
-    def instruction_size(self):
+    def instruction_size(self) -> int:
         return 2
 
-    def calculate_address(self, processor, parameter):
-        lo_addr = (parameter + processor.x.value) & 0x00ff
+    def calculate_address(self, cpu: Cpu, parameter: int) -> int:
+        lo_addr = (parameter + cpu.x.value) & 0x00ff
         hi_addr = (lo_addr + 1) & 0x00ff
-        lo = processor.read(lo_addr)
-        hi = processor.read(hi_addr)
+        lo = cpu.read(lo_addr)
+        hi = cpu.read(hi_addr)
         return (hi << 8) | lo

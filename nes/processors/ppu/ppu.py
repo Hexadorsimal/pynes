@@ -13,29 +13,27 @@ class Ppu(Processor):
     def __init__(self, bus, cpu, config):
         super().__init__(bus)
 
-        self.registers = {
-            'nt': GeneralPurposeRegister(),
-            'at': GeneralPurposeRegister(),
-            'pt': GeneralPurposeRegister(),
-            'fv': GeneralPurposeRegister(),
-            'fh': GeneralPurposeRegister(),
-            'vt': GeneralPurposeRegister(),
-            'ht': GeneralPurposeRegister(),
-            'v': GeneralPurposeRegister(),
-            'h': GeneralPurposeRegister(),
-            's': GeneralPurposeRegister(),
-            'par': GeneralPurposeRegister(),
-            'ar': GeneralPurposeRegister(),
-            'ppuctrl': PpuCtrl(),
-            'ppumask': PpuMask(),
-            'ppustatus': PpuStatus(),
-            'ppuscroll': PpuScroll(self),
-            'ppuaddr': PpuAddr(),
-            'ppudata': PpuData(self),
-            'oamaddr': OamAddr(),
-            'oamdata': OamData(self),
-            'oamdma': OamDma(self, cpu),
-        }
+        self.nt = GeneralPurposeRegister()
+        self.at = GeneralPurposeRegister()
+        self.pt = GeneralPurposeRegister()
+        self.fv = GeneralPurposeRegister()
+        self.fh = GeneralPurposeRegister()
+        self.vt = GeneralPurposeRegister()
+        self.ht = GeneralPurposeRegister()
+        self.v = GeneralPurposeRegister()
+        self.h = GeneralPurposeRegister()
+        self.s = GeneralPurposeRegister()
+        self.par = GeneralPurposeRegister()
+        self.ar = GeneralPurposeRegister()
+        self.ppuctrl = PpuCtrl()
+        self.ppumask = PpuMask()
+        self.ppustatus = PpuStatus()
+        self.ppuscroll = PpuScroll(self)
+        self.ppuaddr = PpuAddr()
+        self.ppudata = PpuData(self)
+        self.oamaddr = OamAddr()
+        self.oamdata = OamData(self)
+        self.oamdma = OamDma(self, cpu)
 
         self.register_set = PpuRegisterSet(self)
 
@@ -56,42 +54,6 @@ class Ppu(Processor):
         self.oam = Ram(256)
 
         self.video = Television()
-
-    @property
-    def ppuctrl(self):
-        return self.registers['ppuctrl']
-
-    @property
-    def ppumask(self):
-        return self.registers['ppumask']
-
-    @property
-    def ppustatus(self):
-        return self.registers['ppustatus']
-
-    @property
-    def oamaddr(self):
-        return self.registers['oamaddr']
-
-    @property
-    def oamdata(self):
-        return self.registers['oamdata']
-
-    @property
-    def oamdma(self):
-        return self.registers['oamdma']
-
-    @property
-    def ppuscroll(self):
-        return self.registers['ppuscroll']
-
-    @property
-    def ppuaddr(self):
-        return self.registers['ppuaddr']
-
-    @property
-    def ppudata(self):
-        return self.registers['ppudata']
 
     def read(self, addr):
         return self.bus.read(addr)

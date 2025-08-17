@@ -1,3 +1,4 @@
+from .addressing_mode import AddressingMode
 from .absolute import AbsoluteAddressingMode
 from .absolute_x import AbsoluteXAddressingMode
 from .absolute_y import AbsoluteYAddressingMode
@@ -31,6 +32,8 @@ class AddressingModeFactory:
     }
 
     @classmethod
-    def create(cls, name):
+    def create(cls, name: str) -> AddressingMode | None:
         if name.lower() in cls.classes:
             return cls.classes[name.lower()]()
+        else:
+            return None

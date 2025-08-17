@@ -1,5 +1,6 @@
 from .addressing_modes import AddressingMode
 from .addressing_modes.relative import RelativeAddressingMode
+from .. import Cpu
 
 
 class Instruction:
@@ -22,11 +23,11 @@ class Instruction:
     def size(self) -> int:
         return self.addressing_mode.instruction_size
 
-    def read_source(self, processor):
-        return self.addressing_mode.read_source(processor, self.parameter)
+    def read_source(self, cpu: Cpu) -> int:
+        return self.addressing_mode.read_source(cpu, self.parameter)
 
-    def write_result(self, processor, value):
-        self.addressing_mode.write_result(processor, self.parameter, value)
+    def write_result(self, cpu: Cpu, value: int) -> None:
+        self.addressing_mode.write_result(cpu, self.parameter, value)
 
     @property
     def cycles(self) -> int:
@@ -39,5 +40,5 @@ class Instruction:
 
         return total_cycles
 
-    def execute(self, processor) -> None:
+    def execute(self, cpu: Cpu) -> None:
         raise NotImplementedError

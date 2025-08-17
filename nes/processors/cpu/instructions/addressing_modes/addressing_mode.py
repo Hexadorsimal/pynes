@@ -1,22 +1,25 @@
+from nes.processors.cpu import Cpu
+
+
 class AddressingMode:
     @property
-    def instruction_size(self):
+    def instruction_size(self) -> int:
         raise NotImplementedError
 
     @property
-    def parameter_size(self):
+    def parameter_size(self) -> int:
         return self.instruction_size - 1
 
-    def calculate_address(self, processor, parameter):
+    def calculate_address(self, cpu: Cpu, parameter):
         raise NotImplementedError
 
-    def read_source(self, processor, parameter):
-        addr = self.calculate_address(processor, parameter)
-        return processor.read(addr)
+    def read_source(self, cpu: Cpu, parameter):
+        addr = self.calculate_address(cpu, parameter)
+        return cpu.read(addr)
 
-    def write_result(self, processor, parameter, value):
-        addr = self.calculate_address(processor, parameter)
-        processor.write(addr, value)
+    def write_result(self, cpu: Cpu, parameter, value) -> None:
+        addr = self.calculate_address(cpu, parameter)
+        cpu.write(addr, value)
 
     @staticmethod
     def pages_differ(a, b):

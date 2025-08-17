@@ -11,55 +11,41 @@ class Nes:
     def __init__(self, config: dict):
         self.master_clock = 0
         self.cartridge = None
-        self.buses = {
-            'cpu': Bus(),
-            'ppu': Bus(),
-        }
 
-        cpu = Cpu(self.buses['cpu'])
-        ppu = Ppu(self.buses['ppu'], cpu, config['ppu'])
+        self.cpu_bus = Bus()
+        self.ppu_bus = Bus()
 
-        self.processors = {
-            'ppu': ppu,
-            # 'cpu': cpu,
-        }
+        self.cpu = Cpu(self.cpu_bus)
+        self.ppu = Ppu(self.ppu_bus, self.cpu, config['ppu'])
 
         if config['television_standard'] == 'ntsc':
             self.clock_dividers = {'cpu': 12, 'ppu': 4, 'apu': 1}
         elif config['television_standard'] == 'pal':
             self.clock_dividers = {'cpu': 16, 'ppu': 5, 'apu': 1}
 
-        self.buses['ppu'].attach_device('Nametable Ram', Ram(0x1000), addr=0x2000, size=0x1F00)
-        self.buses['ppu'].attach_device('Palette Ram', PaletteRam(), addr=0x3F00, size=0x100)
+        self.ppu_bus.attach_device('Nametable Ram', Ram(0x1000), addr=0x2000, size=0x1F00)
+        self.ppu_bus.attach_device('Palette Ram', PaletteRam(), addr=0x3F00, size=0x100)
 
-        self.buses['cpu'].attach_device('RAM', Ram(0x0800), addr=0x0000, size=0x2000)
-        self.buses['cpu'].attach_device('PPU Registers', self.processors['ppu'].register_set, addr=0x2000, size=0x2000)
-        self.buses['cpu'].attach_device('APU/IO Registers', ApuIoRegisterSet(ppu), addr=0x4000, size=0x0020)
+        self.cpu_bus.attach_device('RAM', Ram(0x0800), addr=0x0000, size=0x2000)
+        self.cpu_bus.attach_device('PPU Registers', self.ppu.register_set, addr=0x2000, size=0x2000)
+        self.cpu_bus.attach_device('APU/IO Registers', ApuIoRegisterSet(self.ppu), addr=0x4000, size=0x0020)
 
         self.screen = None
 
-    @property
-    def ppu(self):
-        return self.processors['ppu']
-
-    @property
-    def cpu(self):
-        return self.processors['cpu']
-
     def insert_cartridge(self, cartridge):
         self.cartridge = cartridge
-        self.buses['cpu'].attach_device('Cart Bus (CPU)', cartridge.buses['cpu'], addr=0x6000, size=0xA000)
-        self.buses['ppu'].attach_device('Cart Bus (PPU)', cartridge.buses['ppu'], addr=0x0000, size=0x2000)
+        self.cpu_bus.attach_device('Cart Bus (CPU)', cartridge.buses['cpu'], addr=0x6000, size=0xA000)
+        self.ppu_bus.attach_device('Cart Bus (PPU)', cartridge.buses['ppu'], addr=0x0000, size=0x2000)
 
     def remove_cartridge(self):
-        for bus in ['cpu', 'ppu']:
-            self.buses[bus].detach_device(self.cartridge.buses[bus])
+        self.ppu_bus.detach_device(self.cartridge.buses['ppu'])
+        self.cpu_bus.detach_device(self.cartridge.buses['cpu'])
 
         self.cartridge = None
 
     def startup(self):
-        for processor in self.processors.values():
-            processor.power_on()
+        self.cpu.power_on()
+        self.ppu.power_on()
 
     def main_loop(self):
         done = False
@@ -69,7 +55,7 @@ class Nes:
                 if event.type == pygame.QUIT:
                     done = True
 
-            for processor_name, processor in self.processors.items():
+            for processor_name, processor in [('cpu', self.cpu), ('ppu', self.ppu)]:
                 divider = self.clock_dividers[processor_name]
                 if self.master_clock % divider == 0:
                     processor.tick()
@@ -77,5 +63,5 @@ class Nes:
             self.master_clock += 1
 
     def shutdown(self):
-        for processor in self.processors.values():
-            processor.power_off()
+        self.ppu.power_off()
+        self.cpu.power_off()
