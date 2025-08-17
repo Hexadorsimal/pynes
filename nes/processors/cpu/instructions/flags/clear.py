@@ -1,6 +1,22 @@
-from .flag import FlagInstruction
+from .. import Instruction
+from ... import Cpu
 
 
-class ClearInstruction(FlagInstruction):
-    def execute(self, processor):
-        processor.p.flags[self.flag_name].clear()
+class Clc(Instruction):
+    def execute(self, cpu: Cpu) -> None:
+        cpu.p.c = False
+
+
+class Cld(Instruction):
+    def execute(self, cpu: Cpu) -> None:
+        cpu.p.d = False
+
+
+class Cli(Instruction):
+    def execute(self, cpu: Cpu) -> None:
+        cpu.p.i = False
+
+
+class Clv(Instruction):
+    def execute(self, cpu: Cpu) -> None:
+        cpu.p.v = False
