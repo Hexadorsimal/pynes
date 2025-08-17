@@ -1,30 +1,21 @@
 from .decoder import Decoder
 from ..processor import Processor
 from .instructions import InstructionFactory
-from nes.processors.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, FlagRegister
-from nes.processors.registers.flags import Flag, NegativeFlag, ZeroFlag, OverflowFlag, CarryFlag
+from nes.processors.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, ProcessorStatusRegister
+from nes.bus import Bus
 
 
 class Cpu(Processor):
-    def __init__(self, bus=None):
-        super().__init__(bus)
-        self.registers = {
-            'pc': ProgramCounter(),
-            'a': GeneralPurposeRegister(),
-            'x': GeneralPurposeRegister(),
-            'y': GeneralPurposeRegister(),
-            'p': FlagRegister({
-                'n': NegativeFlag(mask=0x80),
-                'v': OverflowFlag(mask=0x40),
-                'x': Flag(mask=0x20),
-                'b': Flag(mask=0x10),
-                'd': Flag(mask=0x08),
-                'i': Flag(mask=0x04),
-                'z': ZeroFlag(mask=0x02),
-                'c': CarryFlag(mask=0x01),
-            }),
-            's': StackPointer(),
-        }
+    def __init__(self, bus: Bus = None):
+        super().__init__()
+        self.pc = ProgramCounter()
+        self.a = GeneralPurposeRegister()
+        self.x = GeneralPurposeRegister()
+        self.y = GeneralPurposeRegister()
+        self.p = ProcessorStatusRegister()
+        self.s = StackPointer()
+
+        self.bus = bus
 
         self.decoder = Decoder()
         self.cycles = 0
@@ -33,51 +24,27 @@ class Cpu(Processor):
         self.reset_vector = 0xfffc
         self.interrupt_vector = 0xfffe
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return 'RICOH 2A03'
 
-    @property
-    def pc(self):
-        return self.registers['pc']
-
-    @property
-    def a(self):
-        return self.registers['a']
-
-    @property
-    def x(self):
-        return self.registers['x']
-
-    @property
-    def y(self):
-        return self.registers['y']
-
-    @property
-    def p(self):
-        return self.registers['p']
-
-    @property
-    def s(self):
-        return self.registers['s']
-
-    def power_on(self):
+    def power_on(self) -> None:
         self.pc.value = 0xC000
         self.s.value = 0xFD
         self.p.value = 0x24
 
-    def nmi(self):
+    def nmi(self) -> None:
         jmpi = InstructionFactory.create('jmp', 'indirect', self.nmi_vector)
         jmpi.execute(self)
 
-    def reset(self):
+    def reset(self) -> None:
         jmpi = InstructionFactory.create('jmp', 'indirect', self.reset_vector)
         jmpi.execute(self)
 
-    def irq(self):
+    def irq(self) -> None:
         jmpi = InstructionFactory.create('jmp', 'indirect', self.interrupt_vector)
         jmpi.execute(self)
 
-    def tick(self):
+    def tick(self) -> None:
         opcode = self.fetch()
         instruction = self.decode(opcode)
 

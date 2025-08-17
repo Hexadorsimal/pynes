@@ -12,14 +12,14 @@ class Instruction:
         self.page_crossed = False
         self.branch_taken = False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         s = f'{self.__class__.__name__.upper()} ({self.addressing_mode})'
         if self.parameter is not None:
             s += f' {self.parameter:#X}'
         return s
 
     @property
-    def size(self):
+    def size(self) -> int:
         return self.addressing_mode.instruction_size
 
     def read_source(self, processor):
@@ -39,5 +39,5 @@ class Instruction:
 
         return total_cycles
 
-    def execute(self, processor):
+    def execute(self, processor) -> None:
         raise NotImplementedError

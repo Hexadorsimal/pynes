@@ -8,7 +8,7 @@ from .bus.devices import ApuIoRegisterSet
 
 
 class Nes:
-    def __init__(self, config):
+    def __init__(self, config: dict):
         self.master_clock = 0
         self.cartridge = None
         self.buses = {

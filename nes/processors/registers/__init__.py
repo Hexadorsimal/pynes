@@ -1,4 +1,4 @@
-from .flag_register import FlagRegister
+from .processor_status_register import ProcessorStatusRegister
 from .general_purpose_register import GeneralPurposeRegister
 from .program_counter import ProgramCounter
 from .register import Register

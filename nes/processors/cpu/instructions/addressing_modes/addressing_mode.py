@@ -1,7 +1,4 @@
 class AddressingMode:
-    def __repr__(self):
-        return self.__class__.__name__.replace('AddressingMode', '')
-
     @property
     def instruction_size(self):
         raise NotImplementedError
