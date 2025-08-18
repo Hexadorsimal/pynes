@@ -1,4 +1,4 @@
-from .register import Register
+from .general_purpose_register import Register
 
 
 class ProcessorStatusRegister(Register):
@@ -18,8 +18,7 @@ class ProcessorStatusRegister(Register):
             for letter in 'nvxbdizc'
         ]).upper()
 
-    @property
-    def value(self) -> int:
+    def read(self) -> int:
         v = 0
 
         if self.n:
@@ -48,8 +47,7 @@ class ProcessorStatusRegister(Register):
 
         return v
 
-    @value.setter
-    def value(self, value) -> None:
+    def write(self, value) -> None:
         self.n = value & 0x80
         self.v = value & 0x40
         self.x = value & 0x20

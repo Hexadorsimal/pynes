@@ -2,43 +2,29 @@ from .register import Register
 
 
 class GeneralPurposeRegister(Register):
-    bits = 8
     mask = 0xff
 
-    def __init__(self, value=0):
-        self._value = value
+    def __init__(self, value: int = 0):
+        self.value = value
 
-    def __repr__(self):
-        return f'{self._value:#X}'
+    def read(self) -> int:
+        return self.value
 
-    @property
-    def hi(self):
-        raise IndexError('This register does not have an upper byte')
+    def write(self, value: int) -> None:
+        self.value = value
 
-    @property
-    def lo(self):
-        return self._value & 0xff
+    def __add__(self, other: int) -> int:
+        return (self.value + other) & self.mask
 
-    @property
-    def value(self):
-        return self._value
+    def __sub__(self, other: int) -> int:
+        return (self.value - other) & self.mask
 
-    @value.setter
-    def value(self, value):
-        self._value = value
-
-    def __add__(self, other):
-        return (self._value + other) & self.mask
-
-    def __sub__(self, other):
-        return (self._value - other) & self.mask
-
-    def __iadd__(self, other):
-        self._value += other
-        self._value &= self.mask
+    def __iadd__(self, other: int) -> 'GeneralPurposeRegister':
+        self.value += other
+        self.value &= self.mask
         return self
 
-    def __isub__(self, other):
-        self._value -= other
-        self._value &= self.mask
+    def __isub__(self, other: int) -> 'GeneralPurposeRegister':
+        self.value -= other
+        self.value &= self.mask
         return self

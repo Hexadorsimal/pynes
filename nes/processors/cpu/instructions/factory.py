@@ -12,7 +12,6 @@ from .nop import Nop
 from .stack import Pha, Php, Pla, Plp
 from .subroutine import Jsr, Rts
 from .transfer import Tax, Tay, Tsx, Txa, Txs, Tya
-from .. import Cpu
 
 
 class InstructionFactory:
@@ -34,26 +33,8 @@ class InstructionFactory:
         class_map[cls.__name__.lower()] = cls
 
     @classmethod
-    def create(cls, cpu: Cpu, name: str, addressing_mode: AddressingMode, cycles=0, page_cycles=0, parameter=None) -> Instruction | None:
-        addressing_mode = AddressingModeFactory.create(addressing_mode)
-
-        if not parameter:
-            parameter = cls.read_parameter(cpu, addressing_mode.parameter_size)
-
+    def create(cls, name: str, addressing_mode: AddressingMode, cycles=0, page_cycles=0, parameter=None) -> Instruction | None:
         if name.lower() in cls.class_map:
             return cls.class_map[name.lower()](addressing_mode, cycles, page_cycles, parameter)
         else:
             return None
-
-    @staticmethod
-    def read_parameter(cpu: Cpu, parameter_size: int) -> int:
-        lo = 0
-        hi = 0
-
-        if parameter_size > 0:
-            lo = cpu.read(cpu.pc + 1)
-
-        if parameter_size > 1:
-            hi = cpu.read(cpu.pc + 2)
-
-        return (hi << 8) | lo

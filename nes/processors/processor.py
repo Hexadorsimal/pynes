@@ -6,7 +6,6 @@ class Processor:
         self.bus = bus
         self.clock = 0
 
-
     def power_on(self) -> None:
         self.clock = 0
 

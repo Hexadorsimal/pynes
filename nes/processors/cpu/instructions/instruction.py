@@ -1,44 +1,33 @@
-from .addressing_modes import AddressingMode
+from dataclasses import dataclass
+
 from .addressing_modes.relative import RelativeAddressingMode
 from .. import Cpu
+from ..decoder import Opcode
 
 
+@dataclass
+class ExecutionResult:
+    base_cycles: int
+    total_cycles: int
+    page_crossed: bool
+    branch_taken: bool
+
+
+@dataclass
 class Instruction:
-    def __init__(self, addressing_mode: AddressingMode, cycles: int = 0, page_cycles: int = 0, parameter: int = 0):
-        self.addressing_mode = addressing_mode
-        self.base_cycles = cycles
-        self.page_cycles = page_cycles
+    opcode: Opcode
+    data: bytes
 
-        self.parameter = parameter
-        self.page_crossed = False
-        self.branch_taken = False
-
-    def __repr__(self) -> str:
-        s = f'{self.__class__.__name__.upper()} ({self.addressing_mode})'
-        if self.parameter is not None:
-            s += f' {self.parameter:#X}'
-        return s
-
-    @property
-    def size(self) -> int:
-        return self.addressing_mode.instruction_size
-
-    def read_source(self, cpu: Cpu) -> int:
-        return self.addressing_mode.read_source(cpu, self.parameter)
-
-    def write_result(self, cpu: Cpu, value: int) -> None:
-        self.addressing_mode.write_result(cpu, self.parameter, value)
-
-    @property
-    def cycles(self) -> int:
-        total_cycles = self.base_cycles
-        if isinstance(self.addressing_mode, RelativeAddressingMode) and self.branch_taken:
-            total_cycles += 1
-
-        if self.page_crossed:
-            total_cycles += self.page_cycles
-
-        return total_cycles
-
-    def execute(self, cpu: Cpu) -> None:
+    def execute(self, cpu: Cpu) -> ExecutionResult:
         raise NotImplementedError
+
+
+def calculate_cycles(opcode: Opcode, result: ExecutionResult) -> int:
+    total_cycles = opcode.base_cycles
+    if isinstance(opcode.addressing_mode, RelativeAddressingMode) and result.branch_taken:
+        total_cycles += 1
+
+    if result.page_crossed:
+        total_cycles += opcode.page_cycles
+
+    return total_cycles

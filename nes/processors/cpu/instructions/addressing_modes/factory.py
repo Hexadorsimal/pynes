@@ -14,26 +14,25 @@ from .zero_page_x import ZeroPageXAddressingMode
 from .zero_page_y import ZeroPageYAddressingMode
 
 
-class AddressingModeFactory:
-    classes = {
-        'absolute': AbsoluteAddressingMode,
-        'absolutex': AbsoluteXAddressingMode,
-        'absolutey': AbsoluteYAddressingMode,
-        'accumulator': AccumulatorAddressingMode,
-        'immediate': ImmediateAddressingMode,
-        'implied': ImpliedAddressingMode,
-        'indexedindirect': IndexedIndirectAddressingMode,
-        'indirect': IndirectAddressingMode,
-        'indirectindexed': IndirectIndexedAddressingMode,
-        'relative': RelativeAddressingMode,
-        'zeropage': ZeroPageAddressingMode,
-        'zeropagex': ZeroPageXAddressingMode,
-        'zeropagey': ZeroPageYAddressingMode,
-    }
+addressing_modes = {
+    'absolute': AbsoluteAddressingMode(),
+    'absolutex': AbsoluteXAddressingMode(),
+    'absolutey': AbsoluteYAddressingMode(),
+    'accumulator': AccumulatorAddressingMode(),
+    'immediate': ImmediateAddressingMode(),
+    'implied': ImpliedAddressingMode(),
+    'indexedindirect': IndexedIndirectAddressingMode(),
+    'indirect': IndirectAddressingMode(),
+    'indirectindexed': IndirectIndexedAddressingMode(),
+    'relative': RelativeAddressingMode(),
+    'zeropage': ZeroPageAddressingMode(),
+    'zeropagex': ZeroPageXAddressingMode(),
+    'zeropagey': ZeroPageYAddressingMode(),
+}
 
-    @classmethod
-    def create(cls, name: str) -> AddressingMode | None:
-        if name.lower() in cls.classes:
-            return cls.classes[name.lower()]()
-        else:
-            return None
+
+def get_addressing_mode(name: str) -> AddressingMode:
+    if name.lower() in addressing_modes:
+        return addressing_modes[name.lower()]
+
+    raise ValueError(name)

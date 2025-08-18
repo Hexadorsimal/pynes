@@ -1,4 +1,5 @@
 from .decoder import Decoder
+from .instructions.addressing_modes.factory import get_addressing_mode
 from ..processor import Processor
 from .instructions import InstructionFactory, Instruction
 from nes.processors.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, ProcessorStatusRegister
@@ -22,51 +23,45 @@ class Cpu(Processor):
         self.reset_vector = 0xfffc
         self.interrupt_vector = 0xfffe
 
-    def __repr__(self) -> str:
-        return 'RICOH 2A03'
-
     def power_on(self) -> None:
         self.pc.value = 0xC000
         self.s.value = 0xFD
         self.p.value = 0x24
 
     def nmi(self) -> None:
-        jmpi = InstructionFactory.create('jmp', 'indirect', self.nmi_vector)
+        opcode = self.decoder.decode(108)
+        jmpi = Instruction(opcode, bytes(self.nmi_vector))
         jmpi.execute(self)
 
     def reset(self) -> None:
-        jmpi = InstructionFactory.create('jmp', 'indirect', self.reset_vector)
+        opcode = self.decoder.decode(108)
+        jmpi = Instruction(opcode, bytes(self.reset_vector))
         jmpi.execute(self)
 
     def irq(self) -> None:
-        jmpi = InstructionFactory.create('jmp', 'indirect', self.interrupt_vector)
+        opcode = self.decoder.decode(108)
+        jmpi = Instruction(opcode, bytes(self.interrupt_vector))
         jmpi.execute(self)
 
     def tick(self) -> None:
-        opcode = self.fetch()
-        instruction = self.decode(opcode)
-
-        print(f'{self.pc.value:X}  {opcode:X} {instruction}')
-
-        self.pc.value += instruction.size
-        self.execute(instruction)
+        instruction = self.fetch_instruction()
+        instruction.execute(self)
         super().tick()
 
-    def fetch(self) -> int:
-        return self.bus.read(self.pc.value)
+    def fetch_instruction(self) -> Instruction:
+        byte = self.fetch_byte()
+        data = bytearray(byte)
+        opcode = self.decoder.decode(byte)
 
-    def decode(self, opcode: int) -> Instruction:
-        info = self.decoder.decode(opcode)
-        instruction = InstructionFactory.create(self,
-                                                info['name'],
-                                                info['addressing_mode'],
-                                                info['cycles'],
-                                                info['page_cycles'])
-        return instruction
+        for i in range(opcode.addressing_mode.parameter_size):
+            data.append(self.fetch_byte())
 
-    def execute(self, instruction: Instruction) -> None:
-        instruction.execute(self)
-        self.cycles += instruction.cycles
+        return Instruction(opcode, bytes(data))
+
+    def fetch_byte(self, offset: int = 0) -> int:
+        byte = self.bus.read(self.pc.read_address() + offset)
+        self.pc += 1
+        return byte
 
     def read(self, addr: int) -> int:
         return self.bus.read(addr)
@@ -75,9 +70,9 @@ class Cpu(Processor):
         self.bus.write(addr, value)
 
     def push(self, value: int) -> None:
-        self.bus.write(self.s.pointer, value)
+        self.bus.write(self.s.read_address(), value)
         self.s.value -= 1
 
     def pull(self):
         self.s.value += 1
-        return self.bus.read(self.s.pointer)
+        return self.bus.read(self.s.read_address())

@@ -1,4 +1,17 @@
+from dataclasses import dataclass
 from sqlite3 import Connection, Row
+
+from nes.processors.cpu.instructions import AddressingMode
+
+
+@dataclass
+class Opcode:
+    opcode: int
+    name: str
+    addressing_mode: AddressingMode
+    base_cycles: int
+    page_cycles: int
+    hex: str
 
 
 class Decoder:
@@ -9,11 +22,12 @@ class Decoder:
     def __del__(self):
         self.conn.close()
 
-    def decode(self, opcode):
+    def decode(self, byte: int) -> Opcode:
         c = self.conn.cursor()
-        c.execute('select * from instruction where opcode=?', [opcode])
+        c.execute('select * from instruction where opcode=?', [byte])
         row = c.fetchone()
         if row:
-            return dict(zip(row.keys(), row))
+            result = dict(zip(row.keys(), row))
+            return Opcode(**result)
         else:
-            raise NotImplementedError('Undocumented Opcode: ' + str(opcode))
+            raise NotImplementedError(f'Undocumented Opcode: {byte}')

@@ -1,5 +1,5 @@
-from .processor_status_register import ProcessorStatusRegister
 from .general_purpose_register import GeneralPurposeRegister
+from .processor_status_register import ProcessorStatusRegister
 from .program_counter import ProgramCounter
 from .register import Register
 from .stack_pointer import StackPointer

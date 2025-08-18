@@ -17,3 +17,4 @@ class ImmediateAddressingMode(AddressingMode):
 
     def write_result(self, cpu: Cpu, parameter: int, value: int) -> Never:
         raise RuntimeError('This should never be called')
+

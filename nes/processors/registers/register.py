@@ -1,8 +1,6 @@
 class Register:
-    @property
-    def value(self) -> int:
-        raise NotImplementedError
+    def read(self):
+        raise NotImplementedError()
 
-    @value.setter
-    def value(self, value) -> None:
-        raise NotImplementedError
+    def write(self, value):
+        raise NotImplementedError()
