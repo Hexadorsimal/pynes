@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from nes.processors.cpu.addressing_modes import RelativeAddressingMode
 from .. import Cpu
 from ..decoder import Opcode
 
@@ -16,7 +15,7 @@ class ExecutionResult:
 @dataclass
 class Instruction:
     opcode: Opcode
-    data: bytes
+    params: list[int]
 
     def execute(self, cpu: Cpu) -> ExecutionResult:
         raise NotImplementedError
@@ -24,10 +23,16 @@ class Instruction:
 
 def calculate_cycles(opcode: Opcode, result: ExecutionResult) -> int:
     total_cycles = opcode.base_cycles
-    if isinstance(opcode.addressing_mode, RelativeAddressingMode) and result.branch_taken:
+    branch_instructions = ['BCC', 'BCS', 'BNE', 'BEQ', 'BPL', 'BMI', 'BVC', 'BVS']
+
+    if opcode.name in branch_instructions and result.branch_taken:
         total_cycles += 1
 
     if result.page_crossed:
         total_cycles += opcode.page_cycles
 
     return total_cycles
+
+
+def pages_differ(a, b):
+    return a & 0xFF00 != b & 0xFF00

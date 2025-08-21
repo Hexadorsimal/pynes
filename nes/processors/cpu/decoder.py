@@ -1,17 +1,15 @@
 from dataclasses import dataclass
 from sqlite3 import Connection, Row
 
-from nes.processors.cpu.instructions import AddressingMode
-
 
 @dataclass
 class Opcode:
     opcode: int
     name: str
-    addressing_mode: AddressingMode
+    addressing_mode: str
     base_cycles: int
     page_cycles: int
-    hex: str
+    param_count: int
 
 
 class Decoder:
@@ -24,7 +22,19 @@ class Decoder:
 
     def decode(self, byte: int) -> Opcode:
         c = self.conn.cursor()
-        c.execute('select * from instruction where opcode=?', [byte])
+
+        query = (
+            'SELECT opcode,'
+            '       Instruction.name,'
+            '       addressing_mode,'
+            '       base_cycles,'
+            '       page_cycles,'
+            '       param_count '
+            '  FROM Instruction JOIN AddressingMode ON Instruction.address_mode = AddressingMode.name '
+            ' WHERE opcode=?'
+        )
+
+        c.execute(query, [byte])
         row = c.fetchone()
         if row:
             result = dict(zip(row.keys(), row))

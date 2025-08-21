@@ -19,28 +19,29 @@ class Cpu(Processor):
         self.decoder = Decoder()
         self.cycles = 0
 
-        self.nmi_vector = 0xfffa
-        self.reset_vector = 0xfffc
-        self.interrupt_vector = 0xfffe
+        self.nmi_vector = [0xff, 0xfa]
+        self.reset_vector = [0xff, 0xfc]
+        self.interrupt_vector = [0xff, 0xfe]
 
     def power_on(self) -> None:
-        self.pc.value = 0xC000
-        self.s.value = 0xFD
-        self.p.value = 0x24
+        self.pc.hi.write(0xc0)
+        self.pc.lo.write(0x00)
+        self.s.write(0xfd)
+        self.p.write(0x24)
 
     def nmi(self) -> None:
-        opcode = self.decoder.decode(108)
-        jmpi = Instruction(opcode, bytes(self.nmi_vector))
+        opcode = self.decoder.decode(0x6c)
+        jmpi = Instruction(opcode, self.nmi_vector)
         jmpi.execute(self)
 
     def reset(self) -> None:
-        opcode = self.decoder.decode(108)
-        jmpi = Instruction(opcode, bytes(self.reset_vector))
+        opcode = self.decoder.decode(0x6c)
+        jmpi = Instruction(opcode, self.reset_vector)
         jmpi.execute(self)
 
     def irq(self) -> None:
-        opcode = self.decoder.decode(108)
-        jmpi = Instruction(opcode, bytes(self.interrupt_vector))
+        opcode = self.decoder.decode(0x6c)
+        jmpi = Instruction(opcode, self.interrupt_vector)
         jmpi.execute(self)
 
     def tick(self) -> None:
@@ -50,13 +51,13 @@ class Cpu(Processor):
 
     def fetch_instruction(self) -> Instruction:
         byte = self.fetch_byte()
-        data = bytearray(byte)
         opcode = self.decoder.decode(byte)
+        params = []
 
-        for i in range(opcode.addressing_mode.parameter_size):
-            data.append(self.fetch_byte())
+        for i in range(opcode.param_count):
+            params.append(self.fetch_byte())
 
-        return Instruction(opcode, bytes(data))
+        return Instruction(opcode, params)
 
     def fetch_byte(self) -> int:
         byte = self.bus.read(self.pc.read_address())

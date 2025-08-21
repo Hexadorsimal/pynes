@@ -5,8 +5,8 @@ from ... import Cpu
 
 class IncrementInstruction(Instruction):
     def increment_register(self, cpu: Cpu, reg: Register, amount: int = 1) -> None:
-        reg.value += amount
-        self.update_flags(cpu, reg.value)
+        reg += amount
+        self.update_flags(cpu, reg.read())
 
     def increment_memory(self, cpu: Cpu, amount: int = 1) -> None:
         value = self.read_source(cpu)
