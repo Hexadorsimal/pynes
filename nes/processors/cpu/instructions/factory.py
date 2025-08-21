@@ -1,5 +1,4 @@
-from . import AddressingMode, Instruction
-from nes.processors.cpu.addressing_modes import AddressingModeFactory
+from . import Instruction
 from .arithmetic import Adc, And, Asl, Eor, Lsr, Ora, Rol, Ror, Sbc
 from .branch import Bcc, Bcs, Beq, Bmi, Bne, Bpl, Bvc, Bvs
 from .compare import Bit, Cmp, Cpx, Cpy
@@ -12,6 +11,8 @@ from .nop import Nop
 from .stack import Pha, Php, Pla, Plp
 from .subroutine import Jsr, Rts
 from .transfer import Tax, Tay, Tsx, Txa, Txs, Tya
+from ..addressing_modes import get_parameter_reader, get_result_writer
+from ..decoder import Opcode
 
 
 class InstructionFactory:
@@ -33,8 +34,10 @@ class InstructionFactory:
         class_map[cls.__name__.lower()] = cls
 
     @classmethod
-    def create(cls, name: str, addressing_mode: AddressingMode, cycles=0, page_cycles=0, parameter=None) -> Instruction | None:
-        if name.lower() in cls.class_map:
-            return cls.class_map[name.lower()](addressing_mode, cycles, page_cycles, parameter)
+    def create(cls, opcode: Opcode, params: list[int]) -> Instruction | None:
+        if opcode.name.lower() in cls.class_map:
+            reader = get_parameter_reader(opcode.addressing_mode)
+            writer = get_result_writer(opcode.addressing_mode)
+            return cls.class_map[opcode.name.lower()](opcode, params, reader, writer)
         else:
             return None

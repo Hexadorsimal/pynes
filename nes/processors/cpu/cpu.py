@@ -1,7 +1,6 @@
 from .decoder import Decoder
-from nes.processors.cpu.addressing_modes import get_parameter_reader, get_result_writer
 from ..processor import Processor
-from .instructions import Instruction
+from .instructions import Instruction, InstructionFactory
 from nes.processors.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, ProcessorStatusRegister
 from nes.bus import Bus
 
@@ -31,17 +30,17 @@ class Cpu(Processor):
 
     def nmi(self) -> None:
         opcode = self.decoder.decode(0x6c)
-        jmpi = Instruction(opcode, self.nmi_vector)
+        jmpi = InstructionFactory.create(opcode, self.nmi_vector)
         jmpi.execute(self)
 
     def reset(self) -> None:
         opcode = self.decoder.decode(0x6c)
-        jmpi = Instruction(opcode, self.reset_vector)
+        jmpi = InstructionFactory.create(opcode, self.reset_vector)
         jmpi.execute(self)
 
     def irq(self) -> None:
         opcode = self.decoder.decode(0x6c)
-        jmpi = Instruction(opcode, self.interrupt_vector)
+        jmpi = InstructionFactory.create(opcode, self.interrupt_vector)
         jmpi.execute(self)
 
     def tick(self) -> None:
@@ -57,10 +56,7 @@ class Cpu(Processor):
         for i in range(opcode.param_count):
             params.append(self.fetch_byte())
 
-        reader = get_parameter_reader(opcode.addressing_mode)
-        writer = get_result_writer(opcode.addressing_mode)
-
-        return Instruction(opcode, params, reader, writer)
+        return InstructionFactory.create(opcode, params)
 
     def fetch_byte(self) -> int:
         byte = self.bus.read(self.pc.read_address())
@@ -75,8 +71,8 @@ class Cpu(Processor):
 
     def push(self, value: int) -> None:
         self.bus.write(self.s.read_address(), value)
-        self.s.value -= 1
+        self.s -= 1
 
     def pull(self):
-        self.s.value += 1
+        self.s += 1
         return self.bus.read(self.s.read_address())
