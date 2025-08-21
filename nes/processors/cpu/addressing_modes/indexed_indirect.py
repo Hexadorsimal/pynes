@@ -1,5 +1,5 @@
 from .addressing_mode import AddressingMode
-from ... import Cpu
+from nes.processors.cpu import Cpu
 
 
 class IndexedIndirectAddressingMode(AddressingMode):

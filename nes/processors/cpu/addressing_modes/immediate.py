@@ -1,7 +1,7 @@
 from typing import Never
 
 from .addressing_mode import AddressingMode
-from ... import Cpu
+from nes.processors.cpu import Cpu
 
 
 class ImmediateAddressingMode(AddressingMode):

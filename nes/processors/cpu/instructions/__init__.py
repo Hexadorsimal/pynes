@@ -1,3 +1,3 @@
 from .instruction import Instruction
 from .factory import InstructionFactory
-from .addressing_modes import AddressingMode, AddressingModeFactory
+from nes.processors.cpu.addressing_modes import AddressingModeFactory

@@ -1,7 +1,7 @@
 from .decoder import Decoder
-from .instructions.addressing_modes.factory import get_addressing_mode
+from nes.processors.cpu.addressing_modes import get_addressing_mode
 from ..processor import Processor
-from .instructions import InstructionFactory, Instruction
+from .instructions import Instruction
 from nes.processors.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, ProcessorStatusRegister
 from nes.bus import Bus
 
@@ -58,8 +58,8 @@ class Cpu(Processor):
 
         return Instruction(opcode, bytes(data))
 
-    def fetch_byte(self, offset: int = 0) -> int:
-        byte = self.bus.read(self.pc.read_address() + offset)
+    def fetch_byte(self) -> int:
+        byte = self.bus.read(self.pc.read_address())
         self.pc += 1
         return byte
 

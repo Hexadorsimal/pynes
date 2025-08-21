@@ -1,5 +1,5 @@
 from . import AddressingMode, Instruction
-from .addressing_modes import AddressingModeFactory
+from nes.processors.cpu.addressing_modes import AddressingModeFactory
 from .arithmetic import Adc, And, Asl, Eor, Lsr, Ora, Rol, Ror, Sbc
 from .branch import Bcc, Bcs, Beq, Bmi, Bne, Bpl, Bvc, Bvs
 from .compare import Bit, Cmp, Cpx, Cpy

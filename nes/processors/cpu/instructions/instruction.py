@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from .addressing_modes.relative import RelativeAddressingMode
+from nes.processors.cpu.addressing_modes import RelativeAddressingMode
 from .. import Cpu
 from ..decoder import Opcode
 
