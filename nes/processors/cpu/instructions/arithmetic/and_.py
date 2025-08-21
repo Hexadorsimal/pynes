@@ -1,11 +1,12 @@
 from ..instruction import Instruction
+from ... import Cpu
 
 
 class And(Instruction):
-    def execute(self, processor):
-        a = processor.a
-        mem = self.read_source(processor)
+    def execute(self, cpu: Cpu) -> None:
+        a = cpu.a.read()
+        mem = self.read_source(cpu)
 
         a.value &= mem
-        processor.p.z.update(a.value)
-        processor.p.n.update(a.value)
+        cpu.p.z.update(a.value)
+        cpu.p.n.update(a.value)

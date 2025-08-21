@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from .. import Cpu
+from ..addressing_modes import ParameterReader, ResultWriter
 from ..decoder import Opcode
 
 
@@ -16,6 +17,8 @@ class ExecutionResult:
 class Instruction:
     opcode: Opcode
     params: list[int]
+    reader: ParameterReader | None = None
+    writer: ResultWriter | None = None
 
     def execute(self, cpu: Cpu) -> ExecutionResult:
         raise NotImplementedError

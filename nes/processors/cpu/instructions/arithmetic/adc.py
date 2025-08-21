@@ -5,7 +5,7 @@ from ... import Cpu
 class Adc(Instruction):
     def execute(self, cpu: Cpu):
         acc = cpu.a
-        mem = self.read_source(processor)
+        mem = self.read_source(cpu)
 
         value = mem + acc
         if cpu.p.c:

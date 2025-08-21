@@ -9,4 +9,5 @@ class IndexedIndirectParameterReader(ParameterReader):
         hi_addr = (lo_addr + 1) & 0x00ff
         lo = cpu.read(lo_addr)
         hi = cpu.read(hi_addr)
-        return (hi << 8) | lo
+        addr = (hi << 8) | lo
+        return cpu.read(addr)

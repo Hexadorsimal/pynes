@@ -1,5 +1,5 @@
 from .decoder import Decoder
-from nes.processors.cpu.addressing_modes import get_addressing_mode
+from nes.processors.cpu.addressing_modes import get_parameter_reader, get_result_writer
 from ..processor import Processor
 from .instructions import Instruction
 from nes.processors.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, ProcessorStatusRegister
@@ -57,7 +57,10 @@ class Cpu(Processor):
         for i in range(opcode.param_count):
             params.append(self.fetch_byte())
 
-        return Instruction(opcode, params)
+        reader = get_parameter_reader(opcode.addressing_mode)
+        writer = get_result_writer(opcode.addressing_mode)
+
+        return Instruction(opcode, params, reader, writer)
 
     def fetch_byte(self) -> int:
         byte = self.bus.read(self.pc.read_address())
