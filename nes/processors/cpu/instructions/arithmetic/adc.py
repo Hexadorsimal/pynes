@@ -1,15 +1,16 @@
 from ..instruction import Instruction
+from ... import Cpu
 
 
 class Adc(Instruction):
-    def execute(self, processor):
-        acc = processor.a.value
+    def execute(self, cpu: Cpu):
+        acc = cpu.a
         mem = self.read_source(processor)
 
         value = mem + acc
-        if processor.p.c:
+        if cpu.p.c:
             value += 1
 
-        processor.p.z.update(value)
-        processor.p.n.update(value)
-        processor.p.v.update(not ((acc ^ mem) & 0x80) and (acc ^ value) & 0x80)
+        cpu.p.z.update(value)
+        cpu.p.n.update(value)
+        cpu.p.v.update(not ((acc ^ mem) & 0x80) and (acc ^ value) & 0x80)

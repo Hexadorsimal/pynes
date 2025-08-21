@@ -5,5 +5,5 @@ from nes.processors.cpu import Cpu
 
 class ZeroPageXParameterReader(ParameterReader):
     def read_parameter(self, cpu: Cpu, instruction: Instruction) -> int:
-        addr = (instruction.parameter + cpu.x.value) & 0x00ff
+        addr = (instruction.params[0] + cpu.x.value) & 0x00ff
         return cpu.read(addr)

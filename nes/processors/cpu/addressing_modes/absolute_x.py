@@ -1,11 +1,10 @@
-from .addressing_mode import AddressingMode
 from nes.processors.cpu import Cpu
+from .parameter_reader import ParameterReader
+from ..instructions import Instruction
 
 
-class AbsoluteXAddressingMode(AddressingMode):
-    @property
-    def instruction_size(self) -> int:
-        return 3
-
-    def calculate_address(self, cpu: Cpu, parameter: int) -> int:
-        return parameter + cpu.x.value
+class AbsoluteXParameterReader(ParameterReader):
+    def read_parameter(self, cpu: Cpu, instruction: Instruction) -> int:
+        addr = (instruction.params[0] << 8) | instruction.params[0]
+        addr += cpu.x.read()
+        return cpu.read(addr)

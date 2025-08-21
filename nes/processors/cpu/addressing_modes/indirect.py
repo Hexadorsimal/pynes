@@ -1,14 +1,11 @@
-from .addressing_mode import AddressingMode
 from nes.processors.cpu import Cpu
+from .parameter_reader import ParameterReader
+from ..instructions import Instruction
 
 
-class IndirectAddressingMode(AddressingMode):
-    @property
-    def instruction_size(self) -> int:
-        return 3
-
-    def calculate_address(self, cpu: Cpu, parameter: int) -> int:
-        lo_addr = parameter
+class IndirectParameterReader(ParameterReader):
+    def read_parameter(self, cpu: Cpu, instruction: Instruction) -> int:
+        lo_addr = instruction.params[0]
         hi_addr = (lo_addr + 1) & 0xffff
         lo = cpu.read(lo_addr)
         hi = cpu.read(hi_addr)
