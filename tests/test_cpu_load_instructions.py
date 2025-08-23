@@ -1,22 +1,40 @@
-import unittest
+import pytest
 from nes.processors.cpu import Cpu
 from nes.bus import Bus
 from nes.bus.devices.memory import Ram
+from nes.processors.cpu.decoder import Decoder
+from nes.processors.instructions import factory
 
 
-class CpuLoadInstructionsTestCase(unittest.TestCase):
-    def setUp(self):
-        bus = Bus()
-        bus.attach_device('RAM', Ram(256), 0, 256)
-        self.cpu = Cpu(bus)
-        self.cpu.write(0x0000, 0xff)
+@pytest.fixture
+def bus():
+    bus = Bus()
+    bus.attach_device('RAM', Ram(256), 0, 256)
+    return bus
 
-    def test_lda(self):
-        instruction = self.cpu.decode(0xAD)
-        self.cpu.execute(instruction)
-        self.assertEqual(self.cpu.a.value, 0xFF)
-        self.assertFalse(self.cpu.p.z)
-        self.assertTrue(self.cpu.p.n)
+@pytest.fixture
+def cpu(bus):
+    return Cpu(bus, factory)
+
+@pytest.fixture
+def decoder():
+    return Decoder()
+
+@pytest.fixture
+def lda(decoder):
+    return decoder.decode(0xAD)
+
+
+class TestCpuLoadInstructions:
+    def test_lda(self, cpu, lda):
+        cpu.write(0x0000, 0xff)
+
+        instruction = factory.create(lda, [])
+        instruction.execute(cpu)
+
+        assert cpu.a == 0xff
+        assert cpu.p.z is False
+        assert cpu.p.n is True
 
     def test_ldx(self):
         instruction = self.cpu.decode(0xAE)

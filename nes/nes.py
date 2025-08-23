@@ -6,6 +6,8 @@ from .bus import Bus
 from .bus.devices.memory import Ram
 from .bus.devices import ApuIoRegisterSet
 
+from .processors.instructions import factory
+
 
 class Nes:
     def __init__(self, config: dict):
@@ -15,7 +17,7 @@ class Nes:
         self.cpu_bus = Bus()
         self.ppu_bus = Bus()
 
-        self.cpu = Cpu(self.cpu_bus)
+        self.cpu = Cpu(self.cpu_bus, factory)
         self.ppu = Ppu(self.ppu_bus, self.cpu, config['ppu'])
 
         if config['television_standard'] == 'ntsc':

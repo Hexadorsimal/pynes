@@ -2,7 +2,7 @@ import unittest
 
 from nes.bus import Bus
 from nes.processors.cpu import Cpu
-from nes.processors.cpu.instructions import InstructionFactory
+from nes.processors.instructions import InstructionFactory
 
 
 class CpuClearInstructionsTestCase(unittest.TestCase):

@@ -1,12 +1,12 @@
-from .decoder import Decoder
 from ..processor import Processor
-from .instructions import Instruction, InstructionFactory
+from .decoder import Decoder
+from .instruction_factory import InstructionFactory
 from nes.processors.registers import GeneralPurposeRegister, ProgramCounter, StackPointer, ProcessorStatusRegister
 from nes.bus import Bus
 
 
 class Cpu(Processor):
-    def __init__(self, bus: Bus):
+    def __init__(self, bus: Bus, instruction_factory: InstructionFactory):
         super().__init__(bus)
         self.pc = ProgramCounter()
         self.a = GeneralPurposeRegister()
@@ -16,6 +16,7 @@ class Cpu(Processor):
         self.s = StackPointer()
 
         self.decoder = Decoder()
+        self.instruction_factory = instruction_factory
         self.cycles = 0
 
         self.nmi_vector = [0xff, 0xfa]
@@ -30,17 +31,17 @@ class Cpu(Processor):
 
     def nmi(self) -> None:
         opcode = self.decoder.decode(0x6c)
-        jmpi = InstructionFactory.create(opcode, self.nmi_vector)
+        jmpi = self.instruction_factory.create(opcode, self.nmi_vector)
         jmpi.execute(self)
 
     def reset(self) -> None:
         opcode = self.decoder.decode(0x6c)
-        jmpi = InstructionFactory.create(opcode, self.reset_vector)
+        jmpi = self.instruction_factory.create(opcode, self.reset_vector)
         jmpi.execute(self)
 
     def irq(self) -> None:
         opcode = self.decoder.decode(0x6c)
-        jmpi = InstructionFactory.create(opcode, self.interrupt_vector)
+        jmpi = self.instruction_factory.create(opcode, self.interrupt_vector)
         jmpi.execute(self)
 
     def tick(self) -> None:
@@ -48,7 +49,7 @@ class Cpu(Processor):
         instruction.execute(self)
         super().tick()
 
-    def fetch_instruction(self) -> Instruction:
+    def fetch_instruction(self):
         byte = self.fetch_byte()
         opcode = self.decoder.decode(byte)
         params = []
@@ -56,7 +57,7 @@ class Cpu(Processor):
         for i in range(opcode.param_count):
             params.append(self.fetch_byte())
 
-        return InstructionFactory.create(opcode, params)
+        return self.instruction_factory.create(opcode, params)
 
     def fetch_byte(self) -> int:
         byte = self.bus.read(self.pc.read_address())
