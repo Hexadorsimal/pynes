@@ -32,7 +32,7 @@ def get_parameter_reader(addressing_mode: str) -> ParameterReader:
         'ZeroPageY': ZeroPageYParameterReader,
     }
 
-    return readers.get(addressing_mode)
+    return readers[addressing_mode]()
 
 
 def get_result_writer(addressing_mode: str) -> ResultWriter:

@@ -5,9 +5,10 @@ from nes.processors.cpu import Cpu
 
 class LoadInstruction(Instruction):
     def load_register(self, cpu: Cpu, reg: Register) -> None:
-        reg.value = self.read_source(cpu)
-        cpu.p.z.update(reg.value)
-        cpu.p.n.update(reg.value)
+        value = self.reader.read_parameter(cpu, self)
+        reg.write(value)
+        cpu.p.update_zero_flag(value)
+        cpu.p.update_negative_flag(value)
 
 
 class Lda(LoadInstruction):

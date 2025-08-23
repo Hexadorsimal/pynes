@@ -29,7 +29,7 @@ class TestCpuLoadInstructions:
     def test_lda(self, cpu, lda):
         cpu.write(0x0000, 0xff)
 
-        instruction = factory.create(lda, [])
+        instruction = factory.create(lda, [0x00, 0x00])
         instruction.execute(cpu)
 
         assert cpu.a == 0xff
@@ -50,6 +50,3 @@ class TestCpuLoadInstructions:
         self.assertFalse(self.cpu.p.z)
         self.assertTrue(self.cpu.p.n)
 
-
-if __name__ == '__main__':
-    unittest.main()

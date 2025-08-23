@@ -30,7 +30,7 @@ class Decoder:
             '       base_cycles,'
             '       page_cycles,'
             '       param_count '
-            '  FROM Instruction JOIN AddressingMode ON Instruction.address_mode = AddressingMode.name '
+            '  FROM Instruction JOIN AddressingMode ON Instruction.addressing_mode = AddressingMode.name '
             ' WHERE opcode=?'
         )
 

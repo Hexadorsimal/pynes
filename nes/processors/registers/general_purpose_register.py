@@ -13,6 +13,12 @@ class GeneralPurposeRegister(Register):
     def write(self, value: int) -> None:
         self.value = value
 
+    def __eq__(self, other) -> bool:
+        if isinstance(other, GeneralPurposeRegister):
+            return self.value == other.value
+        else:
+            return self.value == other
+
     def __add__(self, other: int) -> int:
         return (self.value + other) & self.mask
 
