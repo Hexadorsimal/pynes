@@ -24,6 +24,14 @@ def decoder():
 def lda(decoder):
     return decoder.decode(0xAD)
 
+@pytest.fixture
+def ldx(decoder):
+    return decoder.decode(0xAE)
+
+@pytest.fixture
+def ldy(decoder):
+    return decoder.decode(0xAC)
+
 
 class TestCpuLoadInstructions:
     def test_lda(self, cpu, lda):
@@ -36,17 +44,23 @@ class TestCpuLoadInstructions:
         assert cpu.p.z is False
         assert cpu.p.n is True
 
-    def test_ldx(self):
-        instruction = self.cpu.decode(0xAE)
-        self.cpu.execute(instruction)
-        self.assertEqual(self.cpu.x.value, 0xFF)
-        self.assertFalse(self.cpu.p.z)
-        self.assertTrue(self.cpu.p.n)
+    def test_ldx(self, cpu, ldx):
+        cpu.write(0x0000, 0xff)
 
-    def test_ldy(self):
-        instruction = self.cpu.decode(0xAC)
-        self.cpu.execute(instruction)
-        self.assertEqual(self.cpu.y.value, 0xFF)
-        self.assertFalse(self.cpu.p.z)
-        self.assertTrue(self.cpu.p.n)
+        instruction = factory.create(ldx, [0x00, 0x00])
+        instruction.execute(cpu)
+
+        assert cpu.x == 0xff
+        assert cpu.p.z is False
+        assert cpu.p.n is True
+
+    def test_ldy(self, cpu, ldy):
+        cpu.write(0x0000, 0xff)
+
+        instruction = factory.create(ldy, [0x00, 0x00])
+        instruction.execute(cpu)
+
+        assert cpu.y == 0xff
+        assert cpu.p.z is False
+        assert cpu.p.n is True
 
